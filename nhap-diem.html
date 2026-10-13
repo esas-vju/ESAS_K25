@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Nhập bảng điểm K22–K25</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:wght@600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+html,body{margin:0}
+a{color:var(--accent)}
+:root{
+  --bg:#f2f5f0; --surface:#ffffff; --ink:#16231b; --muted:#5a6a60; --line:#d5ded3; --branch:#9fb3a5;
+  --accent:#2c7547; --accent-ink:#ffffff; --accent-soft:#e1efe5; --l4:#e4f1e7;
+  --warn:#94540a; --warn-soft:#fbefd9; --bad:#a3352b;
+  --f-display:"Lora",Georgia,"Times New Roman",serif;
+  --f-body:"Be Vietnam Pro",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101712; --surface:#18211b; --ink:#e2eae3; --muted:#93a398; --line:#2b372f; --branch:#4a5d50;
+  --accent:#70cf92; --accent-ink:#0d1a12; --accent-soft:#1d3325; --l4:#1a2a1f;
+  --warn:#f0bf62; --warn-soft:#352a14; --bad:#f08a7e; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#101712; --surface:#18211b; --ink:#e2eae3; --muted:#93a398; --line:#2b372f; --branch:#4a5d50;
+  --accent:#70cf92; --accent-ink:#0d1a12; --accent-soft:#1d3325; --l4:#1a2a1f;
+  --warn:#f0bf62; --warn-soft:#352a14; --bad:#f08a7e; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body)}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 96px;display:grid;gap:16px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,32px);line-height:1.2;margin:10px 0 4px}
+h2{font-family:var(--f-display);font-size:20px;margin:0}
+.cohort{display:inline-flex;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:13px;padding:4px 12px;border-radius:999px}
+.sub,.muted{color:var(--muted);margin:0;max-width:75ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;min-width:0}
+.acct{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13.5px}
+.acct .sp{margin-left:auto}
+.ok{color:var(--accent);font-weight:600} .bad{color:var(--bad)} .warn{color:var(--warn)}
+.primary{justify-self:start;border:0;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:8px;padding:9px 18px;cursor:pointer}
+.primary:disabled{opacity:.5;cursor:default}
+.linkbtn{border:0;background:none;color:var(--accent);cursor:pointer;padding:0;font-size:13.5px;text-decoration:underline}
+.drop{border:2px dashed var(--branch);border-radius:12px;padding:22px;text-align:center;color:var(--muted);cursor:pointer}
+.drop.on{border-color:var(--accent);background:var(--accent-soft)}
+.drop b{color:var(--ink)}
+.note{font-size:13px;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:8px 12px}
+.note.warn{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+.note.bad{color:var(--bad);background:var(--warn-soft);border-color:transparent}
+.meta{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13px;color:var(--muted)}
+.meta b{color:var(--ink);font-family:var(--f-mono);font-weight:600}
+.tag{font-size:11px;border-radius:5px;padding:0 6px;background:var(--l4);color:var(--muted);font-weight:600;white-space:nowrap}
+.tag.ok{background:var(--accent-soft);color:var(--accent)} .tag.w{background:var(--warn-soft);color:var(--warn)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.tbl table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+.tbl th,.tbl td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--line)}
+.tbl th{font-size:11.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+.tbl td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+details summary{cursor:pointer;font-size:13.5px;color:var(--accent)}
+ol{margin:0;padding-left:20px} li{margin:2px 0}
+code{font-family:var(--f-mono);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="cohort">Dành cho quản trị viên · K22 · K23 · K24 · K25</span>
+    <h1>Nhập bảng điểm</h1>
+    <p class="sub">Tải lên tệp “Bảng điểm theo lớp” xuất từ hệ thống đào tạo (.xls). Mỗi tệp là một lớp trong một học kỳ. Sau khi lưu, sinh viên đăng nhập trang lộ trình sẽ thấy điểm, GPA từng học kỳ và GPA tích lũy của mình ở mục <b>Kết quả học tập</b>.</p>
+  </header>
+
+  <div class="card acct" id="acct">Đang kết nối…</div>
+
+  <section class="card" aria-labelledby="h-up">
+    <h2 id="h-up">1 · Chọn tệp bảng điểm</h2>
+    <label class="drop" id="drop"><input type="file" id="file" accept=".xls,.html,.htm" multiple hidden>
+      <b>Kéo thả tệp vào đây</b> hoặc bấm để chọn. Chọn được nhiều tệp cùng lúc (nhiều học kỳ, nhiều lớp).</label>
+    <p class="muted" style="font-size:13px">Tệp chỉ được đọc trên máy của bạn để kiểm tra. Chưa có gì được gửi đi cho tới khi bạn bấm <b>Lưu lên hệ thống</b>.</p>
+  </section>
+
+  <section class="card" id="preview" hidden aria-labelledby="h-pv">
+    <h2 id="h-pv">2 · Kiểm tra</h2>
+    <div id="files"></div>
+  </section>
+
+  <section class="card" id="saveBox" hidden aria-labelledby="h-sv">
+    <h2 id="h-sv">3 · Lưu lên hệ thống</h2>
+    <p class="muted" id="saveInfo"></p>
+    <button class="primary" type="button" id="saveBtn">Lưu lên hệ thống</button>
+    <div id="saveMsg"></div>
+  </section>
+
+  <section class="card" id="stored" hidden aria-labelledby="h-st">
+    <h2 id="h-st">Bảng điểm đang có trên hệ thống</h2>
+    <div id="storedBody"></div>
+  </section>
+
+  <section class="card">
+    <h2>Lưu ý</h2>
+    <ol class="muted" style="font-size:13.5px">
+      <li>Tải lên lại cùng một lớp và học kỳ sẽ <b>thay</b> điểm học kỳ đó bằng tệp mới (ví dụ sau khi có điểm thi lại). Các học kỳ khác giữ nguyên.</li>
+      <li>Sinh viên chỉ xem được điểm của chính mình: bảng điểm gắn với MSSV, và hệ thống chỉ cho email <code>MSSV@st.vju.ac.vn</code> đọc.</li>
+      <li>Cột “Kiểm tra GPA” so GPA trang tính được với cột “Điểm TBC” trong tệp. Lệch nhiều thường do mã học phần mới chưa khai báo (xem <code>ALIAS</code> trong <code>diem.js</code>) hoặc tệp bị sửa tay.</li>
+      <li>“Ngoài khung”: mã học phần không có trong khung chương trình của trang lộ trình. Điểm vẫn được lưu và tính GPA, nhưng không tự đánh dấu trên sơ đồ. Nếu đó là mã mới của một học phần trong khung, thêm vào <code>ALIAS</code> trong <code>diem.js</code>.</li>
+    </ol>
+  </section>
+  <p class="muted" style="font-size:13px"><a href="index.html">← Về trang lộ trình</a></p>
+</div>
+
+<script type="module">
+import {parseExport,semStats,isCond,frameId,fmt} from "./diem.js";
+const KHOAS=["K22","K23","K24","K25"];
+const GCOL="grades_k22_25";
+const FB="https://www.gstatic.com/firebasejs/10.12.2/";
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const $=id=>document.getElementById(id);
+
+let cfg=null,FRAME=null,FA,FS,auth,fs,ME=null,mode="loading",loginErr="";
+let parsed=[]; // [{name, data|null, err}]
+
+// Cấu hình Firebase và danh sách mã học phần lấy từ index.html, để không phải dán cấu hình hai lần.
+async function readIndex(){
+  try{
+    const t=await (await fetch("index.html",{cache:"no-store"})).text();
+    const blk=/const FIREBASE_CONFIG=\{([\s\S]*?)\};/.exec(t);
+    if(blk){
+      const get=k=>{const m=new RegExp(k+'\\s*:\\s*"([^"]*)"').exec(blk[1]);return m?m[1]:"";};
+      cfg={apiKey:get("apiKey"),authDomain:get("authDomain"),projectId:get("projectId"),appId:get("appId")};
+    }
+    FRAME=new Set([...t.matchAll(/\b(?:c|h|k2|k3|m2)\("([A-Z]{3}\d{4})"/g)].map(m=>m[1]));
+    FRAME.add("SAS3048-TMDT");
+  }catch(e){}
+}
+
+function renderAcct(){
+  const a=$("acct");
+  const out=`<span class="sp"><button type="button" class="linkbtn" data-act="logout">Đăng xuất</button></span>`;
+  if(mode==="loading")a.innerHTML="Đang kết nối…";
+  else if(mode==="local")a.innerHTML=`<span class="warn">Trang lộ trình chưa có cấu hình Firebase (hoặc đang mở tệp trên máy). Bạn vẫn kiểm tra được tệp, nhưng chưa lưu được.</span>`;
+  else if(mode==="offline")a.innerHTML=`<span class="warn">Không kết nối được Firebase. Kiểm tra mạng rồi tải lại trang.</span>`;
+  else if(mode==="login")a.innerHTML=`<span>Đăng nhập bằng tài khoản Google đã được cấp quyền quản trị.</span><button class="primary" type="button" data-act="login">Đăng nhập bằng Google</button>${loginErr?`<span class="bad">${esc(loginErr)}</span>`:""}`;
+  else if(mode==="admin")a.innerHTML=`<b>${esc(ME)}</b><span class="ok">Quản trị viên · được nhập bảng điểm</span>${out}`;
+  else if(mode==="denied")a.innerHTML=`<b>${esc(ME)}</b><span class="bad">Tài khoản này chưa có quyền nhập điểm. Thêm email vào bộ sưu tập <code>admins</code> trong Firestore (xem HUONG-DAN-CAI-DAT-FIREBASE.md).</span>${out}`;
+  renderSave();
+}
+
+// ---------- đọc và kiểm tra tệp ----------
+async function addFiles(list){
+  for(const f of list){
+    const text=await f.text();
+    let data=null,err="";
+    try{data=parseExport(text);}catch(e){err=e.message||String(e);}
+    if(data&&!KHOAS.includes(data.khoa))err=`Lớp ${data.lop} (${data.khoa||"?"}) không thuộc K22–K25. Trang này chỉ nhận bảng điểm K22–K25.`;
+    parsed=parsed.filter(p=>!(p.data&&data&&p.data.lop===data.lop&&p.data.key===data.key));
+    parsed.push({name:f.name,data:err?null:data,err});
+  }
+  parsed.sort((a,b)=>a.data&&b.data?(a.data.lop+a.data.key).localeCompare(b.data.lop+b.data.key):a.data?-1:1);
+  renderPreview();
+}
+function renderPreview(){
+  $("preview").hidden=!parsed.length;
+  $("files").innerHTML=parsed.map((p,i)=>{
+    if(!p.data)return `<div class="note bad"><b>${esc(p.name)}</b>: ${esc(p.err)} <button type="button" class="linkbtn" data-rm="${i}">Bỏ tệp</button></div>`;
+    const d=p.data;
+    let ok=0,cmp=0;
+    const rows=d.students.map(s=>{
+      const st=semStats(s.mon);const o=s.off.tbc;
+      let chk="";
+      if(o!=null&&st.gpa!=null){cmp++;const diff=Math.abs(o-st.gpa);if(diff<0.005){ok++;chk='<span class="tag ok">khớp</span>';}else chk=`<span class="tag w">lệch ${diff.toFixed(2)}</span>`;}
+      return `<tr><td class="n">${esc(s.mssv)}</td><td>${esc(s.hoTen)}</td><td class="n">${s.mon.length}</td><td class="n">${st.tc}</td><td class="n">${st.truot||""}</td><td class="n">${fmt(st.gpa)}</td><td class="n">${o==null?"—":o.toFixed(2)}</td><td>${chk}</td></tr>`;
+    }).join("");
+    const out=FRAME?d.courses.filter(c=>!isCond(c.code,c.ten)&&!FRAME.has(frameId(c.code,c.ten))):[];
+    const mapped=d.courses.filter(c=>frameId(c.code,c.ten)!==c.code);
+    return `<div class="card" style="padding:12px">
+      <div class="meta"><span>Tệp <b>${esc(p.name)}</b></span><span>Lớp <b>${esc(d.lop)}</b> (${d.khoa})</span><span><b>Học kỳ ${d.ky===3?"hè":d.ky}</b> năm học <b>${d.nam}</b></span><span><b>${d.students.length}</b> sinh viên</span><span><b>${d.courses.length}</b> học phần</span>
+        <span>Kiểm tra GPA: <b class="${ok===cmp?"ok":"warn"}">${ok}/${cmp}</b> khớp</span><button type="button" class="linkbtn" data-rm="${i}">Bỏ tệp</button></div>
+      ${d.warn.map(w=>`<div class="note warn">${esc(w)}</div>`).join("")}
+      ${out.length?`<div class="note warn">Ngoài khung chương trình: ${out.map(c=>`${esc(c.code)} ${esc(c.ten)}`).join("; ")}. Điểm vẫn được lưu và tính GPA.</div>`:""}
+      <details><summary>Học phần trong tệp (${d.courses.length})</summary><div class="tbl" style="margin-top:6px"><table><thead><tr><th>Mã</th><th>Học phần</th><th>TC</th><th>Ghi chú</th></tr></thead><tbody>${d.courses.map(c=>`<tr><td class="n">${esc(c.code)}</td><td>${esc(c.ten)}</td><td class="n">${c.tc}</td><td>${isCond(c.code,c.ten)?'<span class="tag">điều kiện · không tính GPA</span>':""}${mapped.includes(c)?`<span class="tag ok">mã khung ${esc(frameId(c.code,c.ten))}</span>`:""}${out.includes(c)?'<span class="tag w">ngoài khung</span>':""}</td></tr>`).join("")}</tbody></table></div></details>
+      <details><summary>Sinh viên (${d.students.length})</summary><div class="tbl" style="margin-top:6px"><table><thead><tr><th>MSSV</th><th>Họ tên</th><th>Số HP</th><th>TC có điểm</th><th>TC trượt</th><th>GPA trang tính</th><th>TBC trong tệp</th><th>Kiểm tra GPA</th></tr></thead><tbody>${rows}</tbody></table></div></details>
+    </div>`;
+  }).join("");
+  renderSave();
+}
+function renderSave(){
+  const good=parsed.filter(p=>p.data);
+  $("saveBox").hidden=!good.length;
+  if(!good.length)return;
+  const sv=new Set();good.forEach(p=>p.data.students.forEach(s=>sv.add(s.mssv)));
+  $("saveInfo").innerHTML=`Sẽ lưu <b>${good.length}</b> bảng điểm (lớp × học kỳ) của <b>${sv.size}</b> sinh viên.`+(mode==="admin"?"":` <span class="warn">Cần đăng nhập bằng tài khoản quản trị để lưu.</span>`);
+  $("saveBtn").disabled=mode!=="admin";
+}
+
+// ---------- lưu ----------
+async function save(){
+  const btn=$("saveBtn"),msg=$("saveMsg");
+  btn.disabled=true;btn.textContent="Đang lưu…";msg.innerHTML="";
+  const now=new Date().toISOString();
+  const ops=[];
+  for(const p of parsed){if(!p.data)continue;const d=p.data;
+    for(const s of d.students)ops.push([s.mssv,{mssv:s.mssv,hoTen:s.hoTen,lop:d.lop,khoa:d.khoa,capNhat:now,hk:{[d.key]:{nam:d.nam,ky:d.ky,mon:s.mon,capNhat:now}}}]);}
+  try{
+    for(let i=0;i<ops.length;i+=400){
+      const b=FS.writeBatch(fs);
+      ops.slice(i,i+400).forEach(([id,data])=>b.set(FS.doc(fs,GCOL,id),data,{merge:true}));
+      await b.commit();
+    }
+    msg.innerHTML=`<div class="note"><b class="ok">Đã lưu ${ops.length} lượt điểm.</b> Sinh viên tải lại trang lộ trình và mở mục “Kết quả học tập” để xem.</div>`;
+    parsed=[];renderPreview();loadStored();
+  }catch(e){
+    msg.innerHTML=`<div class="note bad">Chưa lưu được (${esc(e&&e.code||e)}). ${e&&e.code==="permission-denied"?"Kiểm tra email có trong bộ sưu tập admins và đã dán firestore.rules mới.":"Kiểm tra mạng rồi thử lại."}</div>`;
+  }
+  btn.textContent="Lưu lên hệ thống";renderSave();
+}
+async function loadStored(){
+  if(mode!=="admin")return;
+  $("stored").hidden=false;$("storedBody").innerHTML='<p class="muted">Đang tải…</p>';
+  try{
+    const snap=await FS.getDocs(FS.collection(fs,GCOL));
+    const by={};
+    snap.forEach(d=>{const x=d.data();const k=x.lop||"?";by[k]=by[k]||{khoa:x.khoa,n:0,hk:{}};by[k].n++;Object.keys(x.hk||{}).forEach(h=>by[k].hk[h]=(by[k].hk[h]||0)+1);});
+    const ks=Object.keys(by).sort().reverse();
+    $("storedBody").innerHTML=ks.length?`<div class="tbl"><table><thead><tr><th>Lớp</th><th>Khóa</th><th>Số SV</th><th>Học kỳ đã nhập (số SV)</th></tr></thead><tbody>${ks.map(k=>`<tr><td>${esc(k)}</td><td>${esc(by[k].khoa||"")}</td><td class="n">${by[k].n}</td><td>${Object.keys(by[k].hk).sort().map(h=>{const [n,ky]=h.split("_");return `<span class="tag">HK${ky==="3"?" hè":ky} ${n} · ${by[k].hk[h]}</span>`;}).join(" ")}</td></tr>`).join("")}</tbody></table></div>`:'<p class="muted">Chưa có bảng điểm nào.</p>';
+  }catch(e){$("storedBody").innerHTML=`<div class="note bad">Không đọc được (${esc(e&&e.code||e)}).</div>`;}
+}
+
+// ---------- đăng nhập ----------
+async function init(){
+  await readIndex();
+  if(!cfg||!cfg.apiKey){mode="local";renderAcct();return;}
+  try{
+    const [AP,A,F]=await Promise.all([import(FB+"firebase-app.js"),import(FB+"firebase-auth.js"),import(FB+"firebase-firestore.js")]);
+    FA=A;FS=F;const app=AP.initializeApp(cfg);auth=A.getAuth(app);fs=F.getFirestore(app);
+  }catch(e){mode="offline";renderAcct();return;}
+  FA.onAuthStateChanged(auth,async u=>{
+    if(!u){ME=null;mode="login";$("stored").hidden=true;renderAcct();return;}
+    ME=(u.email||"").toLowerCase();mode="loading";renderAcct();
+    let ok=false;
+    try{ok=(await FS.getDoc(FS.doc(fs,"admins",ME))).exists();}catch(e){}
+    mode=ok?"admin":"denied";renderAcct();loadStored();
+  });
+}
+document.addEventListener("click",async e=>{
+  const a=e.target.closest("[data-act]");
+  if(a){
+    if(a.dataset.act==="login"){
+      const p=new FA.GoogleAuthProvider();p.setCustomParameters({prompt:"select_account"});loginErr="";
+      try{await FA.signInWithPopup(auth,p);}catch(x){if(x&&x.code!=="auth/popup-closed-by-user"){loginErr="Đăng nhập không thành công ("+(x.code||"lỗi")+").";renderAcct();}}
+    }else if(a.dataset.act==="logout")FA.signOut(auth);
+    return;
+  }
+  const rm=e.target.closest("[data-rm]");
+  if(rm){e.preventDefault();parsed.splice(+rm.dataset.rm,1);renderPreview();return;}
+  if(e.target.id==="saveBtn")save();
+});
+$("file").addEventListener("change",e=>{addFiles([...e.target.files]);e.target.value="";});
+const drop=$("drop");
+["dragenter","dragover"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.add("on");}));
+["dragleave","drop"].forEach(t=>drop.addEventListener(t,e=>{e.preventDefault();drop.classList.remove("on");}));
+drop.addEventListener("drop",e=>addFiles([...e.dataTransfer.files]));
+init();
+</script>
+</body>
+</html>

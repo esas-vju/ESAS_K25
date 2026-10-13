@@ -141,6 +141,12 @@ Góc dưới bên trái phải hiện **Spark · No-cost ($0/month)**.
 
 Thêm giảng viên khác: chọn collection `lecturers`, bấm **+ Add document** và làm lại mục 3–5. Muốn thu hồi quyền, xoá document đó.
 
+### 4b. Cấp quyền nhập bảng điểm (quản trị viên)
+
+Làm giống bước 4 nhưng với collection **`admins`**: *Collection ID* `admins`, *Document ID* là email người được nhập điểm (viết thường), thêm trường `ten`. Chỉ người có trong `admins` mới lưu được bảng điểm. Một người có thể nằm ở cả `lecturers` và `admins`.
+
+> Nếu bạn đã dán `firestore.rules` trước khi có tính năng bảng điểm, hãy **dán lại tệp `firestore.rules` mới** (bước 2.5) và bấm **Publish**.
+
 ---
 
 ## Bước 5 · Kiểm tra trước khi gửi sinh viên
@@ -152,10 +158,25 @@ Mở trang bằng **Chrome hoặc Safari**:
 - [ ] Tải lại trang: các môn đã đánh dấu vẫn còn.
 - [ ] Đăng nhập lại bằng email giảng viên, mở **Theo dõi lớp**: sinh viên thử hiện trong bảng, đúng lớp đã chọn. Bấm nút lớp đó ở hàng *Chia lớp*, rồi thử **Tải CSV**.
 - [ ] Đăng nhập bằng một Gmail cá nhân không có trong `lecturers`: trang báo **"Email chưa đúng"**.
+- [ ] **Bảng điểm:** mở `…/nhap-diem.html`, đăng nhập bằng email trong `admins`, kéo thả tệp bảng điểm, kiểm tra cột *Kiểm tra GPA* gần như đều **khớp**, rồi bấm **Lưu lên hệ thống**. Đăng nhập trang chính bằng email sinh viên có trong tệp, mở **Kết quả học tập**: thấy điểm và GPA.
 
 Khi cả 5 mục đều đạt, gửi sinh viên 2 đường link:
 - Trang chính: `https://<tên-tài-khoản>.github.io/lo-trinh-nntmbv-k22-k25/`
 - Hướng dẫn: `https://<tên-tài-khoản>.github.io/lo-trinh-nntmbv-k22-k25/huong-dan.html`
+
+---
+
+## Nhập bảng điểm mỗi học kỳ
+
+1. Trên hệ thống đào tạo, xuất **Bảng điểm theo lớp** của lớp (ví dụ ESAS2024) cho học kỳ vừa xong. Tệp có đuôi `.xls`, không cần mở hay sửa.
+2. Mở `https://<tên-tài-khoản>.github.io/lo-trinh-nntmbv-k22-k25/nhap-diem.html`, đăng nhập bằng email quản trị.
+3. Kéo thả một hoặc nhiều tệp (nhiều lớp, nhiều học kỳ cùng lúc được). Trang đọc tên lớp, học kỳ, năm học từ tiêu đề tệp. Lớp ESAS2024 là K24, ESAS2023 là K23…
+4. Xem phần **Kiểm tra**: GPA trang tính phải khớp cột *Điểm TBC* trong tệp (lệch 0,01 ở vài sinh viên là do làm tròn). Nếu có cảnh báo *ngoài khung*, đó là mã học phần mới chưa có trong trang lộ trình: điểm vẫn được lưu và tính GPA, nhưng không tự đánh dấu trên sơ đồ.
+5. Bấm **Lưu lên hệ thống**. Bảng *Bảng điểm đang có trên hệ thống* cho biết lớp nào đã có học kỳ nào.
+
+Tải lại cùng lớp và học kỳ (ví dụ sau khi có điểm thi lại) sẽ thay điểm học kỳ đó; học kỳ khác giữ nguyên.
+
+**Mã học phần mới:** hệ thống đào tạo đang dùng vài mã khác khung ESAS5 (SAS2030 → SAS2001 Sinh lý thực vật, SAS2031 → SAS2004, SAS2032 → SAS2005, SAS2033 → SAS2006, SAS2034 → SAS2009). Bảng đối chiếu nằm ở `ALIAS` đầu tệp `diem.js`; gặp mã mới thì thêm một dòng vào đó.
 
 ---
 
@@ -167,7 +188,10 @@ Khi cả 5 mục đều đạt, gửi sinh viên 2 đường link:
 | Không thấy **Project settings** | Dùng **Settings → General** (bước 3.1). |
 | Trang vẫn hiện "Chế độ thử" | `FIREBASE_CONFIG` chưa được lưu hoặc GitHub chưa cập nhật. Đợi thêm rồi nhấn Cmd/Ctrl+Shift+R. |
 | "Địa chỉ trang chưa được khai báo trong Firebase" | Kiểm tra bước 2.3. Tên miền phải đúng `<tên-tài-khoản>.github.io`. |
+| Trang nhập điểm báo "chưa có quyền nhập điểm" hoặc lưu bị `permission-denied` | Thêm email vào collection `admins` (bước 4b) và dán lại `firestore.rules` mới. |
+| Trang nhập điểm báo "chưa có cấu hình Firebase" | Trang nhập điểm dùng chung `FIREBASE_CONFIG` trong `index.html`. Kiểm tra đã dán cấu hình vào `index.html` trên GitHub và đã tải `diem.js`, `nhap-diem.html` lên cùng thư mục. |
 | "Firebase chưa bật đăng nhập bằng Google" | Làm lại bước 2.2 và bấm Save. |
+| "auth/configuration-not-found" hoặc "Firebase chưa bật Authentication" | Dự án chưa bấm **Get started** trong Authentication, hoặc `FIREBASE_CONFIG` trong `index.html` là của dự án khác. Làm lại bước 2.2 và kiểm tra `projectId` trong `index.html` trùng với tên dự án ở góc trên Firebase Console. |
 | Đăng nhập được nhưng "Chưa lưu được vào tài khoản" | Quy tắc chưa Publish hoặc dán thiếu. Làm lại bước 2.5. |
 | Giảng viên bị báo "Email chưa đúng" | Document ID phải trùng hệt email và viết thường. Collection phải tên `lecturers`. |
 | Email trường báo "Access blocked" hoặc "ứng dụng bị chặn" | Quản trị Google Workspace của trường đang chặn ứng dụng ngoài. Đề nghị phòng CNTT cho phép ứng dụng OAuth của dự án. Client ID xem tại Google Cloud Console → APIs & Services → Credentials. |

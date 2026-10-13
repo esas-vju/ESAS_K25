@@ -3,8 +3,11 @@ rules_version = '2';
 // Tệp này dùng được cho cả hai trang, nên có thể đặt chung một dự án Firebase:
 //   - progress/<uid>          : trang K2026
 //   - progress_k22_25/<uid>   : trang K22–K25 (có thêm trường "khoa": K22, K23, K24, K25)
-// - Sinh viên (email @st.vju.ac.vn đã xác minh) chỉ đọc/ghi tài liệu của chính mình.
-// - Giảng viên có tài liệu lecturers/<email viết thường> đọc được toàn bộ, không sửa được.
+//   - grades_k22_25/<MSSV>    : bảng điểm K22–K25
+// - Sinh viên (email @st.vju.ac.vn đã xác minh) chỉ đọc/ghi tiến độ của chính mình, và chỉ đọc
+//   được bảng điểm có MSSV trùng với email của mình (MSSV@st.vju.ac.vn).
+// - Giảng viên có tài liệu lecturers/<email viết thường> đọc được toàn bộ tiến độ và bảng điểm, không sửa được.
+// - Quản trị viên có tài liệu admins/<email viết thường> nhập được bảng điểm (trang nhap-diem.html).
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -20,6 +23,12 @@ service cloud.firestore {
       return request.auth != null
         && request.auth.token.email != null
         && exists(/databases/$(database)/documents/lecturers/$(email()));
+    }
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true
+        && exists(/databases/$(database)/documents/admins/$(email()));
     }
     function baseProgress(d) {
       return d.email == email()
@@ -51,6 +60,21 @@ service cloud.firestore {
       allow read: if (isStudent() && request.auth.uid == uid) || isLecturer();
       allow create, update: if isStudent() && request.auth.uid == uid && validProgressK22();
       allow delete: if false;
+    }
+
+    // Bảng điểm K22–K25 (nhập từ trang nhap-diem.html)
+    match /grades_k22_25/{mssv} {
+      allow read: if isAdmin() || isLecturer() || (isStudent() && email() == mssv.lower() + '@st.vju.ac.vn');
+      allow create, update: if isAdmin()
+        && request.resource.data.mssv == mssv
+        && request.resource.data.hk is map
+        && request.resource.data.keys().hasOnly(['mssv', 'hoTen', 'lop', 'khoa', 'hk', 'capNhat']);
+      allow delete: if false;
+    }
+
+    match /admins/{adEmail} {
+      allow get: if request.auth != null && request.auth.token.email != null && email() == adEmail;
+      allow list, write: if false;
     }
 
     match /lecturers/{lecEmail} {

@@ -9,6 +9,8 @@ Sinh viên đăng nhập bằng email `@st.vju.ac.vn` và chọn lớp của mì
 | `index.html` | Trang lộ trình: sơ đồ cây 5 khối, 8 học kỳ, cẩm nang tư vấn 3 định hướng, cơ hội việc làm, theo dõi lớp |
 | `viec-lam.txt` | Danh sách tin tuyển dụng hiện ở mục *Cơ hội việc làm*. Sửa tệp này để thêm tin |
 | `HUONG-DAN-THEM-VIEC-LAM.md` | Cách thêm, ẩn, xoá tin tuyển dụng ngay trên GitHub |
+| `nhap-diem.html` | Trang nhập bảng điểm cho quản trị viên (kéo thả tệp “Bảng điểm theo lớp” .xls) |
+| `diem.js` | Đọc bảng điểm, quy đổi điểm, tính GPA; bảng đối chiếu mã học phần `ALIAS` |
 | `huong-dan.html` | Hướng dẫn cho sinh viên (gửi link này kèm link trang chính) |
 | `firestore.rules` | Quy tắc bảo mật dữ liệu, dán vào Firebase. Dùng được cho cả trang K2026 |
 | `HUONG-DAN-CAI-DAT-FIREBASE.md` | Hướng dẫn cài đặt chi tiết từng bước |
@@ -17,7 +19,8 @@ Sinh viên đăng nhập bằng email `@st.vju.ac.vn` và chọn lớp của mì
 
 - **Khung chương trình:** 5 khối I–V (26 · 34 · 30 · 20 · 55 TC), 3 định hướng chuyên sâu V.2, mỗi hướng 14 TC: 1 · Nông nghiệp sinh thái, 2 · Nông nghiệp tiên tiến Nhật Bản, 3 · Tạo lập và quản trị doanh nghiệp nông nghiệp.
 - **Chia lớp:** sinh viên chọn lớp K25, K24, K23 hoặc K22 khi nhập thông tin lần đầu, và đổi được ở mục *Lớp của bạn*. Mục *Theo 8 học kỳ* ghi năm học của từng học kỳ theo lớp và đánh dấu học kỳ đang học theo lịch dự kiến.
-- **Theo dõi lớp (giảng viên):** có hàng nút *Chia lớp* (Tất cả · K25 · K24 · K23 · K22), mỗi nút ghi số sinh viên và TC trung bình. Bảng có cột *Lớp*, tệp CSV tải về theo lớp đang chọn.
+- **Theo dõi lớp (giảng viên):** có cột GPA tích lũy và TC tích lũy từ bảng điểm, sắp xếp “GPA thấp trước”, đếm số SV có GPA dưới 2,00; bấm vào dòng để xem GPA từng học kỳ và môn cần học lại. Sinh viên đã có bảng điểm nhưng chưa đăng nhập trang vẫn hiện trong bảng. Có hàng nút *Chia lớp* (Tất cả · K25 · K24 · K23 · K22), mỗi nút ghi số sinh viên và TC trung bình. Bảng có cột *Lớp*, tệp CSV tải về theo lớp đang chọn.
+- **Kết quả học tập:** quản trị viên tải bảng điểm lên ở `nhap-diem.html`. Sinh viên xem điểm từng học phần, GPA từng học kỳ, GPA tích lũy, tín chỉ tích lũy và học phần cần học lại; học phần đã đạt được tự đánh dấu trên sơ đồ. Cách tính đã đối chiếu với bảng điểm ESAS2024: 68/70 GPA học kỳ khớp tuyệt đối, 2 lệch 0,01 do làm tròn; GPA tích lũy khớp cột TBC TL.
 - **Dữ liệu riêng:** tiến độ lưu ở bộ sưu tập `progress_k22_25`, không lẫn với `progress` của K2026.
 
 ---
@@ -31,6 +34,7 @@ Nếu trang K2026 đã chạy với Firebase, bạn không cần tạo dự án 
 3. **Quy tắc bảo mật:** Firebase Console → Firestore → tab **Rules**. Xoá nội dung cũ, dán toàn bộ tệp `firestore.rules` của thư mục này, rồi bấm **Publish**. Tệp mới vẫn giữ nguyên quy tắc của K2026 và thêm phần cho K22–K25.
 4. **Tên miền:** nếu hai repo cùng một tài khoản GitHub thì tên miền `<tên-tài-khoản>.github.io` đã có trong *Authorized domains*, không cần thêm.
 5. **Giảng viên:** dùng chung danh sách `lecturers`. Giảng viên đã có quyền ở trang K2026 thì tự có quyền ở trang này.
+6. **Quản trị bảng điểm:** tạo collection `admins`, mỗi document có ID là email (viết thường) của người được nhập điểm. Xem mục *Nhập bảng điểm mỗi học kỳ* trong `HUONG-DAN-CAI-DAT-FIREBASE.md`.
 
 ## Cách 2 · Tạo dự án Firebase riêng
 
@@ -52,7 +56,9 @@ Chưa điền `FIREBASE_CONFIG` thì trang chạy ở **chế độ thử**: dù
 | Người dùng | Đọc | Ghi |
 |---|---|---|
 | Sinh viên `@st.vju.ac.vn` | Chỉ tiến độ của mình | Chỉ tiến độ của mình |
-| Giảng viên trong `lecturers` | Tiến độ cả 4 lớp | Không |
+| Sinh viên `MSSV@st.vju.ac.vn` | Bảng điểm có đúng MSSV đó | Không |
+| Giảng viên trong `lecturers` | Tiến độ và bảng điểm cả 4 lớp | Không |
+| Quản trị viên trong `admins` | Bảng điểm cả 4 lớp | Nhập bảng điểm |
 | Email khác | Không | Không |
 
 Không ai xoá được dữ liệu từ trang web. Quản trị viên xoá được trong Firebase Console (Firestore → Data → `progress_k22_25`).
