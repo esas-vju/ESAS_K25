@@ -1,0 +1,1187 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Lộ trình học tập 165 tín chỉ ngành Nông nghiệp thông minh và bền vững, Trường ĐH Việt Nhật, áp dụng cho các khóa K22, K23, K24 và K25.">
+<title>Lộ trình NNTM&amp;BV K22–K25</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:wght@600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+html,body{margin:0}
+a{color:var(--accent)}
+/* Layout: summary band on top, then a collapsible outline tree (root → khối I–V → nhóm → học phần) or an 8-semester grid */
+:root{
+  --bg:#f2f5f0; --surface:#ffffff; --ink:#16231b; --muted:#5a6a60; --line:#d5ded3; --branch:#9fb3a5;
+  --accent:#2c7547; --accent-ink:#ffffff; --accent-soft:#e1efe5;
+  --l0:#cfd0f7; --l1:#c6d9ef; --l2:#acdccf; --l3:#bde9c9; --l4:#e4f1e7;
+  --warn:#94540a; --warn-soft:#fbefd9; --bad:#a3352b;
+  --bar:#dfe7dd;
+  --f-display:"Lora",Georgia,"Times New Roman",serif;
+  --f-body:"Be Vietnam Pro",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101712; --surface:#18211b; --ink:#e2eae3; --muted:#93a398; --line:#2b372f; --branch:#4a5d50;
+  --accent:#70cf92; --accent-ink:#0d1a12; --accent-soft:#1d3325;
+  --l0:#2d2d55; --l1:#1f3249; --l2:#17423a; --l3:#1c4229; --l4:#1a2a1f;
+  --warn:#f0bf62; --warn-soft:#352a14; --bad:#f08a7e; --bar:#26322a; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#101712; --surface:#18211b; --ink:#e2eae3; --muted:#93a398; --line:#2b372f; --branch:#4a5d50;
+  --accent:#70cf92; --accent-ink:#0d1a12; --accent-soft:#1d3325;
+  --l0:#2d2d55; --l1:#1f3249; --l2:#17423a; --l3:#1c4229; --l4:#1a2a1f;
+  --warn:#f0bf62; --warn-soft:#352a14; --bad:#f08a7e; --bar:#26322a; color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--f-body)}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:20px 96px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* header */
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start;justify-content:space-between}
+.cohort{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:13px;padding:4px 12px;border-radius:999px;letter-spacing:.02em}
+h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2;margin:10px 0 4px;text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:70ch}
+.iconbtn{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:13.5px;white-space:nowrap}
+.iconbtn:hover{border-color:var(--branch)}
+
+/* summary */
+.summary{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:16px}
+.total{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.total .big{font-family:var(--f-mono);font-size:clamp(30px,6vw,42px);font-weight:600;line-height:1;font-variant-numeric:tabular-nums}
+.total .big small{font-size:.5em;color:var(--muted);font-weight:500}
+.total .pct{font-family:var(--f-mono);color:var(--accent);font-weight:600}
+.bar{height:8px;border-radius:99px;background:var(--bar);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.bar.big{height:12px}
+.blocks{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.blk{display:grid;gap:5px;min-width:0}
+.blk .row{display:flex;justify-content:space-between;gap:8px;font-size:13.5px}
+.blk .row b{font-weight:500}
+.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:12.5px;white-space:nowrap}
+.cond{font-size:13px;color:var(--muted)}
+
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:18px}
+.ctl-label{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;display:block;margin-bottom:5px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:7px;padding:7px 12px;cursor:pointer;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.seg button:not([aria-pressed="true"]):hover{background:var(--accent-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--muted);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+/* tree */
+.treebar{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0 4px}
+.tree{overflow-x:auto;padding-bottom:6px}
+.tree ul{list-style:none;margin:0;padding-left:20px}
+.tree>ul{padding-left:0}
+.tree li{position:relative;padding-top:8px}
+.tree ul ul>li::before{content:"";position:absolute;left:-13px;top:0;height:100%;border-left:1.5px solid var(--branch)}
+.tree ul ul>li:last-child::before{display:none}
+.tree ul ul>li::after{content:"";position:absolute;left:-13px;top:0;width:11px;height:30px;border-left:1.5px solid var(--branch);border-bottom:1.5px solid var(--branch);border-bottom-left-radius:10px}
+.node{display:flex;flex-direction:column;gap:6px;width:100%;max-width:640px;text-align:left;border:0;border-radius:10px;padding:10px 12px;cursor:pointer;background:var(--l3)}
+.node:hover{filter:brightness(.97)}
+.node .head{display:flex;align-items:center;gap:8px;min-width:0}
+.chev{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--ink) 10%,transparent);font-size:11px;transition:transform .2s}
+.node[aria-expanded="true"] .chev{transform:rotate(90deg)}
+.node .name{flex:1;min-width:0;font-weight:600;font-size:14.5px}
+.node .name em{font-style:normal;font-weight:400;color:var(--muted)}
+.node .bar{height:6px;background:color-mix(in srgb,var(--ink) 12%,transparent)}
+.d0 .node{background:var(--l0)} .d0 .node .name{font-family:var(--f-display);font-size:17px}
+.d1>.node{background:var(--l1)} .d2>.node{background:var(--l2)} .d3>.node{background:var(--l3)} .d4>.node{background:var(--l4);border:1px solid var(--line)}
+.node.full .num{color:var(--accent);font-weight:600}
+.note{font-size:13px;color:var(--muted);max-width:640px;background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:8px 12px}
+.note b{color:var(--ink);font-weight:600}
+.note.warn{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+
+/* orientation chooser */
+.choose{display:grid;gap:8px;max-width:640px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.choose button{text-align:left;border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;cursor:pointer}
+.choose button:hover{border-color:var(--accent)}
+.choose b{display:block}
+.choose span{font-size:13px;color:var(--muted)}
+
+/* course card */
+.course{display:flex;gap:10px;max-width:640px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer}
+.course:hover{border-color:var(--branch)}
+.course.done{border-color:var(--accent);background:color-mix(in srgb,var(--accent-soft) 60%,var(--surface))}
+.course.off{opacity:.55;cursor:not-allowed}
+.course input{flex:none;width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent);cursor:inherit}
+.cbody{flex:1;min-width:0}
+.ctop{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.code{font-family:var(--f-mono);font-size:13px;font-weight:600;letter-spacing:.01em}
+.tmp{font-size:11px;font-weight:600;color:var(--warn);border:1px dashed var(--warn);border-radius:5px;padding:0 6px;line-height:18px}
+.tc{margin-left:auto;font-family:var(--f-mono);font-size:12.5px;font-weight:600;background:var(--accent-soft);color:var(--accent);border-radius:5px;padding:1px 7px;white-space:nowrap}
+.vn{font-weight:600;margin-top:2px}
+.en{font-size:13px;color:var(--muted);font-style:italic}
+.facts{display:flex;flex-wrap:wrap;gap:4px 16px;margin:6px 0 0;font-size:12.5px}
+.facts div{display:flex;gap:5px;flex-wrap:wrap;align-items:baseline}
+.facts dt{color:var(--muted)}
+.facts dd{margin:0}
+.pre{font-family:var(--f-mono);font-size:11.5px;border-radius:5px;padding:0 6px;background:var(--warn-soft);color:var(--warn)}
+.pre.ok{background:var(--accent-soft);color:var(--accent)}
+.alert{margin-top:6px;font-size:12.5px;color:var(--warn);font-weight:500}
+.hint{margin-top:6px;font-size:12.5px;color:var(--muted)}
+
+/* semester view */
+.sems{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));margin-top:22px}
+.sem{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;gap:10px;align-content:start;min-width:0}
+.sem h3{margin:0;font-family:var(--f-display);font-size:19px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.sem h3 small{font-family:var(--f-body);font-size:12.5px;color:var(--muted);font-weight:500}
+.srow{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:10px;align-items:start;padding:7px 0;border-top:1px solid var(--line);cursor:pointer}
+.srow input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--accent)}
+.srow .t{min-width:0}
+.srow .t .vn{font-size:14px;margin:0}
+.srow.ph{cursor:default;color:var(--muted)}
+.srow.ph .box{width:18px;height:18px;border:1.5px dashed var(--branch);border-radius:4px;margin-top:2px}
+.tag{font-size:11px;border-radius:5px;padding:0 6px;background:var(--l2);color:var(--ink);white-space:nowrap}
+.tag.sug{background:var(--l1)}
+
+.foot{margin-top:36px;font-size:13px;color:var(--muted);display:grid;gap:8px;max-width:75ch}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(560px,calc(100% - 32px));background:var(--ink);color:var(--bg);border-radius:12px;padding:12px 16px;font-size:14px;box-shadow:0 8px 24px rgb(0 0 0 / .25);display:flex;gap:10px;align-items:flex-start;z-index:10}
+.toast.warn{border-left:5px solid #e8a33a}
+.toast button{margin-left:auto;background:transparent;border:0;color:inherit;cursor:pointer;font-size:16px;line-height:1}
+/* tài khoản, cổng đăng nhập, theo dõi lớp */
+.acct{margin-top:16px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:13.5px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.acct .who{font-weight:600}
+.acct .st{display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.acct .st::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--branch)}
+.acct .st.ok::before{background:var(--accent)} .acct .st.err{color:var(--warn)} .acct .st.err::before{background:var(--warn)}
+.acct .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.linkbtn{border:0;background:none;color:var(--accent);cursor:pointer;padding:0;font-size:13.5px;text-decoration:underline}
+.gate{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:12px;max-width:560px}
+.gate h2{margin:0;font-family:var(--f-display);font-size:21px}
+.gate p{margin:0;color:var(--muted)}
+.gate form{display:grid;gap:12px}
+.field{display:grid;gap:4px}
+.field label{font-size:13px;font-weight:600}
+.field input{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.field input:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+.primary{justify-self:start;border:0;background:var(--accent);color:var(--accent-ink);font-weight:600;border-radius:8px;padding:9px 18px;cursor:pointer}
+.err-text{color:var(--bad);font-size:13px}
+.cls{margin-top:22px;display:grid;gap:14px}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px}
+.kpi b{display:block;font-family:var(--f-mono);font-size:24px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12.5px;color:var(--muted)}
+.clsbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.clsbar input,.clsbar select{font:inherit;font-size:14px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink)}
+.clsbar input{flex:1;min-width:180px}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.tbl table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:900px}
+.tbl th,.tbl td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl th{font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600;white-space:nowrap}
+.tbl tr.r{cursor:pointer} .tbl tr.r:hover td{background:var(--accent-soft)}
+.tbl td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.mini{display:flex;align-items:center;gap:8px;min-width:130px}
+.mini .bar{flex:1;height:6px}
+.det td{background:var(--bg)}
+.det .grid{display:grid;gap:4px 18px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));font-size:13px}
+.det .grid div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--line);padding:2px 0}
+.det .grid .lack{color:var(--warn)}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+/* cẩm nang tư vấn */
+.guide{margin-top:22px;display:grid;gap:16px}
+.jump{display:flex;flex-wrap:wrap;gap:6px}
+.gsec{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;min-width:0;scroll-margin-top:12px}
+.gsec h2{margin:0;font-family:var(--f-display);font-size:21px;line-height:1.3}
+.gsec h3{margin:6px 0 0;font-size:15px}
+.gsec p{margin:0;max-width:75ch}
+.gsec ul{margin:0;padding-left:20px;display:grid;gap:4px;max-width:80ch}
+.gsec .muted{color:var(--muted);font-size:13.5px}
+.chk{list-style:none;padding:0!important;gap:6px!important}
+.chk li{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px dotted var(--line)}
+.chk .ic{font-weight:700;text-align:center}
+.chk .ok .ic{color:var(--accent)} .chk .no .ic{color:var(--warn)} .chk .self .ic{color:var(--muted)}
+.chk .v{font-family:var(--f-mono);font-size:12.5px;white-space:nowrap;color:var(--muted)}
+.cols{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.card{border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:8px;align-content:start;background:var(--bg)}
+.card.me{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.card h3{margin:0;font-size:16px}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;border-radius:5px;padding:1px 7px;margin-right:6px;vertical-align:1px}
+.pill.can{background:var(--warn-soft);color:var(--warn)} .pill.du{background:var(--accent-soft);color:var(--accent)}
+.cl{list-style:none;padding:0!important;gap:2px!important}
+.cl li{display:flex;gap:8px;align-items:baseline;padding:3px 0}
+.cl .code{min-width:76px}
+.cl .ck{width:14px;flex:none;color:var(--accent);font-weight:700}
+.cl .tcn{margin-left:auto;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.jobs{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+.jobs div{border-left:3px solid var(--l2);padding:2px 0 2px 10px}
+.jobs b{display:block}
+.jobs span{font-size:13.5px;color:var(--muted)}
+.cmp table{min-width:620px}
+.cmp td:first-child{font-weight:600;white-space:nowrap}
+.yr{display:grid;gap:10px}
+.yr div{display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr);gap:4px 14px;border-top:1px solid var(--line);padding-top:10px}
+.yr b{font-family:var(--f-display)}
+@media (max-width:520px){.yr div{grid-template-columns:1fr}}
+.todo{font-size:12.5px;background:var(--l4);border-radius:8px;padding:6px 10px}
+.todo b{font-weight:600}
+.tag.fit{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.tag.avoid{background:var(--warn-soft);color:var(--warn);font-weight:600}
+.dup{font-size:11px;font-weight:600;color:var(--warn);border:1px dashed var(--warn);border-radius:5px;padding:0 6px;line-height:18px}
+.tag.alt{background:var(--l4);color:var(--muted);font-weight:600}
+.tag.now{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.sem.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.tbl table.wide{min-width:1180px}
+.field select{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.kseg{display:flex;flex-wrap:wrap;gap:8px}
+.kseg button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px 12px;cursor:pointer;text-align:left;min-width:120px}
+.kseg button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-soft)}
+.kseg b{display:block;font-size:14px}
+.kseg span{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
+.cmp3 table{min-width:760px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:480px){.tree ul{padding-left:16px}.tree ul ul>li::before,.tree ul ul>li::after{left:-11px}.tree ul ul>li::after{width:9px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <span class="cohort">Áp dụng cho sinh viên K22 · K23 · K24 · K25</span>
+      <h1>Lộ trình học tập ngành Nông nghiệp thông minh và bền vững</h1>
+      <p class="sub">Trường Đại học Việt Nhật, ĐHQGHN · Chương trình 165 tín chỉ (Smart Agriculture &amp; Sustainability) áp dụng chung cho bốn khóa K22, K23, K24 và K25. Đăng nhập bằng email sinh viên (@st.vju.ac.vn), chọn lớp của bạn và đánh dấu học phần đã hoàn thành. Tiến độ được lưu vào tài khoản của bạn và giảng viên phụ trách theo dõi được theo từng lớp.</p>
+    </div>
+    <button class="iconbtn" id="themeBtn" type="button">Chế độ tối</button>
+  </header>
+
+  <div class="acct" id="acct" role="status"><span class="st">Đang kết nối tài khoản…</span></div>
+  <section class="gate" id="gate" hidden></section>
+
+  <div id="app">
+  <section class="summary" aria-label="Tổng tiến độ">
+    <div class="total">
+      <span class="big" id="totBig">0<small> / 165 TC</small></span>
+      <span class="pct" id="totPct">0%</span>
+      <span class="cond" id="totNote"></span>
+    </div>
+    <div class="bar big" role="progressbar" aria-label="Tổng tín chỉ đã đạt" aria-valuemin="0" aria-valuemax="165" id="totBar"><i></i></div>
+    <div class="blocks" id="blocks"></div>
+  </section>
+
+  <div class="controls">
+    <div id="khoaCtl">
+      <span class="ctl-label" id="lblKhoa">Lớp của bạn</span>
+      <div class="seg" role="group" aria-labelledby="lblKhoa">
+        <button type="button" data-khoa="K25">K25</button>
+        <button type="button" data-khoa="K24">K24</button>
+        <button type="button" data-khoa="K23">K23</button>
+        <button type="button" data-khoa="K22">K22</button>
+      </div>
+    </div>
+    <div>
+      <span class="ctl-label" id="lblTrack">Định hướng chuyên sâu</span>
+      <div class="seg" role="group" aria-labelledby="lblTrack">
+        <button type="button" data-track="1">1 · Nông nghiệp sinh thái</button>
+        <button type="button" data-track="2">2 · Tiên tiến Nhật Bản</button>
+        <button type="button" data-track="3">3 · Doanh nghiệp nông nghiệp</button>
+      </div>
+    </div>
+    <div>
+      <span class="ctl-label" id="lblView">Cách xem</span>
+      <div class="seg" role="group" aria-labelledby="lblView">
+        <button type="button" id="vTree" data-view="tree">Sơ đồ cây</button>
+        <button type="button" id="vSem" data-view="sem">Theo 8 học kỳ</button>
+        <button type="button" id="vGuide" data-view="guide">Cẩm nang tư vấn</button>
+        <button type="button" id="vClass" data-view="class" hidden>Theo dõi lớp</button>
+      </div>
+    </div>
+  </div>
+  <div class="legend">
+    <span><span class="dup">trùng mã</span> mã học phần đang trùng trong khung, kiểm tra mã chính thức khi đăng ký</span>
+    <span><span class="pre">VJU2010</span> tiên quyết chưa hoàn thành</span>
+    <span><span class="pre ok">VJU2010</span> tiên quyết đã hoàn thành</span>
+  </div>
+
+  <main id="main"></main>
+  </div>
+
+  <footer class="foot">
+    <p>Nguồn: Khung chương trình đào tạo sau điều chỉnh (ESAS5, 2024), Quyển chương trình đào tạo Kỹ sư Nông nghiệp thông minh và bền vững (ESAS1, mục 5.2 Lộ trình đào tạo) và Cẩm nang tư vấn định hướng chuyên sâu NNTMBV. Lộ trình áp dụng chung cho K22, K23, K24 và K25. Học kỳ của học phần tự chọn là gợi ý; sinh viên chọn học phần tự chọn khác trong cùng nhóm sau khi tham vấn cố vấn học tập. Các học phần điều kiện (Giáo dục thể chất, Giáo dục quốc phòng – an ninh, Kỹ năng bổ trợ) không tính vào 165 tín chỉ.</p>
+    <p><a href="huong-dan.html">Hướng dẫn sử dụng cho sinh viên</a></p>
+    <p>Trang này là công cụ tự theo dõi, không thay thế bảng điểm chính thức của nhà trường. Tiến độ của bạn chỉ bạn và giảng viên quản lý trang xem được; các bạn cùng lớp không xem được.</p>
+    <p><button class="iconbtn" type="button" id="resetBtn">Xóa toàn bộ tiến độ</button></p>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden><span id="toastMsg"></span><button type="button" id="toastX" aria-label="Đóng">×</button></div>
+
+<script type="module">
+// =====================================================================
+// CẤU HÌNH FIREBASE: dán cấu hình web app từ Firebase Console vào đây
+// (Settings → General → Your apps → Config).
+// Có thể dùng chung dự án Firebase với trang K2026 (xem README.md).
+// Để trống apiKey thì trang chạy ở chế độ thử, chỉ lưu trên trình duyệt.
+// =====================================================================
+const FIREBASE_CONFIG={
+  apiKey:"",
+  authDomain:"",
+  projectId:"",
+  appId:""
+};
+// Bộ sưu tập Firestore riêng cho K22–K25, không lẫn với dữ liệu K2026 ("progress").
+const COL="progress_k22_25";
+// Các lớp dùng chung lộ trình này. Năm nhập học = 2000 + số khóa.
+const KHOAS=["K25","K24","K23","K22"];
+const entryYear=k=>2000+parseInt(k.slice(1),10);
+
+// ---------- dữ liệu ----------
+// c(code, tên Việt, tên Anh, TC, LT, TH, tự học, [tiên quyết], id riêng nếu mã trùng)
+function c(code,vn,en,tc,lt,th,td,pre,id){return {code,vn,en,tc,lt,th,td,pre:pre||[],id:id||code}}
+const h=(code,vn,en,tc,lt,th,pre,id)=>c(code,vn,en,tc,lt,th,null,pre,id);
+const m2=(code,vn,en,pre)=>h(code,vn,en,2,26,4,pre);
+const k2=(code,vn,en,pre)=>h(code,vn,en,2,20,10,pre);
+const k3=(code,vn,en,pre)=>h(code,vn,en,3,30,15,pre);
+
+const TREE={id:"root",name:"Cấu trúc 165 tín chỉ ngành Nông nghiệp thông minh và bền vững",req:165,children:[
+ {id:"g1",name:"I. Khối kiến thức chung",short:"I. Kiến thức chung",req:26,children:[
+  {id:"g11",name:"Lý luận chính trị, Tin học cơ sở & Pháp luật",req:16,courses:[
+   k3("PHI1006","Triết học Mác - Lênin","Marxist – Leninist Philosophy"),
+   k2("PEC1008","Kinh tế chính trị Mác - Lênin","Marxist – Leninist Political Economy",["PHI1006"]),
+   h("PHI1002","Chủ nghĩa xã hội khoa học","Scientific Socialism",2,30,null),
+   k2("HIS1001","Lịch sử Đảng Cộng sản Việt Nam","History of the Communist Party of Vietnam"),
+   k2("POL1001","Tư tưởng Hồ Chí Minh","Ho Chi Minh Ideology"),
+   k3("VJU1001","Tin học cơ sở","Basic Informatics"),
+   k2("THL1057","Nhà nước và pháp luật đại cương","General Issues of State and Law")]},
+  {id:"g12",name:"Ngoại ngữ",req:10,courses:[
+   c("FLF1107","Tiếng Anh B1","English B1",5,20,35,20),
+   c("FLF1108","Tiếng Anh B2","English B2",5,20,35,20)]},
+  {id:"g13",name:"Học phần điều kiện",req:15,excluded:true,courses:[
+   c("—","Giáo dục thể chất","Physical Education",4,null,null,null,[],"DK-GDTC"),
+   c("—","Giáo dục quốc phòng - an ninh","National Defense Education",8,null,null,null,[],"DK-GDQP"),
+   c("—","Kỹ năng bổ trợ","Supplementary Skills",3,30,15,null,[],"DK-KNBT")]}]},
+ {id:"g2",name:"II. Khối kiến thức theo lĩnh vực",short:"II. Theo lĩnh vực",req:34,children:[
+  {id:"g21",name:"II.1.1 · Cơ bản theo lĩnh vực (bắt buộc)",short:"Cơ bản theo lĩnh vực",req:21,courses:[
+   h("VJU2031","Tiếng Nhật cơ sở 1","Japanese A1",3,20,25),
+   h("VJU2032","Tiếng Nhật cơ sở 2","Japanese A2",2,15,15),
+   h("VJU2001","Phương pháp luận nghiên cứu khoa học","Research Methodology",2,26,4),
+   k2("VJU2002","Giải tích","Calculus"),
+   k2("VJU2003","Đại số tuyến tính 1","Linear Algebra 1"),
+   k2("VJU2005","Vật lý 1","Physics 1"),
+   k2("VJU2007","Hóa học 1","Chemistry 1"),
+   k2("VJU2008","Hóa học 2","Chemistry 2",["VJU2007"]),
+   k2("VJU2009","Sinh học 1","Biology 1"),
+   k2("VJU2010","Sinh học 2","Biology 2",["VJU2009"])]},
+  {id:"g22",name:"II.1.2 · Thế kỷ 21 bắt buộc (Khoa học bền vững, Khoa học thông tin)",short:"Thế kỷ 21 bắt buộc",req:6,courses:[
+   m2("VJU2012","Khoa học toàn cầu và môi trường","Global and Environmental Sciences"),
+   h("AET2014","Nhập môn lập trình","Introduction to Programming",2,15,15),
+   k2("AET2015","Nhập môn hệ thống máy tính","Introduction to Computer Systems")]},
+  {id:"g23",name:"II.2 · Tự chọn theo lĩnh vực (khối M2)",short:"Tự chọn II.2",req:7,cap:8,pool:true,
+   rule:"Chọn tối thiểu <b>7 TC</b> trong danh mục chung của Trường, trên cơ sở tham vấn cố vấn học tập. Học phần có 2 hoặc 4 TC nên thực tế cần tích luỹ <b>8 TC</b>: 4 học phần 2 TC, hoặc 1 học phần 4 TC và 2 học phần 2 TC.",children:[
+   {id:"g23F",name:"Kiến thức cơ bản theo lĩnh vực",courses:[
+    h("THL2003","Giới thiệu về hệ thống pháp luật Việt Nam","Introduction to Vietnamese Legal System",4,50,10),
+    h("INE2004","Nguyên lý kinh tế","Principle of Economics",4,50,10),
+    k2("VJU2004","Toán 3 (Thống kê)","Mathematics 3 (Statistics)"),
+    m2("SOC2005","Xã hội học đại cương","Introduction of Sociology"),
+    m2("MNS2006","Khoa học quản lý đại cương","Introduction of Management Science"),
+    k2("VJU2006","Vật lý 2","Physics 2"),
+    m2("VJU2011","Khoa học Trái đất","Earth Science")]},
+   {id:"g23A",name:"Thế kỷ 21 · Nhóm A · Khoa học bền vững",courses:[
+    m2("VJU2013","Sự phát triển và Năng lượng ở Châu Á (Kinh tế năng lượng, Kỹ thuật năng lượng)","Development and Energy in Asia (Energy Economy, Energy Engineering)"),
+    m2("VJU2014","Khoa học cơ bản về biến đổi khí hậu","Basic Science of Climate Change"),
+    m2("VJU2015","Thực phẩm, nước và sức khỏe","Food, Water and Health"),
+    m2("VJU2016","An ninh và phát triển bền vững","Sustainable Development and Security"),
+    m2("VJU2017","Khoa học, Công nghệ và Xã hội","Science, Technology and Society")]},
+   {id:"g23B",name:"Thế kỷ 21 · Nhóm B · Toàn cầu hóa và Khoa học xã hội",courses:[
+    m2("VJU2018","Toàn cầu hóa và Khu vực hóa","Globalization and Regionalization"),
+    m2("VJU2019","Phát triển quốc tế và Khu vực","International and Regional Development"),
+    m2("VJU2020","Tôn giáo, Văn hóa và Xã hội","Religion, Culture and Society"),
+    m2("VJU2021","Luật và Xã hội","Law and Society"),
+    k2("VJU2022","Quản trị kinh doanh","Business Administration")]},
+   {id:"g23C",name:"Thế kỷ 21 · Nhóm C · Nghiên cứu Nhật Bản",courses:[
+    k2("VJU2023","Các vấn đề đương đại ở Đông Á","Contemporary Issues in East Asia"),
+    m2("VJU2024","Văn hóa và lịch sử Nhật Bản","Japanese History and Culture"),
+    m2("VJU2025","Kinh doanh Nhật Bản - Việt Nam","Japanese and Vietnamese Business"),
+    m2("VJU2026","Hệ thống pháp luật Nhật Bản","Legal System of Japan"),
+    m2("VJU2027","So sánh xã hội Nhật Bản với xã hội Việt Nam","Japanese Society in Comparison with Vietnamese Society"),
+    m2("VJU2028","So sánh Việt Nam và Nhật Bản","Vietnam in Comparison with Japan"),
+    m2("VJU2029","Giới thiệu về giảng dạy tiếng Nhật như một ngoại ngữ","Introduction to Teaching Japanese as a Foreign Language")]},
+   {id:"g23D",name:"Thế kỷ 21 · Nhóm D · Khoa học thông tin",courses:[
+    m2("AET2012","Khoa học thông tin","Information Science"),
+    m2("AET2013","Phân tích dữ liệu khoa học","Scientific Data Analyses",["VJU2002","VJU2003","VJU2004"]),
+    m2("INE1052","Kinh tế lượng","Econometrics"),
+    k2("AET2016","Thuật toán","Computer Algorithms",["VJU2002","VJU2003"]),
+    k2("AET2017","Mô phỏng toán học","Mathematical Simulation")]},
+   {id:"g23E",name:"Thế kỷ 21 · Nhóm E · Kỹ thuật cho nghiên cứu nâng cao",courses:[
+    k2("AET2018","Vật liệu tiên tiến và kết cấu tiên tiến ứng dụng trong kỹ thuật","Advanced Materials and Advanced Structures Applied in Engineering",["VJU2002","VJU2003","VJU2004","VJU2005"]),
+    k2("AET2019","Nhiệt động lực học","Thermodynamics",["VJU2002","VJU2004"]),
+    k2("AET2020","Kỹ thuật truyền nhiệt","Heat Transfer",["VJU2002","VJU2004"]),
+    k2("AET2021","Thí nghiệm trong khoa học và kỹ thuật 1","Experiment on Science and Engineering 1",["AET2018","AET2019","AET2020"]),
+    k2("AET2022","Thí nghiệm trong khoa học và kỹ thuật 2","Experiment on Science and Engineering 2",["AET2021"])]}]}]},
+ {id:"g3",name:"III. Khối kiến thức theo khối ngành",short:"III. Theo khối ngành",req:30,children:[
+  {id:"g31",name:"III.1 · Bắt buộc",short:"Khối ngành bắt buộc",req:27,courses:[
+   h("SAS2001","Sinh lý thực vật","Plant Physiology",3,25,20,["VJU2010"]),
+   k3("SAS2002","Di truyền học thực vật","Plant Genetics",["VJU2010"]),
+   k3("SAS2003","Cơ sở hóa sinh và hóa lý","Basic Biochemistry and Physical Chemistry",["VJU2008","VJU2010"]),
+   k3("SAS2004","Cơ sở hóa học phân tích","Basics in Analytical Chemistry",["VJU2008"]),
+   k3("SAS2005","Cơ sở vi sinh vật học","Basic Microbiology"),
+   h("SAS2006","Thống kê sinh học","Biostatistics",3,20,25,["VJU2010"]),
+   k3("SAS2021","Kinh tế học đại cương","General Economics"),
+   k3("SAS2009","Khí tượng nông nghiệp","Agri-meteorology"),
+   k3("SAS2010","Hệ thống kiểm định chất lượng nông sản, thực phẩm","Quality Control System for Food and Agricultural Products",["VJU2010","VJU2008"])]},
+  {id:"g32",name:"III.2 · Ngoại ngữ chuyên ngành tự chọn",short:"Ngoại ngữ chuyên ngành",req:3,elective:true,
+   rule:"Chọn <b>1 trong 2</b> học phần (3 TC).",courses:[
+   k3("SAS2011","Tiếng Anh chuyên ngành","English for Special Purposes"),
+   k3("SAS2012","Tiếng Nhật chuyên ngành","Japanese for Special Purposes")]}]},
+ {id:"g4",name:"IV. Khối kiến thức theo nhóm ngành",short:"IV. Theo nhóm ngành",req:20,courses:[
+   k3("SAS2013","Nhập môn nông nghiệp thông minh và bền vững","Introduction of Smart Agriculture and Sustainability"),
+   k3("SAS2014","Sinh thái học cây trồng nông nghiệp","Crop Ecology"),
+   k3("SAS2015","Kỹ thuật thông tin trong khoa học môi trường và sinh học","Biological and Environmental Information Engineering"),
+   k3("SAS2016","Thổ nhưỡng học","Pedosphere Science"),
+   k2("SAS2017","Thủy nông","Agricultural Hydrology"),
+   h("SAS3039","Ứng dụng công nghệ trong quản lý trang trại","Technologies for Farming",3,20,25),
+   k3("SAS2020","Nhập môn quản lý kinh doanh nông nghiệp","Fundamentals of Agribusiness Management")]},
+ {id:"g5",name:"V. Khối kiến thức theo ngành",short:"V. Theo ngành",req:55,children:[
+  {id:"g51",name:"V.1 · Học phần chung bắt buộc",short:"Chung bắt buộc V.1",req:17,courses:[
+   k3("SAS3001","Quy tắc trong sinh thái học nông nghiệp","Principles of Agroecology"),
+   k3("SAS3002","Kĩ thuật thông tin nông nghiệp","Agricultural Information Engineering"),
+   k3("SAS3048","Tài chính nông nghiệp","Agricultural Finance"),
+   k3("SAS3004","Luật và chính sách nông nghiệp Nhật Bản và Việt Nam","Comparative Study on Agricultural Law and Policy between Japan and Vietnam"),
+   k3("FTH3005","Quản lý thực phẩm cơ sở","Institutional Food Management"),
+   h("SAS3005","Học theo dự án","Project-based Training",2,5,25)]},
+  {id:"g52",name:"V.2 · Tự chọn định hướng chuyên sâu",short:"Định hướng chuyên sâu",req:14,orient:true,children:[
+   {id:"track1",track:"1",name:"Định hướng 1 · Nông nghiệp sinh thái",req:14,courses:[
+    k3("SAS3006","Hóa học nông nghiệp","Agricultural Chemistry"),
+    k3("SAS3007","Khoa học cây ăn quả","Horticultural Science"),
+    k3("SAS3009","Quản lý dinh dưỡng cây trồng tổng hợp","Integrated Plant Nutrient Management"),
+    k3("SAS3010","Các biện pháp quản lý sinh học","Biological Management"),
+    k2("FTH2022","Các kỹ thuật sinh học phân tử","Molecular Biology Techniques")]},
+   {id:"track2",track:"2",name:"Định hướng 2 · Nông nghiệp tiên tiến Nhật Bản",req:14,courses:[
+    k3("SAS3012","Máy nông nghiệp","Agricultural Mechanics"),
+    k3("SAS3013","Công nghệ sau thu hoạch","Postharvest Technology"),
+    k3("SAS3014","Điều khiển tự động trong nông nghiệp","Agricultural IoT"),
+    k3("SAS3037","Kỹ thuật kiểm soát trong trồng trọt","Crop Monitoring"),
+    h("SAS3041","Kỹ thuật xây dựng nhà kính và hệ thủy canh","Greenhouse Technology and Hydroponics",2,15,15)]},
+   {id:"track3",track:"3",name:"Định hướng 3 · Tạo lập và quản trị doanh nghiệp nông nghiệp",req:14,courses:[
+    k3("SAS3017","Phân tích tiếp thị và phân phối thực phẩm","Marketing and Food Distribution Analysis"),
+    k3("SAS3018","Nguyên lý kế toán","Principles of Accounting"),
+    k3("SAS3019","Quản lý chuỗi cung ứng nông sản","Agri-food Supply Chain Management"),
+    k3("SAS3020","Phân tích chuỗi giá trị sản phẩm nông nghiệp","Value Chain Analysis of Agricultural Products"),
+    h("SAS3048","Thương mại điện tử nông sản","Agriculture Electronic Commerce",2,15,15,[],"SAS3048-TMDT")]}]},
+  {id:"g53",name:"V.3 · Học phần tự chọn khác",short:"Tự chọn V.3",req:9,cap:10,elective:true,
+   rule:"Chọn tối thiểu <b>9 TC</b> theo hướng dẫn của Khoa cho định hướng của bạn. Gói gợi ý cho từng hướng có ở mục <b>Cẩm nang tư vấn</b>.",courses:[
+   k2("SAS3021","Sinh trắc học","Biometrics"),
+   k3("SAS3022","Công nghệ cải tiến sinh trưởng thực vật","Plant Improvement Science"),
+   k3("SAS3023","Bệnh cây đại cương","Plant Pathology"),
+   k3("SAS3024","Quản lý nông nghiệp theo vùng miền","Regional Management of Agriculture"),
+   k2("SAS3025","Côn trùng học","Entomology"),
+   k2("SAS3026","Ức chế sinh học","Stress Biology"),
+   k2("SAS3027","Hình thái học thực vật","Plant Morphology"),
+   k2("SAS3028","Hệ thống thực phẩm bền vững","Sustainable Food System (including Food System Theory)"),
+   k2("SAS3029","Cỏ dại","Weed Science (including Pharmaceutical Botany)"),
+   k3("SAS3030","Hệ môi trường thực vật","Plant-environment System"),
+   k2("SAS3031","Tin sinh học","Bioinformatics"),
+   h("FTH3022","Thực phẩm chức năng","Functional Foods",2,15,15),
+   k2("SAS3033","Đa dạng sinh học và tiến hóa","Biodiversity and Evolution"),
+   h("SAS3032","Đạo đức nông nghiệp","Agricultural Ethics",2,15,15),
+   k3("SAS3034","Toán học ứng dụng trong nông nghiệp","Applied Mathematics in Agriculture"),
+   k3("SAS3035","Dự án nông nghiệp quốc tế","International Agricultural Project"),
+   k3("SAS3036","Các yếu tố môi trường sinh học","Bioenvironmental Element Science"),
+   k3("SAS3038","Tận dụng sinh khối trong nông nghiệp","Introduction to Biomass Utilization"),
+   k3("SAS3040","Công nghiệp nông thôn","Rural Engineering"),
+   k3("SAS3042","Thương mại quốc tế trong nông nghiệp","International Trade in Agriculture"),
+   k2("SAS3043","Quy hoạch phát triển nông thôn","Rural Planning"),
+   k2("SAS3044","Kinh tế phát triển nông thôn","Rural Development Economics"),
+   k3("SAS3045","Giao dịch và đàm phán kinh doanh nông nghiệp","Communication and Negotiation in Agriculture Business"),
+   k2("SAS3046","Quản trị hợp tác xã nông nghiệp","Principles of Cooperative Management"),
+   k2("SAS3049","Nhập môn khảo cứu nông thôn","Introduction to Rural Survey"),
+   k2("SAS2007","Sinh học tế bào","Cell Biology"),
+   k3("SAS3008","Sinh thái học phân tử cây trồng","Plant Molecular Ecology"),
+   k3("SAS3016","Quản lý kinh doanh trang trại","Farm Business Management"),
+   h("SAS3003","Lý thuyết kinh tế tài nguyên nông nghiệp","Agricultural Resource Economics General Theory",3,25,20),
+   k2("SAS3050","Du lịch nông nghiệp","Agricultural Tourism"),
+   h("FTH2001","Miễn dịch học","Immunology",2,30,0),
+   h("FTH0002","Sinh học người","Human Biology",2,30,0),
+   k2("FTH2003","Enzyme trong công nghệ thực phẩm","Enzyme in Food Technology"),
+   h("FTH2005","Kinh tế học thực phẩm","Food Economics",3,45,0),
+   h("FTH2006","Chuyển đổi số trong công nghiệp thực phẩm","Digital Transformation in Food Industry",2,30,0),
+   h("FTH2014","Cơ bản trong Khoa học và Công nghệ thực phẩm","Basics in Food Science and Technology",3,45,0),
+   h("MJM3012","Cơ học kỹ thuật","Engineering Mechanics",3,45,null),
+   h("MJM3023","Kỹ thuật điều khiển tự động","Control Systems Engineering",2,30,null),
+   h("MJM3033","Kỹ thuật tự động hóa","Engineering Automation",2,30,null),
+   h("MJM3018","Nhập môn cơ điện tử","Fundamentals of Mechatronics",2,30,null)]},
+  {id:"g54",name:"V.4 · Thực tập và tốt nghiệp",short:"Thực tập & tốt nghiệp",req:15,courses:[
+   h("SAS4001","Thực tập nghề nghiệp","Professional Internship",3,null,45),
+   h("SAS4002","Thực hành hướng nghiệp","Practical Career Design",2,null,30),
+   c("SAS4003","Đồ án tốt nghiệp","Graduation Thesis",10,null,100,50)]}]}
+]};
+const BLOCKS=TREE.children.map(b=>b.id); // g1…g5
+const TRACKS=["1","2","3"];
+
+// Lộ trình 8 học kỳ (ESAS1, mục 5.2). {g, tc, s}: chỗ tự chọn của nhóm g, tổng tc TC, gợi ý s. {o}: chỗ học phần định hướng o TC.
+// Khung ghi II.2 = 7 TC (HK3: 2, HK4: 5); vì học phần có 2 hoặc 4 TC nên lộ trình dưới đây dành 8 TC.
+const ROAD=[
+ ["PHI1006","FLF1107","VJU1001","VJU2002","VJU2031","VJU2009","VJU2007"],
+ ["PEC1008","FLF1108","VJU2032","VJU2003","VJU2008","VJU2010","VJU2005","VJU2012","AET2014"],
+ ["HIS1001","VJU2001","AET2015",{g:"g23",tc:2},"SAS2004","SAS2005","SAS2001","SAS2021",{g:"g32",tc:3,s:["SAS2011"]}],
+ ["PHI1002",{g:"g23",tc:6},"SAS2002","SAS2003","SAS2006","SAS2009","SAS2016"],
+ ["POL1001","THL1057","SAS2010","SAS2013","SAS2014","SAS2015","SAS2017","SAS2020"],
+ ["SAS3039","SAS3001","SAS3002","SAS3048","SAS3004","FTH3005","SAS3005",{o:3}],
+ [{o:3},{o:3},{o:3},{o:2},{g:"g53",tc:9}],
+ ["SAS4001","SAS4002","SAS4003"]
+];
+
+// ---------- chỉ mục ----------
+const C={}, G={}, byCode={}, PARENT={};
+(function idx(n,p,d){n.depth=d;G[n.id]=n;PARENT[n.id]=p;
+  (n.children||[]).forEach(ch=>idx(ch,n,d+1));
+  (n.courses||[]).forEach(x=>{C[x.id]=x;x.group=n;if(x.code!=="—"&&!(x.code in byCode))byCode[x.code]=x.id;});
+})(TREE,null,0);
+const isDup=x=>x.id!==x.code&&x.code!=="—";
+const SEM={};
+ROAD.forEach((items,i)=>items.forEach(it=>{if(typeof it==="string")SEM[it]="HK"+(i+1);}));
+function semText(x){
+  if(SEM[x.id])return SEM[x.id];
+  const g=x.group;
+  if(g.track)return "HK6–HK7";
+  if(x.id==="DK-KNBT")return "HK2 · tính riêng";
+  if(g.id==="g13")return "HK1 · tính riêng, theo kế hoạch của ĐHQGHN";
+  if(PARENT[g.id]&&PARENT[g.id].id==="g23")return "Tự chọn, HK3–HK4";
+  if(g.id==="g32")return "HK3 (chọn 1 trong 2)";
+  if(g.id==="g53")return "HK7 (tự chọn)";
+  return "—";
+}
+
+// ---------- trạng thái ----------
+const KEY="esas-nntmbv-k22-k25-v1";
+let S={done:[],track:null,khoa:null,open:{},view:"tree",theme:null};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw));}catch(e){}
+if(!TRACKS.includes(S.track))S.track=null;
+if(!KHOAS.includes(S.khoa))S.khoa=null;
+let done=new Set(S.done);
+function save(){S.done=[...done];try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function isOpen(n){return n.id in S.open?S.open[n.id]:n.depth<=2&&n.id!=="g23"&&n.id!=="g53";}
+
+// một học phần có được tính không (học phần của định hướng không chọn thì không tính)
+function visible(x){return !x.group.track||x.group.track===S.track;}
+function allCourses(n){return (n.courses||[]).concat(...(n.children||[]).map(allCourses));}
+function earned(n){
+  let s;
+  if(n.courses)s=n.courses.filter(x=>done.has(x.id)&&visible(x)).reduce((a,x)=>a+x.tc,0);
+  else if(n.orient)s=n.children.filter(ch=>ch.track===S.track).reduce((a,ch)=>a+earned(ch),0);
+  else s=n.children.filter(ch=>!ch.excluded).reduce((a,ch)=>a+earned(ch),0);
+  return n.req?Math.min(s,n.req):s;
+}
+function limitOf(x){let g=x.group;while(g){if(g.pool||g.elective)return g;g=PARENT[g.id];}return null;}
+function pickedIn(g){return allCourses(g).filter(x=>done.has(x.id));}
+const capOf=g=>g.cap||g.req;
+
+// ---------- thông báo ----------
+let tTimer;
+function toast(msg,warn){
+  const t=document.getElementById("toast");document.getElementById("toastMsg").innerHTML=msg;
+  t.className="toast"+(warn?" warn":"");t.hidden=false;clearTimeout(tTimer);tTimer=setTimeout(()=>t.hidden=true,warn?7000:3500);
+}
+document.getElementById("toastX").onclick=()=>document.getElementById("toast").hidden=true;
+
+// ---------- tick ----------
+function toggle(id,want){
+  const x=C[id];
+  if(!canTick()){render();return;}
+  if(!want){done.delete(id);persist();render();return;}
+  const lim=limitOf(x);
+  if(lim){
+    const cur=pickedIn(lim).reduce((a,y)=>a+y.tc,0);
+    if(cur+x.tc>capOf(lim)){toast(`Nhóm <b>${lim.short||lim.name}</b> cần ${lim.req} TC và bạn đã chọn ${cur} TC. Bỏ chọn một học phần khác trong nhóm nếu muốn đổi.`,true);render();return;}
+  }
+  done.add(id);
+  const miss=x.pre.filter(p=>!done.has(byCode[p]));
+  if(miss.length)toast(`Lưu ý: <b>${x.code} ${x.vn}</b> có học phần tiên quyết chưa được đánh dấu hoàn thành: ${miss.map(p=>`<b>${p}</b> ${C[byCode[p]].vn}`).join(", ")}.`,true);
+  persist();render();
+}
+
+// ---------- vẽ ----------
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function hours(x){
+  if(x.lt==null&&x.th==null)return x.id.startsWith("DK")?"Theo quy định":"—";
+  const p=[];if(x.lt!=null)p.push(x.lt+" LT");if(x.th!=null)p.push(x.th+" TH");if(x.td)p.push(x.td+" tự học");
+  return p.join(" · ")+" giờ";
+}
+const dupTag=x=>isDup(x)?'<span class="dup" title="Mã đang trùng với Tài chính nông nghiệp (V.1). Kiểm tra mã chính thức trên hệ thống đào tạo khi đăng ký.">trùng mã</span>':"";
+function courseCard(x){
+  const on=done.has(x.id);const lim=limitOf(x);
+  let off=false,hint="";
+  if(!on&&lim){const cur=pickedIn(lim).reduce((a,y)=>a+y.tc,0);if(cur+x.tc>capOf(lim)){off=true;hint=`Nhóm đã đủ ${lim.req} TC. Bỏ chọn học phần khác để đổi.`;}}
+  const miss=on?x.pre.filter(p=>!done.has(byCode[p])):[];
+  const pre=x.pre.length?x.pre.map(p=>`<span class="pre${done.has(byCode[p])?" ok":""}" title="${esc(C[byCode[p]].vn)}">${p}</span>`).join(" "):"Không";
+  return `<li class="cli"><label class="course${on?" done":""}${off?" off":""}" for="c-${x.id}">
+  <input type="checkbox" id="c-${x.id}" data-c="${x.id}" ${on?"checked":""} ${off?"disabled":""}>
+  <div class="cbody">
+   <div class="ctop"><span class="code">${x.code}</span>${dupTag(x)}${sugTag(x)}<span class="tc">${x.tc} TC</span></div>
+   <div class="vn">${esc(x.vn)}</div><div class="en">${esc(x.en)}</div>
+   <dl class="facts"><div><dt>Giờ học</dt><dd class="num">${hours(x)}</dd></div><div><dt>Học kỳ dự kiến</dt><dd>${semText(x)}</dd></div><div><dt>Tiên quyết</dt><dd>${pre}</dd></div></dl>
+   ${miss.length?`<div class="alert">Chưa hoàn thành tiên quyết: ${miss.join(", ")}</div>`:""}
+   ${hint?`<div class="hint">${hint}</div>`:""}
+  </div></label></li>`;
+}
+function nodeHead(n){
+  const open=isOpen(n);
+  let meta,pct;
+  if(n.req){const e=earned(n);meta=`${e}/${n.req} TC`;pct=e/n.req*100;}
+  else{const e=pickedIn(n).reduce((a,y)=>a+y.tc,0);meta=`đã chọn ${e} TC`;pct=null;}
+  const label=n.req&&n.depth>0?`${esc(n.name)} <em>(${n.req} TC)</em>`:esc(n.name);
+  const extra=n.excluded?' <em>· không tính vào 165 TC</em>':"";
+  return `<button type="button" class="node${pct>=100?" full":""}" id="n-${n.id}" data-n="${n.id}" aria-expanded="${open}">
+   <span class="head"><span class="chev" aria-hidden="true">▶</span><span class="name">${label}${extra}</span><span class="num">${meta}</span></span>
+   ${pct!=null?`<span class="bar" aria-hidden="true"><i style="width:${pct}%"></i></span>`:""}</button>`;
+}
+function nodeLi(n){
+  let inner="";
+  if(isOpen(n)){
+    const items=[];
+    if(n.rule)items.push(`<li><div class="note">${n.rule}</div></li>`);
+    if(n.orient){
+      if(!S.track){
+        items.push(`<li><div class="note warn">Bạn chưa chọn định hướng. Chọn một trong ba định hướng để xem 14 TC học phần tương ứng.</div></li>`);
+        items.push(`<li><div class="choose">${n.children.map(ch=>`<button type="button" data-track="${ch.track}" id="ch-${ch.track}"><b>${esc(ch.name)}</b><span>${ch.courses.length} học phần · 14 TC</span></button>`).join("")}</div></li>`);
+      }else n.children.filter(ch=>ch.track===S.track).forEach(ch=>items.push(nodeLi(ch)));
+    }else{
+      (n.children||[]).forEach(ch=>items.push(nodeLi(ch)));
+      (n.courses||[]).forEach(x=>items.push(courseCard(x)));
+    }
+    inner=`<ul>${items.join("")}</ul>`;
+  }
+  return `<li class="d${Math.min(n.depth,4)}">${nodeHead(n)}${inner}</li>`;
+}
+function renderTree(){
+  return `<div class="treebar"><button type="button" class="iconbtn" id="openAll">Mở tất cả</button><button type="button" class="iconbtn" id="closeAll">Thu gọn</button></div>
+  <div class="tree"><ul>${nodeLi(TREE)}</ul></div>`;
+}
+
+// ---------- 8 học kỳ ----------
+// học kỳ hiện tại theo lịch dự kiến: HK lẻ từ tháng 9 đến tháng 1, HK chẵn từ tháng 2 đến tháng 8
+function curSem(){
+  if(!S.khoa)return null;
+  const d=new Date(),m=d.getMonth()+1,y=d.getFullYear(),ay=m>=9?y:y-1;
+  return (ay-entryYear(S.khoa))*2+(m>=9||m<=1?1:2);
+}
+function fillSlots(){
+  // gán học phần thực tế (rồi đến gợi ý theo định hướng) vào các chỗ tự chọn trong lộ trình
+  const res={},byG={},at=k=>{const [i,j]=k.split("-");return ROAD[i][j];};
+  ROAD.forEach((items,i)=>items.forEach((it,j)=>{if(it.g)(byG[it.g]=byG[it.g]||[]).push(i+"-"+j);}));
+  for(const g in byG){
+    const picks=pickedIn(G[g]).map(x=>x.id);
+    const sugs=[...new Set([...(S.track?SUG[S.track][g]||[]:[]),...byG[g].flatMap(k=>at(k).s||[])])].filter(id=>!picks.includes(id));
+    let carry=0;
+    byG[g].forEach((k,n)=>{
+      let rem=at(k).tc+carry;const out=[];
+      while(rem>0&&picks.length){const id=picks.shift();out.push({id});rem-=C[id].tc;}
+      if(n===byG[g].length-1)while(picks.length){const id=picks.shift();out.push({id});rem-=C[id].tc;}
+      while(rem>0){const q=sugs.findIndex(id=>C[id].tc<=rem);if(q<0)break;const id=sugs.splice(q,1)[0];out.push({id,sug:true});rem-=C[id].tc;}
+      if(rem>0)out.push({ph:`Học phần ${G[g].short} (${rem} TC)`,tc:rem});
+      carry=Math.min(rem,0);res[k]=out;
+    });
+  }
+  const tr=S.track?G["track"+S.track].courses:null;const q={3:[],2:[]};
+  if(tr)tr.forEach(x=>q[x.tc].push(x.id));
+  ROAD.forEach((items,i)=>items.forEach((it,j)=>{if(it.o){const k=i+"-"+j;
+    res[k]=[tr?{id:q[it.o].shift(),orient:true}:{ph:`Học phần định hướng chuyên sâu (${it.o} TC) · chọn 1, 2 hoặc 3`,tc:it.o}];}}));
+  return res;
+}
+function renderSem(){
+  const fill=fillSlots(),cs=curSem(),ey=S.khoa?entryYear(S.khoa):null;
+  let top="";
+  if(!S.khoa)top=`<div class="note">Chọn <b>lớp của bạn</b> (K25, K24, K23 hoặc K22) ở phía trên để xem năm học của từng học kỳ và học kỳ hiện tại.</div>`;
+  else if(cs>8)top=`<div class="note warn">Theo lịch dự kiến, lớp <b>${S.khoa}</b> đã qua 8 học kỳ của lộ trình chuẩn (hiện là học kỳ ${cs}). Dùng học kỳ 9 để học bù, cải thiện điểm, nộp chứng chỉ ngoại ngữ, GDTC, GDQP-AN và hoàn tất hồ sơ xét tốt nghiệp. Xem khối còn thiếu ở <b>Cẩm nang tư vấn → Điều kiện tốt nghiệp</b>.</div>`;
+  else if(cs<1)top=`<div class="note">Lớp <b>${S.khoa}</b> chưa bắt đầu học kỳ 1 theo lịch dự kiến.</div>`;
+  return `${top?`<div style="margin-top:22px">${top}</div>`:""}<div class="sems">${ROAD.map((items,i)=>{
+    let tot=0,got=0;
+    const rows=items.flatMap((it,j)=>{
+      const list=typeof it==="string"?[{id:it}]:fill[i+"-"+j];
+      return list.map(f=>{
+        if(f.ph){tot+=f.tc;return `<div class="srow ph"><span class="box"></span><div class="t">${f.ph}</div><span class="num">${f.tc} TC</span></div>`;}
+        const x=C[f.id];const on=done.has(x.id);tot+=x.tc;if(on)got+=x.tc;
+        const tag=f.sug?`<span class="tag sug">gợi ý${S.track?" "+S.track:""}</span>`:(typeof it!=="string"?(f.orient?`<span class="tag">Định hướng ${S.track}</span>`:'<span class="tag">tự chọn</span>'):"");
+        const miss=on?x.pre.filter(p=>!done.has(byCode[p])):[];
+        return `<label class="srow" for="s-${x.id}"><input type="checkbox" id="s-${x.id}" data-c="${x.id}" ${on?"checked":""}>
+          <div class="t"><div class="ctop"><span class="code">${x.code}</span>${dupTag(x)}${tag}</div>
+          <div class="vn">${esc(x.vn)}</div>${miss.length?`<div class="alert">Chưa hoàn thành tiên quyết: ${miss.join(", ")}</div>`:""}</div>
+          <span class="num">${x.tc} TC</span></label>`;
+      });
+    }).join("");
+    const yr=Math.ceil((i+1)/2),now=cs===i+1;
+    const when=ey?` · ${ey+yr-1}–${ey+yr}`:"";
+    return `<section class="sem${now?" now":""}" aria-label="Học kỳ ${i+1}"><h3><span>Học kỳ ${i+1}${now?' <span class="tag now">đang học</span>':""}</span> <small>Năm ${yr}${when} · <span class="num">${got}/${tot} TC</span></small></h3>
+      <div class="bar"><i style="width:${tot?got/tot*100:0}%"></i></div><div class="todo"><b>Việc cần làm:</b> ${TODO[i]}</div><div>${rows}</div></section>`;
+  }).join("")}</div>`;
+}
+
+// ---------- cẩm nang tư vấn (Tu-van-dinh-huong-NNTMBV) ----------
+const TODO=[
+ "Học Tiếng Anh B1 và Tin học cơ sở; bắt đầu tìm hiểu 3 định hướng chuyên sâu. GDTC, GDQP-AN tính riêng theo kế hoạch của ĐHQGHN.",
+ "Đạt chuẩn Tiếng Anh B2 sớm. Hoàn thành Kỹ năng bổ trợ (tính riêng, không vào 165 TC).",
+ "Chọn học phần tự chọn II.2 và ngoại ngữ chuyên ngành (Tiếng Anh hoặc Tiếng Nhật) theo định hướng dự kiến.",
+ "Hoàn thành đủ 8 TC tự chọn II.2. Lưu ý AET2013 cần VJU2004 Toán 3 (Thống kê); nhóm E cần Giải tích và Toán 3.",
+ "<b>Mốc quan trọng:</b> chốt định hướng với cố vấn học tập trước khi đăng ký HK6.",
+ "Học toàn bộ V.1 (17 TC) và học phần định hướng đầu tiên; chọn giảng viên hướng dẫn, định hình đề tài đồ án.",
+ "Hoàn thành 14 TC định hướng và 9 TC tự chọn V.3; tìm nơi thực tập.",
+ "Thực tập và đồ án cùng một chủ đề; chuẩn bị CV, portfolio, ứng tuyển song song khi làm đồ án."
+];
+const TRK={
+ "1":{icon:"🌱",name:"Nông nghiệp sinh thái",en:"Agroecology · V.2.1",
+  desc:"Đào tạo kỹ sư thiết kế và quản lý hệ canh tác bền vững về mặt sinh thái: dinh dưỡng cây trồng tổng hợp, quản lý dịch hại bằng biện pháp sinh học, kỹ thuật sinh học phân tử, cây ăn quả và nông sản chất lượng cao.",
+  fit:["Thích sinh học, cây trồng, đất, làm việc ở phòng thí nghiệm và ngoài đồng ruộng","Quan tâm canh tác hữu cơ, giảm hoá chất, thích ứng biến đổi khí hậu","Muốn làm nghiên cứu hoặc học lên thạc sĩ, tiến sĩ"],
+  good:"Sinh lý thực vật, Di truyền, Vi sinh, Thổ nhưỡng, Sinh thái học cây trồng",
+  need:["Đồ án tốt nghiệp có đề tài thuộc lĩnh vực sinh thái, cây trồng, đất, bảo vệ thực vật hoặc sinh học nông nghiệp.","Thực tập nghề nghiệp tại phòng thí nghiệm, viện nghiên cứu, trang trại hoặc doanh nghiệp vật tư nông nghiệp."],
+  v3:["SAS3023","SAS3025","SAS3029","SAS3026"],
+  alt:["SAS3008","SAS3022","SAS3030","SAS3031","SAS2007","SAS3027","SAS3033","SAS3038"],
+  g23:["VJU2004","VJU2014","VJU2011","VJU2015"],g23note:"",
+  g32:["SAS2011"],g32note:"Tiếng Anh chuyên ngành (SAS2011): thuận lợi đọc tài liệu, viết bài báo khoa học và chuẩn bị học lên cao.",
+  topics:["Đánh giá hiệu quả chế phẩm vi sinh hoặc phân hữu cơ lên sinh trưởng cây trồng","Quản lý dịch hại tổng hợp (IPM) cho một cây trồng chủ lực ở địa phương","Chỉ thị phân tử trong chọn giống chống chịu hạn, mặn","Đánh giá tính bền vững của một mô hình canh tác hữu cơ hoặc nông lâm kết hợp"],
+  skills:["Kỹ năng phòng thí nghiệm: phân tích đất và phân bón, PCR, nuôi cấy mô","Xử lý số liệu thí nghiệm bằng R hoặc Python; GIS cơ bản (QGIS)","Hiểu biết tiêu chuẩn VietGAP, GlobalGAP, hữu cơ (TCVN 11041, USDA/EU Organic)","Tiếng Anh học thuật (IELTS 6.0–6.5 nếu định học thạc sĩ ở nước ngoài)","Tham gia nhóm nghiên cứu của giảng viên từ năm 3 để có bài báo hoặc báo cáo hội nghị"],
+  jobs:[["Kỹ sư nông học, cán bộ kỹ thuật vùng trồng","Doanh nghiệp giống cây trồng, phân bón, thuốc bảo vệ thực vật sinh học, chế phẩm vi sinh. Phát triển vùng nguyên liệu, hướng dẫn kỹ thuật cho nông dân và hợp tác xã."],["Chuyên viên chứng nhận và kiểm soát chất lượng","Tổ chức chứng nhận VietGAP, GlobalGAP, hữu cơ; bộ phận QA/QC của doanh nghiệp xuất khẩu rau quả."],["Nghiên cứu viên, trợ lý nghiên cứu","Viện nghiên cứu nông nghiệp, sinh học, thổ nhưỡng, bảo vệ thực vật; phòng thí nghiệm của trường đại học; dự án hợp tác quốc tế (JICA, FAO, CGIAR…)."],["Cán bộ khuyến nông, quản lý nhà nước","Trung tâm khuyến nông, Chi cục Trồng trọt và Bảo vệ thực vật, Phòng/Sở Nông nghiệp; tổ chức phi chính phủ về môi trường, sinh kế nông thôn."]],
+  grad:"Thạc sĩ, tiến sĩ khoa học cây trồng, bảo vệ thực vật, công nghệ sinh học nông nghiệp, khoa học môi trường. Học bổng MEXT, JICA, ADB-JSP và chương trình liên kết với ĐH Tokyo là lựa chọn phù hợp."},
+ "2":{icon:"🤖",name:"Nông nghiệp tiên tiến Nhật Bản",en:"Japanese Agriculture Engineering · V.2.2",
+  desc:"Đào tạo kỹ sư thiết kế, vận hành và tự động hoá hệ canh tác công nghệ cao theo mô hình Nhật Bản: máy nông nghiệp, IoT, giám sát cây trồng, nhà kính, thuỷ canh và công nghệ sau thu hoạch.",
+  fit:["Thích công nghệ, máy móc, lập trình, cảm biến, IoT","Muốn vận hành nhà kính, thuỷ canh, nhà máy trồng cây, nông nghiệp chính xác","Muốn làm việc cho doanh nghiệp Nhật hoặc làm việc tại Nhật"],
+  good:"Nhập môn lập trình, Hệ thống máy tính, Vật lý, Kỹ thuật thông tin trong KH môi trường và sinh học, Thuỷ nông",
+  need:["Đồ án tốt nghiệp có sản phẩm hoặc thiết kế kỹ thuật: hệ thống cảm biến, điều khiển, mô hình nhà kính hoặc thuỷ canh, quy trình sau thu hoạch.","Thực tập tại trang trại công nghệ cao, doanh nghiệp máy nông nghiệp hoặc doanh nghiệp FDI Nhật Bản, hoặc thực tập tại Nhật nếu có chương trình trao đổi."],
+  v3:["MJM3023","MJM3033","MJM3018","SAS3030"],
+  alt:["MJM3012","SAS3040","SAS3034","SAS3036","SAS3038","SAS3021","FTH2006"],
+  g23:["VJU2004","AET2013","AET2016","VJU2006"],g23note:"Học VJU2004 Toán 3 trước, vì AET2013 yêu cầu đã học VJU2002, VJU2003 và VJU2004.",
+  g32:["SAS2012"],g32note:"Tiếng Nhật chuyên ngành (SAS2012): lợi thế lớn khi ứng tuyển doanh nghiệp Nhật hoặc làm việc tại Nhật.",
+  topics:["Thiết kế hệ thống tưới tự động dựa trên cảm biến độ ẩm đất và dữ liệu thời tiết","Giám sát sinh trưởng cây trồng bằng ảnh và xử lý ảnh, AI cơ bản","Tối ưu dung dịch dinh dưỡng và điều kiện ánh sáng trong hệ thuỷ canh hoặc nhà máy trồng cây","Đánh giá công nghệ bảo quản lạnh hoặc MAP để kéo dài thời gian bảo quản nông sản"],
+  skills:["Lập trình Python; vi điều khiển Arduino, ESP32, Raspberry Pi; giao thức IoT (MQTT)","Vẽ kỹ thuật, CAD (AutoCAD, Fusion 360) cho thiết kế nhà kính, thiết bị","Tiếng Nhật JLPT N3 trở lên (N2 nếu muốn làm kỹ sư tại Nhật)","Hiểu văn hoá doanh nghiệp Nhật: 5S, Kaizen, Hō-Ren-Sō","Portfolio dự án thực tế từ Học theo dự án, cuộc thi khởi nghiệp, sáng tạo kỹ thuật"],
+  jobs:[["Kỹ sư vận hành nông nghiệp công nghệ cao","Trang trại nhà kính, nhà màng, thuỷ canh, nhà máy trồng cây. Thiết kế, lắp đặt, vận hành hệ thống kiểm soát môi trường canh tác."],["Kỹ sư IoT, nông nghiệp chính xác","Công ty AgriTech, giải pháp cảm biến, drone phun thuốc, phần mềm quản lý trang trại: kỹ sư triển khai giải pháp, kỹ thuật viên dữ liệu."],["Kỹ sư máy nông nghiệp và sau thu hoạch","Doanh nghiệp phân phối, bảo trì máy nông nghiệp (nhiều hãng Nhật Bản tại Việt Nam); nhà máy sơ chế, đóng gói, kho lạnh nông sản và thực phẩm."],["Kỹ sư làm việc tại Nhật Bản hoặc doanh nghiệp Nhật","Kỹ sư nông nghiệp, kỹ thuật tại Nhật (cần JLPT N2–N3), hoặc cầu nối kỹ thuật cho doanh nghiệp Nhật đầu tư vào nông nghiệp Việt Nam."]],
+  grad:"Thạc sĩ kỹ thuật nông nghiệp, kỹ thuật sinh học – môi trường, khoa học thông tin nông nghiệp tại Nhật Bản (học bổng MEXT, JICA, chương trình hợp tác với ĐH Tokyo) hoặc các chương trình kỹ thuật trong nước."},
+ "3":{icon:"📈",name:"Tạo lập và quản trị doanh nghiệp nông nghiệp",en:"Start-up in Agriculture & Enterprise Management · V.2.3",
+  desc:"Đào tạo kỹ sư có tư duy kinh tế và khởi nghiệp: tiếp thị và phân phối thực phẩm, kế toán, chuỗi cung ứng, chuỗi giá trị và thương mại điện tử nông sản. Chương trình vẫn giữ nền tảng kỹ thuật canh tác.",
+  fit:["Thích kinh doanh, thị trường, số liệu tài chính, giao tiếp","Muốn khởi nghiệp, quản lý trang trại hoặc HTX, làm chuỗi cung ứng hay xuất nhập khẩu","Quan tâm thương mại điện tử và chính sách nông nghiệp"],
+  good:"Kinh tế học đại cương, Nhập môn quản lý kinh doanh NN, Tài chính NN, Luật và chính sách NN",
+  need:["Đồ án tốt nghiệp về kinh tế, quản trị, thị trường, chuỗi giá trị hoặc kế hoạch kinh doanh nông nghiệp có phân tích tài chính.","Thực tập tại doanh nghiệp, HTX, chuỗi bán lẻ, công ty xuất nhập khẩu, tổ chức tín dụng hoặc cơ quan quản lý nông nghiệp.","Thương mại điện tử nông sản đang trùng mã SAS3048 với Tài chính nông nghiệp (V.1). Khi đăng ký, kiểm tra mã chính thức trên hệ thống đào tạo."],
+  v3:["SAS3016","SAS3045","SAS3042"],
+  alt:["SAS3046","SAS3003","FTH2005","SAS3044","SAS3043","SAS3050","SAS3028","SAS3049","SAS3035"],
+  g23:["VJU2022","VJU2025","INE1052","MNS2006"],g23note:"",
+  g32:["SAS2011","SAS2012"],g32note:"Tiếng Anh chuyên ngành nếu hướng tới xuất nhập khẩu và thị trường quốc tế; Tiếng Nhật chuyên ngành nếu hướng tới đối tác hoặc thị trường Nhật Bản.",
+  topics:["Kế hoạch kinh doanh cho một mô hình nông nghiệp thông minh, có phân tích NPV/IRR","Phân tích chuỗi giá trị một nông sản chủ lực (vải, cà phê, rau an toàn…)","Đánh giá kênh thương mại điện tử và truy xuất nguồn gốc đối với nông sản OCOP","Hiệu quả hoạt động của hợp tác xã nông nghiệp kiểu mới"],
+  skills:["Excel nâng cao, Power BI hoặc Tableau; phần mềm kế toán cơ bản","Nghiệp vụ xuất nhập khẩu (Incoterms, chứng từ, kiểm dịch thực vật), logistics","Digital marketing, vận hành gian hàng trên sàn thương mại điện tử","Kỹ năng thuyết trình, gọi vốn; tham gia các cuộc thi khởi nghiệp sinh viên","Hiểu chính sách: OCOP, nông nghiệp hữu cơ, tín dụng nông nghiệp, cam kết FTA (CPTPP, EVFTA)"],
+  jobs:[["Chuỗi cung ứng, thu mua, phát triển vùng nguyên liệu","Chuỗi siêu thị, bán lẻ thực phẩm, doanh nghiệp chế biến và xuất khẩu nông sản: giám sát chất lượng đầu vào, quản lý nhà cung cấp, điều phối logistics."],["Kinh doanh, xuất nhập khẩu nông sản","Phát triển thị trường trong nước và quốc tế, đàm phán hợp đồng, marketing và thương mại điện tử nông sản."],["Thẩm định dự án, tín dụng nông nghiệp","Ngân hàng, quỹ đầu tư, tổ chức tài chính vi mô; ban quản lý dự án nông nghiệp; tư vấn lập và thẩm định dự án đầu tư."],["Khởi nghiệp, quản lý trang trại hoặc HTX","Thành lập doanh nghiệp, HTX, trang trại; phân tích chính sách tại Sở và các cơ quan thuộc Bộ Nông nghiệp và Môi trường, tổ chức quốc tế."]],
+  grad:"Thạc sĩ kinh tế nông nghiệp, quản lý kinh tế, quản trị kinh doanh (MBA), chính sách công hoặc phát triển nông thôn, trong nước và quốc tế."}
+};
+// Học phần gợi ý theo định hướng: gắn nhãn trong sơ đồ và điền chỗ trống trong lộ trình 8 học kỳ.
+const SUG={};
+TRACKS.forEach(k=>{const T=TRK[k];SUG[k]={g23:T.g23,g32:T.g32,g53:T.v3,alt:T.alt};});
+function sugTag(x){
+  if(!S.track)return "";
+  const s=SUG[S.track],g=limitOf(x);
+  if(!g)return "";
+  if(s[g.id]&&s[g.id].includes(x.id))return `<span class="tag fit">gợi ý ${S.track}</span>`;
+  if(g.id==="g53"&&s.alt.includes(x.id))return `<span class="tag alt">thay thế được</span>`;
+  return "";
+}
+let gTrack=null;
+function cRow(code){const x=C[byCode[code]||code];if(!x)return "";const on=done.has(x.id);
+  return `<li><span class="ck" aria-label="${on?"đã đạt":"chưa đạt"}">${on?"✓":""}</span><span class="code">${x.code}</span>${dupTag(x)}<span>${esc(x.vn)}</span><span class="tcn">${x.tc} TC</span></li>`;}
+function gradChecks(){
+  const full=id=>{const g=G[id];return [earned(g),g.req];};
+  const items=[];
+  const add=(ok,label,v)=>items.push({ok,label,v});
+  const t=earned(TREE);add(t>=165,"Tích luỹ đủ 165 TC",`${t}/165`);
+  const req=[["g11","I · Lý luận chính trị, Tin học cơ sở, Pháp luật"],["g12","I · Tiếng Anh B1, B2"],["g21","II.1.1 · Cơ bản theo lĩnh vực"],["g22","II.1.2 · Thế kỷ 21 bắt buộc"]];
+  req.forEach(([id,l])=>{const [e,r]=full(id);add(e>=r,l,`${e}/${r}`);});
+  const [e23]=full("g23");add(e23>=7,"II.2 · Tự chọn theo lĩnh vực (tối thiểu 7 TC)",`${e23}/7`);
+  [["g31","III.1 · Khối ngành bắt buộc"]].forEach(([id,l])=>{const [e,r]=full(id);add(e>=r,l,`${e}/${r}`);});
+  const [e32]=full("g32");add(e32>=3,"III.2 · Ngoại ngữ chuyên ngành",`${e32}/3`);
+  [["g4","IV · Theo nhóm ngành"],["g51","V.1 · Học phần chung bắt buộc (gồm Học theo dự án)"]].forEach(([id,l])=>{const [e,r]=full(id);add(e>=r,l,`${e}/${r}`);});
+  const e52=earned(G.g52);add(!!S.track&&e52>=14,S.track?`V.2 · Định hướng ${S.track}: đủ 5 học phần`:"V.2 · Định hướng chuyên sâu (chưa chọn)",`${e52}/14`);
+  const [e53]=full("g53");add(e53>=9,"V.3 · Tự chọn khác (tối thiểu 9 TC)",`${e53}/9`);
+  const [e54,r54]=full("g54");add(e54>=r54,"V.4 · Thực tập nghề nghiệp, Thực hành hướng nghiệp, Đồ án tốt nghiệp",`${e54}/${r54}`);
+  const w=warnCount();add(w===0,"Không có học phần đã đánh dấu mà thiếu tiên quyết",w?`${w} môn`:"");
+  const [edk]=full("g13");add(edk>=15,"Giáo dục thể chất, GDQP-AN, Kỹ năng bổ trợ",`${edk}/15`);
+  return items;
+}
+function renderGuide(){
+  const t=gTrack||S.track||"1",T=TRK[t];
+  const chk=gradChecks(),okN=chk.filter(i=>i.ok).length;
+  const li=a=>a.map(s=>`<li>${s}</li>`).join("");
+  const sec=(id,title,body)=>`<section class="gsec" id="gd-${id}" aria-labelledby="gh-${id}"><h2 id="gh-${id}">${title}</h2>${body}</section>`;
+  const jump=[["dk","Điều kiện tốt nghiệp"],["chon","Chọn hướng nào?"],["huong","Chi tiết định hướng"],["ss","So sánh nhanh"],["nam","Mốc từng năm"]];
+  const sumTc=a=>a.reduce((s,id)=>s+C[id].tc,0);
+  return `<div class="guide">
+  <nav class="jump" aria-label="Mục lục cẩm nang">${jump.map(([k,l])=>`<button type="button" class="iconbtn" data-jump="gd-${k}">${l}</button>`).join("")}</nav>
+  ${sec("dk",`Điều kiện xét tốt nghiệp · bạn đạt ${okN}/${chk.length} mục`,`
+   <p class="muted">Thiếu một trong các mục dưới đây thì không được xét tốt nghiệp, dù chọn hướng nào. Danh sách tự cập nhật theo các học phần bạn đã đánh dấu. Dư TC ở khối tự chọn này không bù cho khối khác.</p>
+   <ul class="chk">${chk.map(i=>`<li class="${i.ok?"ok":"no"}"><span class="ic">${i.ok?"✓":"○"}</span><span>${i.label}</span><span class="v">${i.v}</span></li>`).join("")}
+    <li class="self"><span class="ic">•</span><span>Đạt chuẩn đầu ra Tiếng Anh bậc 4 (B2) theo Khung năng lực ngoại ngữ 6 bậc dùng cho Việt Nam</span><span class="v">tự kiểm tra</span></li>
+    <li class="self"><span class="ic">•</span><span>Điểm trung bình chung tích luỹ đạt mức tối thiểu theo Quy chế đào tạo của ĐHQGHN</span><span class="v">tự kiểm tra</span></li>
+    <li class="self"><span class="ic">•</span><span>Không trong thời gian bị truy cứu trách nhiệm hình sự hoặc kỷ luật đình chỉ học tập</span><span class="v">tự kiểm tra</span></li></ul>
+   <div class="note"><b>Khối II.2 (7 TC):</b> mọi học phần trong danh mục M2 có 2 hoặc 4 TC, nên trên thực tế cần tích luỹ 8 TC (4 học phần 2 TC, hoặc 1 học phần 4 TC và 2 học phần 2 TC). Mỗi học kỳ đăng ký tối thiểu 16 TC.</div>
+   <div class="note"><b>Không tính vào điểm trung bình:</b> Tiếng Anh B1, B2 và Tiếng Nhật cơ sở 1 được tính vào 165 TC nhưng không tính vào điểm trung bình. GDTC, GDQP-AN không tính vào 165 TC và điểm trung bình.</div>
+   <div class="note"><b>Tiên quyết cần nhớ:</b> Sinh học 1 → Sinh học 2 → Sinh lý thực vật, Di truyền, Thống kê sinh học; Hoá học 1 → Hoá học 2 → Hoá phân tích, Hoá sinh; Triết học → Kinh tế chính trị. Ở khối II.2, AET2013 cần VJU2004 Toán 3, và nhóm E (AET2018–AET2022) học theo chuỗi.</div>`)}
+  ${sec("chon","Bạn phù hợp với hướng nào?",`
+   <p class="muted">Chốt định hướng vào <b>học kỳ 5</b>, trước khi đăng ký học phần V.2 đầu tiên ở HK6. Dùng các câu hỏi dưới đây làm điểm khởi đầu cho buổi trao đổi với cố vấn học tập.</p>
+   <div class="cols">${TRACKS.map(k=>{const X=TRK[k];return `<div class="card${S.track===k?" me":""}"><h3>${X.icon} ${k} · ${X.name}</h3>
+    <div class="muted">Hợp với bạn nếu:</div><ul>${li(X.fit)}</ul>
+    <div class="muted"><b>Môn nên học tốt:</b> ${X.good}</div>
+    ${S.track===k?'<div class="muted"><b>Bạn đang theo định hướng này.</b></div>':`<button type="button" class="iconbtn" data-track="${k}">Chọn định hướng ${k}</button>`}</div>`;}).join("")}</div>`)}
+  ${sec("huong",`Chi tiết định hướng ${t} · ${T.name}`,`
+   <div class="seg" role="group" aria-label="Xem định hướng">${TRACKS.map(k=>`<button type="button" data-gt="${k}" aria-pressed="${k===t}">${TRK[k].icon} Định hướng ${k}${S.track===k?" (của bạn)":""}</button>`).join("")}</div>
+   <p class="muted">${T.en}</p><p>${T.desc}</p>
+   <p class="muted"><span class="pill can">CẦN</span>bắt buộc riêng của hướng · <span class="pill du">ĐỦ</span>phương án gợi ý để tích luỹ đủ tín chỉ tự chọn, có thể thay sau khi trao đổi với cố vấn. Dấu ✓ là học phần bạn đã đánh dấu.</p>
+   <div class="cols">
+    <div class="card"><h3><span class="pill can">CẦN</span>14 TC chuyên sâu (V.2)</h3><ul class="cl">${G["track"+t].courses.map(x=>cRow(x.id)).join("")}</ul>
+     ${T.need.map(s=>`<p><span class="pill can">CẦN</span>${s}</p>`).join("")}</div>
+    <div class="card"><h3><span class="pill du">ĐỦ</span>Tự chọn khác V.3 (9 TC)</h3>
+     <div class="muted">Gói đề xuất, ${sumTc(T.v3)} TC:</div><ul class="cl">${T.v3.map(cRow).join("")}</ul>
+     <div class="muted">Có thể thay thế bằng:</div><ul class="cl">${T.alt.map(cRow).join("")}</ul></div>
+   </div>
+   <div class="cols">
+    <div class="card"><h3><span class="pill du">ĐỦ</span>Tự chọn II.2 (8 TC)</h3><ul class="cl">${T.g23.map(cRow).join("")}</ul>${T.g23note?`<p class="muted">${T.g23note}</p>`:""}</div>
+    <div class="card"><h3><span class="pill du">ĐỦ</span>Ngoại ngữ chuyên ngành III.2 (3 TC)</h3><ul class="cl">${T.g32.map(cRow).join("")}</ul><p class="muted">${T.g32note}</p></div>
+   </div>
+   <div class="cols"><div><h3>Gợi ý đề tài đồ án</h3><ul>${li(T.topics)}</ul></div><div><h3>Kỹ năng và chứng chỉ nên bổ sung</h3><ul>${li(T.skills)}</ul></div></div>
+   <h3>Hướng việc làm sau khi tốt nghiệp</h3>
+   <div class="jobs">${T.jobs.map(([a,b])=>`<div><b>${a}</b><span>${b}</span></div>`).join("")}</div>
+   <p class="muted"><b>Học lên cao:</b> ${T.grad}</p>`)}
+  ${sec("ss","So sánh nhanh ba định hướng",`<div class="tbl cmp cmp3"><table><thead><tr><th></th>${TRACKS.map(k=>`<th>${TRK[k].icon} ${k} · ${TRK[k].name}</th>`).join("")}</tr></thead><tbody>
+   ${[["Trọng tâm","Sinh học, đất, cây trồng, canh tác bền vững","Kỹ thuật, tự động hoá, IoT, nhà kính","Kinh tế, thị trường, quản trị, khởi nghiệp"],
+      ["Tự chọn II.2 gợi ý","Toán 3, Biến đổi khí hậu, Khoa học Trái đất, Thực phẩm – nước – sức khoẻ","Toán 3, Phân tích dữ liệu khoa học, Thuật toán, Vật lý 2","Quản trị kinh doanh, Kinh doanh Nhật–Việt, Kinh tế lượng, Khoa học quản lý"],
+      ["Ngoại ngữ chuyên ngành","Tiếng Anh","Tiếng Nhật","Tiếng Anh hoặc Tiếng Nhật"],
+      ["V.3 gợi ý","Bệnh cây, Côn trùng, Cỏ dại, Ức chế sinh học","Điều khiển tự động, Tự động hoá, Cơ điện tử, Hệ môi trường TV","QL kinh doanh trang trại, Đàm phán, Thương mại quốc tế"],
+      ["Môi trường làm việc","Phòng thí nghiệm, đồng ruộng, viện nghiên cứu","Trang trại công nghệ cao, nhà máy, doanh nghiệp công nghệ","Văn phòng doanh nghiệp, chuỗi bán lẻ, ngân hàng, HTX"],
+      ["Chứng chỉ nên có","VietGAP/GlobalGAP, IELTS","JLPT N3–N2","Nghiệp vụ XNK, công cụ phân tích dữ liệu"]].map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join("")}</tr>`).join("")}
+   </tbody></table></div>`)}
+  ${sec("nam","Mốc từng năm",`<div class="yr">
+   ${[["Năm 1 · HK1–HK2","Nền tảng","Lý luận chính trị, Tin học cơ sở, Tiếng Anh B1–B2, Tiếng Nhật cơ sở 1–2, Toán, Lý, Hoá, Sinh, Nhập môn lập trình, Khoa học toàn cầu và môi trường.","Đạt chuẩn Tiếng Anh sớm; bắt đầu tìm hiểu 3 định hướng."],
+      ["Năm 2 · HK3–HK4","Khối ngành","Sinh lý thực vật, Di truyền, Hoá sinh, Hoá phân tích, Vi sinh, Thống kê sinh học, Kinh tế học đại cương, Khí tượng NN, Thổ nhưỡng, ngoại ngữ chuyên ngành, tự chọn II.2.","Hoàn thành các học phần tự chọn II.2 theo định hướng dự kiến."],
+      ["Năm 3 · HK5","Nhóm ngành","Nhập môn NNTMBV, Sinh thái học cây trồng, Kỹ thuật thông tin trong KH môi trường và sinh học, Thuỷ nông, Nhập môn quản lý kinh doanh NN, Kiểm định chất lượng nông sản.","<b>Mốc quan trọng:</b> chốt định hướng với cố vấn học tập."],
+      ["Năm 3–4 · HK6–HK7","Chuyên sâu","Ứng dụng công nghệ trong quản lý trang trại, toàn bộ V.1 (gồm Học theo dự án), 14 TC V.2 của hướng đã chọn và 9 TC V.3.","Chọn giảng viên hướng dẫn, định hình đề tài đồ án, tìm nơi thực tập."],
+      ["Năm 4 · HK8","Thực tập và tốt nghiệp","Thực tập nghề nghiệp (3 TC), Thực hành hướng nghiệp (2 TC), Đồ án tốt nghiệp (10 TC).","Chuẩn bị CV, portfolio; ứng tuyển song song khi làm đồ án."],
+      ["HK9 (nếu cần)","Hoàn thiện","Học bù, cải thiện điểm.","Nộp chứng chỉ ngoại ngữ, GDTC, GDQP-AN và hoàn tất hồ sơ xét tốt nghiệp."]]
+     .map(([a,b,c,d])=>`<div><b>${a}</b><span><b>${b}.</b> ${c}<br><span class="muted">Việc cần làm: ${d}</span></span></div>`).join("")}</div>
+   <div class="note"><b>Để kết thúc lộ trình tốt nhất:</b> nối Học theo dự án → Thực tập nghề nghiệp → Đồ án tốt nghiệp vào cùng một chủ đề, thống nhất với định hướng đã chọn. Khi ra trường bạn sẽ có một sản phẩm rõ ràng cho hồ sơ xin việc, khởi nghiệp hoặc xin học bổng sau đại học.</div>`)}
+  <p class="muted">Các gợi ý học phần tự chọn, kỹ năng và vị trí việc làm mang tính tham khảo. Điều kiện xét tốt nghiệp chính thức theo Quy chế đào tạo của ĐHQGHN và thông báo của Trường tại thời điểm xét.</p>
+  </div>`;
+}
+
+function render(){
+  const fid=document.activeElement&&document.activeElement.id;
+  // tổng
+  const tot=earned(TREE);
+  document.getElementById("totBig").innerHTML=`${tot}<small> / 165 TC</small>`;
+  document.getElementById("totPct").textContent=Math.round(tot/165*100)+"%";
+  const tb=document.getElementById("totBar");tb.setAttribute("aria-valuenow",tot);tb.firstChild.style.width=(tot/165*100)+"%";
+  const dk=G.g13;document.getElementById("totNote").textContent=`Học phần điều kiện: ${earned(dk)}/${dk.req} TC (không tính vào 165)`;
+  document.getElementById("blocks").innerHTML=TREE.children.map(b=>{const e=earned(b);
+    return `<div class="blk"><div class="row"><b>${b.short}</b><span class="num">${e}/${b.req} TC</span></div><div class="bar"><i style="width:${e/b.req*100}%"></i></div></div>`;}).join("");
+  // điều khiển
+  document.querySelectorAll(".controls [data-track]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.track===S.track));
+  document.querySelectorAll(".controls [data-khoa]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.khoa===S.khoa));
+  document.getElementById("vClass").hidden=!isOwner;
+  const view=S.view==="class"&&!isOwner?"tree":S.view;
+  document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===view));
+  document.querySelector(".summary").hidden=view==="class";
+  document.getElementById("khoaCtl").hidden=view==="class"||mode==="owner";
+  document.querySelector(".legend").hidden=view==="class"||view==="guide";
+  document.getElementById("main").innerHTML=view==="class"?renderClass():view==="sem"?renderSem():view==="guide"?renderGuide():renderTree();
+  renderAcct();
+  if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});if(el.tagName==="INPUT"&&el.type==="search")el.setSelectionRange(el.value.length,el.value.length);}}
+}
+
+// ---------- tài khoản & đồng bộ (Firebase) ----------
+// Sinh viên đăng nhập Google bằng email @st.vju.ac.vn và ghi một tài liệu progress_k22_25/<uid>.
+// Giảng viên có email trong bộ sưu tập "lecturers" đọc được cả 4 lớp (xem firestore.rules).
+const DOMAIN="@st.vju.ac.vn";
+const FB="https://www.gstatic.com/firebasejs/10.12.2/";
+let mode="loading",FA=null,FS=null,auth=null,fs=null,ME=null,isOwner=false,myRef=null,profile=null,unsubClass=null;
+let sync={state:"idle",at:null},writing=false,dirty=false,wTimer=null,loginErr="";
+let roster=[],clsQ="",clsSort="khoa",clsKhoa="all",openRow=null,clsErr=null;
+const inApp=/Zalo|FBAN|FBAV|FB_IAB|Instagram|Line\/|Messenger|TikTok/i.test(navigator.userAgent);
+
+function canTick(){
+  if(mode==="ready"||mode==="owner"||mode==="offline"||mode==="local")return true;
+  if(mode==="loading")toast("Đang tải tiến độ của bạn, vui lòng đợi giây lát.");
+  else if(mode==="noPerm")toast("Hệ thống chưa cho phép tài khoản này lưu tiến độ. Kiểm tra bạn đã đăng nhập bằng email sinh viên, rồi tải lại trang.",true);
+  return false;
+}
+function warnCount(){return [...done].filter(id=>C[id]&&visible(C[id])&&C[id].pre.some(p=>!done.has(byCode[p]))).length;}
+function body(){
+  const khoi={};BLOCKS.forEach(id=>khoi[id]=earned(G[id]));
+  return {email:ME.email,mssv:profile.mssv,hoTen:profile.hoTen,khoa:S.khoa,track:S.track,done:[...done].filter(id=>C[id]),
+    tong:earned(TREE),khoi,dieuKien:earned(G.g13),canhBao:warnCount(),capNhat:new Date().toISOString(),v:1};
+}
+function persist(){
+  save();
+  if(mode!=="ready")return;
+  dirty=true;sync.state="pending";clearTimeout(wTimer);wTimer=setTimeout(flush,700);
+}
+async function flush(){
+  clearTimeout(wTimer);
+  if(writing)return;writing=true;let tries=0;
+  while(dirty&&mode==="ready"){
+    dirty=false;sync.state="saving";renderAcct();
+    try{await FS.setDoc(myRef,body());sync={state:"saved",at:new Date()};}
+    catch(e){
+      const code=e&&e.code;
+      if((code==="unavailable"||code==="deadline-exceeded")&&tries++<1){await new Promise(r=>setTimeout(r,1200+Math.random()*1500));dirty=true;continue;}
+      sync={state:"error",at:null};
+      if(code==="permission-denied")mode="noPerm";
+      break;
+    }
+  }
+  writing=false;renderAcct();
+}
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"&&dirty)flush();});
+
+function renderAcct(){
+  const a=document.getElementById("acct");let h="";
+  const t=sync.at?sync.at.toLocaleTimeString("vi-VN",{hour:"2-digit",minute:"2-digit"}):"";
+  const st={pending:["Đang chờ lưu…",""],saving:["Đang lưu…",""],saved:["Đã lưu"+(t?" lúc "+t:""),"ok"],error:["Chưa lưu được. Kiểm tra mạng rồi đánh dấu lại.","err"]}[sync.state];
+  const out=`<button type="button" class="linkbtn" data-act="logout">Đăng xuất</button>`;
+  if(mode==="loading")h=`<span class="st">Đang kết nối tài khoản…</span>`;
+  else if(mode==="local")h=`<span class="st err">Chế độ thử: trang chưa được cấu hình Firebase nên tiến độ chỉ lưu trên trình duyệt này.</span>`;
+  else if(mode==="offline")h=`<span class="st err">Không kết nối được hệ thống lưu trữ. Tiến độ tạm lưu trên trình duyệt này; tải lại trang khi có mạng.</span>`;
+  else if(mode==="owner")h=`<span class="who">${esc(ME.email)}</span><span class="st ok">Giảng viên · xem tiến độ từng lớp K22–K25 ở mục “Theo dõi lớp”</span><span class="sp">${out}</span>`;
+  else if(mode==="ready"||mode==="noPerm"){
+    h=`<span class="who">${esc(profile.hoTen)} · ${esc(profile.mssv)}${S.khoa?" · Lớp "+S.khoa:""}</span><span>${esc(ME.email)}</span>`;
+    h+=mode==="noPerm"?`<span class="st err">Chưa lưu được vào tài khoản. Tải lại trang hoặc báo giảng viên.</span>`
+      :`<span class="st ${st?st[1]:"ok"}">${st?st[0]:"Tiến độ được lưu vào tài khoản"}</span>`;
+    h+=`<span class="sp"><button type="button" class="linkbtn" id="editProfile">Sửa thông tin</button>${out}</span>`;
+  }else if(ME)h=`<span class="who">${esc(ME.email)}</span><span class="sp">${out}</span>`;
+  else h=`<span class="st err">Cần đăng nhập bằng email sinh viên ${DOMAIN} để sử dụng.</span>`;
+  a.innerHTML=h;
+}
+function showGate(kind){
+  const g=document.getElementById("gate"),app=document.getElementById("app");
+  if(!kind){g.hidden=true;app.hidden=false;return;}
+  app.hidden=true;g.hidden=false;
+  if(kind==="login")g.innerHTML=`<h2>Đăng nhập để theo dõi lộ trình</h2>
+    <p>Dùng tài khoản email sinh viên <b>…${DOMAIN}</b>. Trang dành cho sinh viên các lớp <b>K22, K23, K24 và K25</b>. Tiến độ của bạn được lưu vào tài khoản, mở trên máy nào cũng thấy.</p>
+    ${inApp?`<div class="note warn">Bạn đang mở trang trong ứng dụng (Zalo, Messenger…). Google không cho đăng nhập ở đây. Hãy bấm <b>⋯</b> và chọn <b>Mở bằng trình duyệt</b> (Chrome, Safari).</div>`:""}
+    <button type="button" class="primary" data-act="login">Đăng nhập bằng Google (email trường)</button>
+    <div class="err-text" ${loginErr?"":"hidden"}>${loginErr}</div>
+    <p class="hint">Chưa biết cách dùng? Xem <a href="huong-dan.html">hướng dẫn cho sinh viên</a>. · Giảng viên: <button type="button" class="linkbtn" data-act="loginLec">đăng nhập bằng email giảng viên</button></p>`;
+  else if(kind==="domain")g.innerHTML=`<h2>Email chưa đúng</h2><p>Bạn đang đăng nhập bằng <b>${esc(ME.email)}</b>. Trang này chỉ dành cho email sinh viên <b>${DOMAIN}</b> (và giảng viên đã được cấp quyền).</p>
+    <button type="button" class="primary" data-act="relogin">Đăng xuất và chọn email trường</button>`;
+  else if(kind==="profile")g.innerHTML=`<h2>Thông tin sinh viên</h2><p>Nhập mã sinh viên, họ tên và lớp để giảng viên nhận ra tiến độ của bạn. Bạn chỉ cần nhập một lần.</p>
+    <form id="profForm" novalidate>
+     <div class="field"><label for="pfMssv">Mã sinh viên</label><input id="pfMssv" autocomplete="off" inputmode="numeric" value="${esc(profile?profile.mssv:"")}"></div>
+     <div class="field"><label for="pfName">Họ và tên</label><input id="pfName" autocomplete="name" value="${esc(profile?profile.hoTen:(ME&&ME.name)||"")}"></div>
+     <div class="field"><label for="pfKhoa">Lớp (khóa)</label><select id="pfKhoa"><option value="">Chọn lớp…</option>${KHOAS.map(k=>`<option value="${k}"${S.khoa===k?" selected":""}>${k} · nhập học năm ${entryYear(k)}</option>`).join("")}</select></div>
+     <div class="err-text" id="pfErr" hidden></div>
+     <div style="display:flex;gap:16px;align-items:center"><button class="primary" type="submit" id="pfSave">Lưu và bắt đầu</button>${profile&&S.khoa?'<button type="button" class="linkbtn" id="pfCancel">Hủy</button>':""}</div>
+    </form>`;
+}
+document.addEventListener("submit",async e=>{
+  if(e.target.id!=="profForm")return;e.preventDefault();
+  const m=document.getElementById("pfMssv").value.trim(),n=document.getElementById("pfName").value.trim().replace(/\s+/g," "),k=document.getElementById("pfKhoa").value;
+  const err=document.getElementById("pfErr"),btn=document.getElementById("pfSave");
+  const fail=msg=>{err.textContent=msg;err.hidden=false;};
+  if(!/^[0-9A-Za-z]{4,15}$/.test(m))return fail("Mã sinh viên gồm 4–15 chữ số hoặc chữ cái, không có dấu cách.");
+  if(n.length<2||n.length>80)return fail("Vui lòng nhập họ và tên.");
+  if(!KHOAS.includes(k))return fail("Vui lòng chọn lớp của bạn (K22, K23, K24 hoặc K25).");
+  const old=profile,oldK=S.khoa,first=!old;profile={mssv:m,hoTen:n};S.khoa=k;
+  btn.disabled=true;btn.textContent="Đang lưu…";
+  try{
+    await FS.setDoc(myRef,body());save();
+    mode="ready";sync={state:"saved",at:new Date()};showGate(null);render();
+    if(first&&done.size)toast("Đã chuyển các học phần đánh dấu trước đây trên trình duyệt này vào tài khoản. Kiểm tra lại nếu máy dùng chung.");
+  }catch(x){
+    profile=old;S.khoa=oldK;btn.disabled=false;btn.textContent="Lưu và bắt đầu";
+    fail(x&&x.code==="permission-denied"?"Hệ thống từ chối lưu. Hãy chắc chắn bạn đăng nhập bằng email sinh viên rồi tải lại trang.":"Chưa lưu được. Kiểm tra kết nối mạng rồi thử lại.");
+  }
+});
+
+const AUTH_MSG={"auth/unauthorized-domain":"Địa chỉ trang chưa được khai báo trong Firebase (Authorized domains). Hãy báo giảng viên.",
+  "auth/popup-blocked":"Trình duyệt chặn cửa sổ đăng nhập. Hãy cho phép cửa sổ bật lên rồi bấm lại.",
+  "auth/network-request-failed":"Không có kết nối mạng. Kiểm tra mạng rồi thử lại.",
+  "auth/operation-not-allowed":"Firebase chưa bật đăng nhập bằng Google. Hãy báo giảng viên."};
+async function login(student){
+  const p=new FA.GoogleAuthProvider();
+  p.setCustomParameters(student?{hd:DOMAIN.slice(1),prompt:"select_account"}:{prompt:"select_account"});
+  loginErr="";
+  try{await FA.signInWithPopup(auth,p);}
+  catch(e){
+    const c=e&&e.code;
+    if(c==="auth/popup-closed-by-user"||c==="auth/cancelled-popup-request")return;
+    if(c==="auth/popup-blocked"){try{await FA.signInWithRedirect(auth,p);return;}catch(x){}}
+    loginErr=AUTH_MSG[c]||("Đăng nhập không thành công ("+esc(c||"lỗi")+"). Thử lại hoặc mở trang bằng Chrome, Safari.");
+    showGate("login");
+  }
+}
+async function logout(){
+  if(dirty)await flush();
+  if(unsubClass){unsubClass();unsubClass=null;}
+  // xóa bộ nhớ tạm để người sau dùng chung máy không thấy tiến độ
+  done.clear();S.track=null;S.khoa=null;save();
+  await FA.signOut(auth);
+}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-act]");if(!a)return;
+  const act=a.dataset.act;
+  if(act==="login")login(true);
+  else if(act==="loginLec")login(false);
+  else if(act==="logout")logout();
+  else if(act==="relogin")logout();
+});
+
+async function initCloud(){
+  if(!FIREBASE_CONFIG.apiKey){mode="local";render();return;}
+  try{
+    const [AP,A,F]=await Promise.all([import(FB+"firebase-app.js"),import(FB+"firebase-auth.js"),import(FB+"firebase-firestore.js")]);
+    FA=A;FS=F;const app=AP.initializeApp(FIREBASE_CONFIG);
+    auth=A.getAuth(app);fs=F.getFirestore(app);
+  }catch(e){mode="offline";render();return;}
+  FA.getRedirectResult(auth).catch(e=>{loginErr=AUTH_MSG[e&&e.code]||"";});
+  FA.onAuthStateChanged(auth,onUser);
+}
+async function getRetry(ref){
+  for(let i=0;i<2;i++){try{return await FS.getDoc(ref);}catch(e){if(e&&e.code==="permission-denied")throw e;if(i===0)await new Promise(r=>setTimeout(r,1500));}}
+  return null;
+}
+async function onUser(u){
+  if(unsubClass){unsubClass();unsubClass=null;}
+  isOwner=false;profile=null;myRef=null;sync={state:"idle",at:null};
+  if(!u){ME=null;mode="login";showGate("login");render();return;}
+  const email=(u.email||"").toLowerCase();
+  ME={email,name:u.displayName||""};
+  mode="loading";showGate(null);render();
+  if(email.endsWith(DOMAIN)&&u.emailVerified){
+    myRef=FS.doc(fs,COL,u.uid);
+    let snap;
+    try{snap=await getRetry(myRef);}catch(e){mode="noPerm";render();return;}
+    if(!snap){mode="offline";render();toast("Không tải được tiến độ đã lưu. Tải lại trang để thử lại.",true);return;}
+    const d=snap.exists()?snap.data():null;
+    if(d&&d.mssv){
+      profile={mssv:d.mssv,hoTen:d.hoTen||""};done=new Set((d.done||[]).filter(id=>C[id]));
+      S.track=TRACKS.includes(d.track)?d.track:null;S.khoa=KHOAS.includes(d.khoa)?d.khoa:null;save();
+      if(!S.khoa){mode="profile";showGate("profile");render();return;}
+      mode="ready";sync={state:"saved",at:d.capNhat?new Date(d.capNhat):null};render();
+    }else{mode="profile";showGate("profile");render();}
+    return;
+  }
+  // không phải email sinh viên: kiểm tra danh sách giảng viên
+  let lec=null;
+  try{lec=await getRetry(FS.doc(fs,"lecturers",email));}catch(e){}
+  if(lec&&lec.exists()){isOwner=true;mode="owner";showGate(null);render();watchClass();return;}
+  mode="domain";showGate("domain");render();
+}
+
+// ---------- theo dõi lớp (giảng viên) ----------
+function watchClass(){
+  unsubClass=FS.onSnapshot(FS.collection(fs,COL),snap=>{
+    roster=snap.docs.map(d=>Object.assign({},d.data(),{id:d.id})).filter(r=>r.mssv);
+    clsErr=null;if(S.view==="class")render();
+  },e=>{clsErr=e.code||"unavailable";if(S.view==="class")render();});
+}
+function leafGroups(n,out){out=out||[];
+  if(n.courses||n.pool||n.orient){if(n.depth>0)out.push(n);return out;}
+  (n.children||[]).forEach(ch=>leafGroups(ch,out));return out;}
+const LEAVES=leafGroups(TREE);
+function evalR(r){
+  const sd=done,st=S.track;
+  done=new Set((r.done||[]).filter(id=>C[id]));S.track=TRACKS.includes(r.track)?r.track:null;
+  const o={tong:earned(TREE),blk:BLOCKS.map(id=>earned(G[id])),dk:earned(G.g13),
+    warn:[...done].filter(id=>visible(C[id])&&C[id].pre.some(p=>!done.has(byCode[p]))).map(id=>C[id].code),
+    leaves:LEAVES.map(g=>({g,e:earned(g)})),track:S.track};
+  done=sd;S.track=st;return o;
+}
+const khoaOf=r=>KHOAS.includes(r.khoa)?r.khoa:"";
+const fmtTime=s=>{const d=new Date(s);return isNaN(d)?"—":d.toLocaleString("vi-VN",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});};
+function classRows(){
+  const rows=roster.map(r=>({r,e:evalR(r),email:r.email||"",k:khoaOf(r)}));
+  const q=clsQ.trim().toLowerCase();
+  const list=rows.filter(x=>(clsKhoa==="all"||x.k===clsKhoa)&&(!q||[x.r.mssv,x.r.hoTen,x.email].some(v=>v&&String(v).toLowerCase().includes(q))));
+  const byM=(a,b)=>String(a.r.mssv).localeCompare(String(b.r.mssv));
+  const cmp={khoa:(a,b)=>String(b.k).localeCompare(String(a.k))||byM(a,b),mssv:byM,low:(a,b)=>a.e.tong-b.e.tong,high:(a,b)=>b.e.tong-a.e.tong,
+    recent:(a,b)=>String(b.r.capNhat||"").localeCompare(String(a.r.capNhat||""))}[clsSort];
+  list.sort(cmp);return {rows,list};
+}
+function miniBar(v,max){return `<div class="mini"><span class="num">${v}/${max}</span><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`;}
+function renderClass(){
+  if(clsErr)return `<div class="cls"><div class="note warn">Không đọc được dữ liệu lớp (${esc(clsErr)}). Tải lại trang để thử lại.</div></div>`;
+  const {rows,list}=classRows();
+  const inK=clsKhoa==="all"?rows:rows.filter(x=>x.k===clsKhoa);const n=inK.length;
+  const avg=n?Math.round(inK.reduce((a,x)=>a+x.e.tong,0)/n):0;
+  const cT=TRACKS.map(k=>inK.filter(x=>x.e.track===k).length).join(" · ");
+  const cW=inK.filter(x=>x.e.warn.length).length;
+  const kAvg=k=>{const a=rows.filter(x=>x.k===k);return [a.length,a.length?Math.round(a.reduce((s,x)=>s+x.e.tong,0)/a.length):0];};
+  const noK=rows.filter(x=>!x.k).length;
+  const tabs=[["all","Tất cả các lớp",[rows.length,rows.length?Math.round(rows.reduce((s,x)=>s+x.e.tong,0)/rows.length):0]]].concat(KHOAS.map(k=>[k,"Lớp "+k,kAvg(k)]));
+  const body=list.map(x=>{
+    const r=x.r,e=x.e,op=openRow===r.id;
+    let h=`<tr class="r" data-row="${esc(r.id)}" aria-expanded="${op}"><td class="n">${esc(r.mssv)}</td><td>${esc(r.hoTen||"")}</td><td>${x.k||'<span class="tmp">chưa chọn</span>'}</td><td>${esc(x.email||"—")}</td>
+      <td>${e.track?"Định hướng "+e.track:'<span class="tmp">chưa chọn</span>'}</td><td>${miniBar(e.tong,165)}</td>
+      ${e.blk.map((v,i)=>`<td class="n">${v}/${G[BLOCKS[i]].req}</td>`).join("")}<td class="n">${e.dk}/15</td>
+      <td class="n">${e.warn.length?`<span class="pre">${e.warn.length}</span>`:"0"}</td><td class="n">${fmtTime(r.capNhat)}</td></tr>`;
+    if(op)h+=`<tr class="det"><td colspan="14"><div class="grid">${e.leaves.map(l=>`<div class="${l.e<l.g.req?"lack":""}"><span>${esc(l.g.short||l.g.name)}</span><span class="num">${l.e}/${l.g.req} TC</span></div>`).join("")}</div>
+      ${e.warn.length?`<p class="alert">Đã đánh dấu nhưng thiếu tiên quyết: ${e.warn.join(", ")}</p>`:""}</td></tr>`;
+    return h;}).join("");
+  return `<div class="cls">
+   <div><span class="ctl-label">Chia lớp</span><div class="kseg" role="group" aria-label="Chọn lớp">${tabs.map(([k,l,[c,a]])=>`<button type="button" data-ck="${k}" aria-pressed="${clsKhoa===k}"><b>${l}</b><span>${c} SV · TB ${a} TC</span></button>`).join("")}</div>
+    ${noK?`<p class="hint">${noK} sinh viên chưa chọn lớp; chỉ hiện ở “Tất cả các lớp”.</p>`:""}</div>
+   <div class="kpis"><div class="kpi"><b>${n}</b><span>sinh viên${clsKhoa==="all"?"":" lớp "+clsKhoa} đã đăng ký</span></div><div class="kpi"><b>${avg}</b><span>TC trung bình / 165</span></div>
+    <div class="kpi"><b>${cT}</b><span>chọn định hướng 1 · 2 · 3</span></div><div class="kpi"><b>${cW}</b><span>SV có học phần thiếu tiên quyết</span></div></div>
+   <div class="clsbar"><input type="search" id="clsSearch" placeholder="Tìm theo MSSV, họ tên, email" value="${esc(clsQ)}" aria-label="Tìm sinh viên">
+    <select id="clsSort" aria-label="Sắp xếp">${[["khoa","Sắp xếp: lớp, rồi MSSV"],["mssv","Sắp xếp: MSSV"],["low","Tiến độ thấp trước"],["high","Tiến độ cao trước"],["recent","Cập nhật gần nhất"]].map(([v,t])=>`<option value="${v}"${v===clsSort?" selected":""}>${t}</option>`).join("")}</select>
+    <button type="button" class="iconbtn" id="csvBtn">Tải CSV</button><button type="button" class="iconbtn" id="copyBtn">Sao chép bảng</button></div>
+   ${n?`<div class="tbl"><table class="wide"><thead><tr><th>MSSV</th><th>Họ tên</th><th>Lớp</th><th>Email</th><th>Định hướng</th><th>Tổng</th><th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th><th>HP điều kiện</th><th>Thiếu TQ</th><th>Cập nhật</th></tr></thead><tbody>${body||'<tr><td colspan="14" class="empty">Không có sinh viên khớp từ khóa.</td></tr>'}</tbody></table></div>`
+     :`<div class="tbl"><div class="empty">${rows.length?`Lớp ${clsKhoa} chưa có sinh viên nào lưu tiến độ.`:"Chưa có sinh viên nào lưu tiến độ. Khi sinh viên đăng nhập, nhập MSSV, chọn lớp và đánh dấu học phần, danh sách sẽ hiện ở đây."}</div></div>`}
+   <p class="hint">Cột I–V là năm khối kiến thức (26 · 34 · 30 · 20 · 55 TC). Bấm vào một dòng để xem tiến độ từng nhóm học phần. Số TC được tính lại từ các học phần sinh viên đánh dấu.</p></div>`;
+}
+function tableData(){
+  const head=["MSSV","Họ tên","Lớp","Email","Định hướng","Tổng TC (/165)"].concat(BLOCKS.map(id=>`${G[id].short} (/${G[id].req})`),["HP điều kiện (/15)","Số HP thiếu tiên quyết","Cập nhật"]);
+  return [head].concat(classRows().list.map(x=>[x.r.mssv,x.r.hoTen||"",x.k,x.email,x.e.track||"",x.e.tong,...x.e.blk,x.e.dk,x.e.warn.length,fmtTime(x.r.capNhat)]));
+}
+document.addEventListener("input",e=>{if(e.target.id==="clsSearch"){clsQ=e.target.value;render();}});
+document.addEventListener("change",e=>{if(e.target.id==="clsSort"){clsSort=e.target.value;render();}});
+document.addEventListener("click",e=>{
+  const id=e.target.id;
+  const row=e.target.closest("tr[data-row]");
+  if(row){openRow=openRow===row.dataset.row?null:row.dataset.row;render();return;}
+  const ck=e.target.closest("[data-ck]");
+  if(ck){clsKhoa=ck.dataset.ck;openRow=null;render();return;}
+  if(id==="editProfile"){showGate("profile");return;}
+  if(id==="pfCancel"){showGate(null);return;}
+  if(id==="csvBtn"){
+    const csv=tableData().map(r=>r.map(v=>{v=String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(",")).join("\r\n");
+    const url=URL.createObjectURL(new Blob(["﻿"+csv],{type:"text/csv;charset=utf-8"}));
+    const a=document.createElement("a");a.href=url;a.download=`tien-do-NNTMBV-${clsKhoa==="all"?"K22-K25":clsKhoa}.csv`;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    return;
+  }
+  if(id==="copyBtn"){
+    const tsv=tableData().map(r=>r.map(v=>String(v).replace(/[\t\n]/g," ")).join("\t")).join("\n");
+    navigator.clipboard.writeText(tsv).then(()=>toast("Đã sao chép bảng. Dán vào Excel hoặc Google Sheets."),()=>toast("Trình duyệt chặn sao chép. Hãy dùng nút “Tải CSV”.",true));
+  }
+});
+
+// ---------- sự kiện ----------
+document.addEventListener("change",e=>{const id=e.target.dataset&&e.target.dataset.c;if(id)toggle(id,e.target.checked);});
+document.addEventListener("click",e=>{
+  const n=e.target.closest("[data-n]");
+  if(n){const g=G[n.dataset.n];S.open[g.id]=!isOpen(g);save();render();return;}
+  const t=e.target.closest("[data-track]");
+  if(t){if(!canTick())return;S.track=t.dataset.track;gTrack=null;persist();render();toast(`Đã chọn định hướng ${S.track} · ${TRK[S.track].name}. Sơ đồ chỉ hiện học phần của định hướng này; học phần tự chọn phù hợp có nhãn “gợi ý ${S.track}”.`);return;}
+  const k=e.target.closest(".controls [data-khoa]");
+  if(k){if(!canTick())return;S.khoa=k.dataset.khoa;persist();render();toast(`Đã chọn lớp ${S.khoa} (nhập học năm ${entryYear(S.khoa)}). Xem năm học của từng học kỳ ở mục “Theo 8 học kỳ”.`);return;}
+  const gt=e.target.closest("[data-gt]");
+  if(gt){gTrack=gt.dataset.gt;render();return;}
+  const j=e.target.closest("[data-jump]");
+  if(j){const el=document.getElementById(j.dataset.jump);if(el)el.scrollIntoView({behavior:"smooth",block:"start"});return;}
+  const v=e.target.closest("[data-view]");
+  if(v){S.view=v.dataset.view;save();render();return;}
+  if(e.target.id==="openAll"||e.target.id==="closeAll"){
+    const o=e.target.id==="openAll";Object.values(G).forEach(g=>{S.open[g.id]=o||g.depth===0;});save();render();}
+});
+let resetArmed=false;
+document.getElementById("resetBtn").onclick=e=>{
+  if(!resetArmed){resetArmed=true;e.target.textContent="Bấm lần nữa để xóa hết";setTimeout(()=>{resetArmed=false;e.target.textContent="Xóa toàn bộ tiến độ";},4000);return;}
+  if(!canTick())return;
+  done.clear();S.track=null;resetArmed=false;e.target.textContent="Xóa toàn bộ tiến độ";persist();render();toast("Đã xóa toàn bộ tiến độ. Lớp của bạn vẫn được giữ.");
+};
+// chế độ tối
+function isDark(){const t=document.documentElement.dataset.theme;return t?t==="dark":matchMedia("(prefers-color-scheme: dark)").matches;}
+function paintTheme(){document.getElementById("themeBtn").textContent=isDark()?"Chế độ sáng":"Chế độ tối";}
+if(S.theme)document.documentElement.dataset.theme=S.theme;
+document.getElementById("themeBtn").onclick=()=>{S.theme=isDark()?"light":"dark";document.documentElement.dataset.theme=S.theme;save();paintTheme();};
+paintTheme();
+render();
+initCloud();
+</script>
+</body>
+</html>
