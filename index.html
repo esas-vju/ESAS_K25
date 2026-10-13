@@ -95,6 +95,8 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 .d0 .node{background:var(--l0)} .d0 .node .name{font-family:var(--f-display);font-size:17px}
 .d1>.node{background:var(--l1)} .d2>.node{background:var(--l2)} .d3>.node{background:var(--l3)} .d4>.node{background:var(--l4);border:1px solid var(--line)}
 .node.full .num{color:var(--accent);font-weight:600}
+.note.prog{max-width:none;margin:14px 0 0;color:var(--ink);border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.trkh{margin:14px 0 6px;font-size:14px}.trkg{margin:6px 0 10px;font-size:13px}.trkg ul{margin:4px 0 0;padding-left:18px;list-style:none}.trkg li{color:var(--muted)}.trkg li.ok{color:var(--ink);font-weight:500}
 .note{font-size:13px;color:var(--muted);max-width:640px;background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:8px 12px}
 .note b{color:var(--ink);font-weight:600}
 .note.warn{color:var(--warn);background:var(--warn-soft);border-color:transparent}
@@ -333,7 +335,7 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
         <button type="button" data-khoa="K22">K22</button>
       </div>
     </div>
-    <div>
+    <div id="trackCtl">
       <span class="ctl-label" id="lblTrack">Định hướng chuyên sâu</span>
       <div class="seg" role="group" aria-labelledby="lblTrack" id="trackSeg"></div>
     </div>
@@ -349,6 +351,7 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
       </div>
     </div>
   </div>
+  <p class="note prog" id="progNote" hidden></p>
   <div class="legend">
     <span id="lgDup"><span class="dup">trùng mã</span> mã học phần đang trùng trong khung, kiểm tra mã chính thức khi đăng ký</span>
     <span id="lgTmp"><span class="tmp">mã tạm</span> mã học phần chưa chính thức</span>
@@ -1362,7 +1365,11 @@ function render(){
   document.getElementById("trackSeg").innerHTML=TRACKS.map(k=>`<button type="button" id="tr-${k}" data-track="${k}" aria-pressed="${k===S.track}">${P.trackBtn[k]}</button>`).join("");
   document.getElementById("lgDup").hidden=P.id!=="K22";document.getElementById("lgTmp").hidden=P.id!=="K26";
   document.getElementById("srcNote").textContent=P.source;
-  document.getElementById("lblKhoa").textContent=isOwner?"Xem lộ trình của lớp":"Lớp của bạn";
+  document.getElementById("lblKhoa").textContent=isOwner?"Xem khung chương trình của lớp":"Lớp của bạn";
+  const pn=document.getElementById("progNote");
+  if(isOwner)pn.innerHTML=P.id==="K26"
+    ?`Đang xem <b>khung K26</b> (3 khối kiến thức, định hướng <b>A · Nông nghiệp thông minh</b> và <b>B · Doanh nghiệp nông nghiệp</b>). Lớp K22–K25 học khung cũ: bấm K22, K23, K24 hoặc K25 ở trên để xem.`
+    :`Đang xem <b>khung K22–K25</b> (5 khối I–V, định hướng 1 · 2 · 3). Lớp <b>K26</b> học khung mới, khác học phần và định hướng (A · B): bấm <b>K26</b> ở trên để xem.`;
   document.querySelectorAll(".controls [data-khoa]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.khoa===S.khoa));
   document.getElementById("vClass").hidden=!isOwner;
   document.getElementById("vGrades").hidden=isOwner;
@@ -1370,6 +1377,8 @@ function render(){
   document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===view));
   document.querySelector(".summary").hidden=view==="class"||view==="jobs"||view==="grades";
   document.getElementById("khoaCtl").hidden=view==="class"||view==="jobs"||view==="grades";
+  pn.hidden=!isOwner||view==="class"||view==="jobs";
+  document.getElementById("trackCtl").hidden=view==="class"||view==="jobs";
   document.querySelector(".legend").hidden=view==="class"||view==="guide"||view==="jobs"||view==="grades";
   document.getElementById("main").innerHTML=view==="class"?renderClass():view==="sem"?renderSem():view==="guide"?renderGuide():view==="jobs"?renderJobs():view==="grades"?renderGrades():renderTree();
   renderAcct();
@@ -1753,6 +1762,15 @@ function renderClass(){
      :`<div class="tbl"><div class="empty">${rows.length?`Lớp ${clsKhoa} chưa có sinh viên nào lưu tiến độ.`:"Chưa có sinh viên nào lưu tiến độ. Khi sinh viên đăng nhập, nhập MSSV, chọn lớp và đánh dấu học phần, danh sách sẽ hiện ở đây."}</div></div>`}
    <p class="hint">Bấm vào một sinh viên để xem GPA từng học kỳ, điểm từng môn và tiến độ từng nhóm học phần. ${CP?`Các cột ${CP.BLOCKS.map(id=>CP.G[id].col).join(", ")} là khối kiến thức của khung ${CP.label} (${CP.BLOCKS.map(id=>CP.G[id].req).join(" · ")} TC).`:"K22–K25 và K26 học hai khung chương trình khác nhau; chọn một lớp để xem tiến độ từng khối kiến thức."} Số TC được tính lại theo khung của từng lớp, từ các học phần sinh viên đánh dấu. GPA TL và TC TL lấy từ bảng điểm do quản trị viên nhập (TC TL chỉ gồm học phần đã đạt); GPA dưới 2,00 tô màu cảnh báo.</p></div>`;
 }
+// Học phần của định hướng sinh viên đã chọn (theo khung của lớp), đánh dấu môn sinh viên đã tích.
+function trackPart(r,e){
+  if(!e.track)return `<p class="hint">Sinh viên chưa chọn định hướng chuyên sâu (${trackList()}).</p>`;
+  const ds=new Set(r.done||[]),gs=Object.values(G).filter(g=>g.track===e.track&&(g.courses||[]).length);
+  const li=c=>`<li class="${ds.has(c.id)?"ok":""}">${ds.has(c.id)?"✓":"○"} ${c.code} · ${esc(c.vn)} (${c.tc} TC)</li>`;
+  return `<h4 class="trkh">Học phần định hướng ${e.track} · ${esc(TRK[e.track].name)}${gs.length===1?` <span class="num">${earned0(gs[0],ds)}/${gs[0].req} TC</span>`:""}</h4>`
+    +gs.map(g=>`<div class="trkg">${gs.length>1?`<b>${esc(g.short||g.name)}</b> <span class="num">${earned0(g,ds)}/${g.req} TC</span>`:""}<ul>${g.courses.map(li).join("")}</ul></div>`).join("");
+}
+function earned0(g,ds){return Math.min(g.req,g.courses.filter(c=>ds.has(c.id)).reduce((a,c)=>a+c.tc,0));}
 // Trang một sinh viên (giảng viên bấm vào dòng): giống trang "Kết quả học tập" của sinh viên + tiến độ lộ trình.
 function renderStudent(list,i){return withProg(list[i].e.p,()=>renderStudent0(list,i));}
 function renderStudent0(list,i){
@@ -1760,11 +1778,11 @@ function renderStudent0(list,i){
   const nav=y=>y?`data-go="${esc(y.r.id)}"`:"disabled";
   const prog=r.noProg?`<p class="hint">Sinh viên chưa đăng nhập trang lộ trình nên chưa có học phần tự đánh dấu.</p>`
     :`<div class="grid">${e.leaves.map(l=>`<div class="${l.e<l.g.req?"lack":""}"><span>${esc(l.g.short||l.g.name)}</span><span class="num">${l.e}/${l.g.req} TC</span></div>`).join("")}</div>
-      ${e.warn.length?`<p class="alert">Đã đánh dấu nhưng thiếu tiên quyết: ${e.warn.join(", ")}</p>`:""}`;
+      ${e.warn.length?`<p class="alert">Đã đánh dấu nhưng thiếu tiên quyết: ${e.warn.join(", ")}</p>`:""}${trackPart(r,e)}`;
   return `<div class="kq">
     <div class="svbar"><button type="button" class="iconbtn" id="clsBack">← Danh sách lớp</button>
       <span class="sp"></span><button type="button" class="iconbtn" ${nav(pv)}>‹ Sinh viên trước</button><span class="hint">${i+1}/${list.length}</span><button type="button" class="iconbtn" ${nav(nx)}>Sinh viên sau ›</button></div>
-    <div class="svh"><h2>${esc(r.hoTen||"(chưa có tên)")}</h2><p>MSSV <b>${esc(r.mssv)}</b> · Lớp ${x.k||"—"} · khung ${P.label}${x.email?" · "+esc(x.email):""}${!r.noProg&&e.track?" · Định hướng "+e.track:""}</p></div>
+    <div class="svh"><h2>${esc(r.hoTen||"(chưa có tên)")}</h2><p>MSSV <b>${esc(r.mssv)}</b> · Lớp ${x.k||"—"} · khung ${P.label}${x.email?" · "+esc(x.email):""}${!r.noProg&&e.track?` · Định hướng ${e.track} · ${esc(TRK[e.track].name)}`:""}</p></div>
     ${x.g?gradesBody(x.g,x.k):`<div class="tbl"><div class="empty">Chưa có bảng điểm của sinh viên này trên hệ thống.</div></div>`}
     <section class="kqs det"><h3><span>Tiến độ lộ trình (sinh viên tự đánh dấu)</span>${r.noProg?"":`<small>${e.tong}/165 TC</small>`}</h3>${prog}</section></div>`;
 }
@@ -1787,7 +1805,7 @@ document.addEventListener("click",e=>{
   if(go){openRow=go.dataset.go;render();document.getElementById("main").scrollIntoView();return;}
   if(id==="clsBack"){openRow=null;render();window.scrollTo(0,clsY);return;}
   const ck=e.target.closest("[data-ck]");
-  if(ck){clsKhoa=ck.dataset.ck;openRow=null;render();return;}
+  if(ck){clsKhoa=ck.dataset.ck;openRow=null;if(clsKhoa!=="all"){setKhoa(clsKhoa);save();}render();return;}
   if(id==="editProfile"){showGate("profile");return;}
   if(id==="pfCancel"){showGate(null);return;}
   if(id==="csvBtn"){
