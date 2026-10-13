@@ -395,6 +395,8 @@ const FIREBASE_CONFIG={
 };
 // Bộ sưu tập Firestore riêng cho K22–K25, không lẫn với dữ liệu K2026 ("progress").
 const COL="progress_k22_25";
+// Họ tên chưa hợp lệ: có chữ số (thường là tên tài khoản Google "25115031 VJU"), chỉ một từ, hoặc còn chữ "name".
+const badName=n=>{n=String(n||"").trim();return !n||/\d/.test(n)||!/\s/.test(n)||/^(name|họ tên|ho ten)\b/i.test(n);};
 // Các lớp dùng chung lộ trình này. Năm nhập học = 2000 + số khóa.
 const KHOAS=["K25","K24","K23","K22"];
 const entryYear=k=>2000+parseInt(k.slice(1),10);
@@ -1101,14 +1103,16 @@ function showGate(kind){
     <p class="hint">Chưa biết cách dùng? Xem <a href="huong-dan.html">hướng dẫn cho sinh viên</a>. · Giảng viên: <button type="button" class="linkbtn" data-act="loginLec">đăng nhập bằng email giảng viên</button></p>`;
   else if(kind==="domain")g.innerHTML=`<h2>Email chưa đúng</h2><p>Bạn đang đăng nhập bằng <b>${esc(ME.email)}</b>. Trang này chỉ dành cho email sinh viên <b>${DOMAIN}</b> (và giảng viên đã được cấp quyền).</p>
     <button type="button" class="primary" data-act="relogin">Đăng xuất và chọn email trường</button>`;
-  else if(kind==="profile")g.innerHTML=`<h2>Thông tin sinh viên</h2><p>Nhập mã sinh viên, họ tên và lớp để giảng viên nhận ra tiến độ của bạn. Bạn chỉ cần nhập một lần.</p>
+  else if(kind==="profile"){const bad=profile&&badName(profile.hoTen),nm=profile?profile.hoTen:(ME&&ME.name)||"";
+    g.innerHTML=`<h2>Thông tin sinh viên</h2><p>Nhập mã sinh viên, họ tên và lớp để giảng viên nhận ra tiến độ của bạn. Bạn chỉ cần nhập một lần.</p>
+    ${bad?`<div class="note warn">Họ tên đang lưu là “<b>${esc(profile.hoTen)}</b>”, chưa phải họ tên đầy đủ. Hãy nhập lại họ và tên có dấu, ví dụ <b>Nguyễn Văn An</b>.</div>`:""}
     <form id="profForm" novalidate>
      <div class="field"><label for="pfMssv">Mã sinh viên</label><input id="pfMssv" autocomplete="off" inputmode="numeric" value="${esc(profile?profile.mssv:"")}"></div>
-     <div class="field"><label for="pfName">Họ và tên</label><input id="pfName" autocomplete="name" value="${esc(profile?profile.hoTen:(ME&&ME.name)||"")}"></div>
+     <div class="field"><label for="pfName">Họ và tên</label><input id="pfName" autocomplete="name" placeholder="Ví dụ: Nguyễn Văn An" value="${esc(badName(nm)?"":nm)}"></div>
      <div class="field"><label for="pfKhoa">Lớp (khóa)</label><select id="pfKhoa"><option value="">Chọn lớp…</option>${KHOAS.map(k=>`<option value="${k}"${S.khoa===k?" selected":""}>${k} · nhập học năm ${entryYear(k)}</option>`).join("")}</select></div>
      <div class="err-text" id="pfErr" hidden></div>
-     <div style="display:flex;gap:16px;align-items:center"><button class="primary" type="submit" id="pfSave">Lưu và bắt đầu</button>${profile&&S.khoa?'<button type="button" class="linkbtn" id="pfCancel">Hủy</button>':""}</div>
-    </form>`;
+     <div style="display:flex;gap:16px;align-items:center"><button class="primary" type="submit" id="pfSave">Lưu và bắt đầu</button>${profile&&S.khoa&&!bad?'<button type="button" class="linkbtn" id="pfCancel">Hủy</button>':""}</div>
+    </form>`;}
 }
 document.addEventListener("submit",async e=>{
   if(e.target.id!=="profForm")return;e.preventDefault();
@@ -1117,6 +1121,7 @@ document.addEventListener("submit",async e=>{
   const fail=msg=>{err.textContent=msg;err.hidden=false;};
   if(!/^[0-9A-Za-z]{4,15}$/.test(m))return fail("Mã sinh viên gồm 4–15 chữ số hoặc chữ cái, không có dấu cách.");
   if(n.length<2||n.length>80)return fail("Vui lòng nhập họ và tên.");
+  if(badName(n))return fail("Họ và tên phải là tên đầy đủ có dấu (ví dụ Nguyễn Văn An), không ghi mã sinh viên hay chữ số.");
   if(!KHOAS.includes(k))return fail("Vui lòng chọn lớp của bạn (K22, K23, K24 hoặc K25).");
   const old=profile,oldK=S.khoa,first=!old;profile={mssv:m,hoTen:n};S.khoa=k;
   btn.disabled=true;btn.textContent="Đang lưu…";
@@ -1195,7 +1200,7 @@ async function onUser(u){
     if(d&&d.mssv){
       profile={mssv:d.mssv,hoTen:d.hoTen||""};done=new Set((d.done||[]).filter(id=>C[id]));
       S.track=TRACKS.includes(d.track)?d.track:null;S.khoa=KHOAS.includes(d.khoa)?d.khoa:null;save();
-      if(!S.khoa){mode="profile";showGate("profile");render();return;}
+      if(!S.khoa||badName(profile.hoTen)){mode="profile";showGate("profile");render();return;}
       mode="ready";sync={state:"saved",at:d.capNhat?new Date(d.capNhat):null};render();autoTick();
     }else{mode="profile";showGate("profile");render();}
     return;
@@ -1323,7 +1328,8 @@ const fmtTime=s=>{const d=new Date(s);return isNaN(d)?"—":d.toLocaleString("vi
 // MSSV dùng để ghép bảng điểm: lấy từ email sinh viên (MSSV@st.vju.ac.vn), không có thì lấy MSSV tự nhập.
 const mssvOf=r=>r.email&&r.email.endsWith(DOMAIN)?r.email.slice(0,-DOMAIN.length):String(r.mssv||"").toLowerCase();
 function classRows(){
-  const rows=roster.map(r=>({r,e:evalR(r),email:r.email||"",k:khoaOf(r),g:gRoster[mssvOf(r)]||null}));
+  // Họ tên: ưu tiên tên trong bảng điểm chính thức, rồi mới đến tên sinh viên tự nhập.
+  const rows=roster.map(r=>{const g=gRoster[mssvOf(r)]||null;if(g&&g.hoTen)r=Object.assign({},r,{hoTen:g.hoTen});return {r,e:evalR(r),email:r.email||"",k:khoaOf(r),g};});
   // sinh viên đã có bảng điểm nhưng chưa đăng nhập trang lộ trình
   const has=new Set(rows.map(x=>mssvOf(x.r)));
   for(const [m,g] of Object.entries(gRoster))if(!has.has(m)){
@@ -1364,7 +1370,7 @@ function renderClass(){
   const tabs=[["all","Tất cả các lớp",[rows.length,tcAvg(rows)]]].concat(KHOAS.map(k=>[k,"Lớp "+k,kAvg(k)]));
   const body=list.map(x=>{
     const r=x.r,e=x.e;
-    return `<tr class="r" data-row="${esc(r.id)}" title="Bấm để xem kết quả học tập và tiến độ"><td class="n">${esc(r.mssv)}</td><td style="white-space:nowrap"><span class="lnk">${esc(r.hoTen||"")}</span></td><td>${x.k||'<span class="tmp">chưa chọn</span>'}</td><td>${esc(x.email||"—")}</td>
+    return `<tr class="r" data-row="${esc(r.id)}" title="Bấm để xem kết quả học tập và tiến độ"><td class="n">${esc(r.mssv)}</td><td style="white-space:nowrap"><span class="lnk">${esc(r.hoTen||"")}</span>${badName(r.hoTen)?' <span class="tmp" title="Sinh viên ghi chưa đúng họ tên; lần đăng nhập sau trang sẽ yêu cầu sửa">tên chưa đúng</span>':""}</td><td>${x.k||'<span class="tmp">chưa chọn</span>'}</td><td>${esc(x.email||"—")}</td>
       <td>${r.noProg?"—":e.track?"Định hướng "+e.track:'<span class="tmp">chưa chọn</span>'}</td>${gpaCell(x)}<td>${r.noProg?'<span class="tmp">chưa đăng nhập</span>':miniBar(e.tong,165)}</td>
       ${r.noProg?'<td class="n">—</td>'.repeat(7):`${e.blk.map((v,i)=>`<td class="n">${v}/${G[BLOCKS[i]].req}</td>`).join("")}<td class="n">${e.dk}/15</td>
       <td class="n">${e.warn.length?`<span class="pre">${e.warn.length}</span>`:"0"}</td>`}<td class="n">${r.noProg?"—":fmtTime(r.capNhat)}</td></tr>`;}).join("");
