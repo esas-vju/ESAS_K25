@@ -231,6 +231,9 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 .field select{font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
 /* kết quả học tập */
 .kq{margin-top:22px;display:grid;gap:14px}
+.svbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center} .svbar .sp{flex:1} .svbar button[disabled]{opacity:.4;cursor:default}
+.svh h2{margin:0;font-size:22px} .svh p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.tbl tr.r .lnk{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .kpi b small{font-size:13px;color:var(--muted);font-weight:500}
 .kpi .rk{display:inline-block;margin-top:4px;font-size:12px;font-weight:600;color:var(--accent);background:var(--accent-soft);border-radius:5px;padding:0 6px}
 .chart{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
@@ -385,10 +388,10 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 // Để trống apiKey thì trang chạy ở chế độ thử, chỉ lưu trên trình duyệt.
 // =====================================================================
 const FIREBASE_CONFIG={
-  apiKey:"AIzaSyAFoaHn_RqlTBa4w-JhX06eJNZ6juNG8JM",
-  authDomain:"esas-k22-k25.firebaseapp.com",
-  projectId:"esas-k22-k25",
-  appId:"1:164637607192:web:361f440f4ed9df07920a6d"
+  apiKey:"",
+  authDomain:"",
+  projectId:"",
+  appId:""
 };
 // Bộ sưu tập Firestore riêng cho K22–K25, không lẫn với dữ liệu K2026 ("progress").
 const COL="progress_k22_25";
@@ -1027,7 +1030,7 @@ const DOMAIN="@st.vju.ac.vn";
 const FB="https://www.gstatic.com/firebasejs/10.12.2/";
 let mode="loading",FA=null,FS=null,auth=null,fs=null,ME=null,isOwner=false,myRef=null,profile=null,unsubClass=null;
 let sync={state:"idle",at:null},writing=false,dirty=false,wTimer=null,loginErr="";
-let roster=[],clsQ="",clsSort="khoa",clsKhoa="all",openRow=null,clsErr=null;
+let roster=[],clsQ="",clsSort="khoa",clsKhoa="all",openRow=null,clsY=0,clsErr=null;
 // bảng điểm: grades_k22_25/<MSSV>, MSSV lấy từ email sinh viên
 const GCOL="grades_k22_25";
 let D=null,grades=null,gState="idle",gTicked=false,gRoster={},gErr=null;
@@ -1245,9 +1248,15 @@ function renderGrades(){
   if(gState==="loading"||gState==="idle")return wrap(`<div class="tbl"><div class="empty">Đang tải bảng điểm…</div></div>`);
   if(gState==="err")return wrap(`<div class="note warn">Không tải được bảng điểm. Kiểm tra mạng rồi tải lại trang.</div>`);
   if(gState==="none")return wrap(`<div class="tbl"><div class="empty">Chưa có bảng điểm của bạn trên hệ thống. Bảng điểm do giảng viên cập nhật sau mỗi học kỳ; nếu bạn đã có điểm mà chưa thấy, hãy báo giảng viên.</div></div>`);
-  const R=D.summarize(grades.hk);
+  return wrap(gradesBody(grades,S.khoa));
+}
+// Phần thân trang "Kết quả học tập": dùng cho sinh viên và cho giảng viên khi mở một sinh viên.
+// g: {hk, khoa, capNhat}; kDef: lớp dự phòng khi bảng điểm không ghi lớp.
+function gradesBody(g,kDef){
+  const R=D.summarize(g.hk);
   const last=R.sems[R.sems.length-1];
-  const k=KHOAS.includes(grades.khoa)?grades.khoa:S.khoa;
+  if(!last)return `<div class="tbl"><div class="empty">Bảng điểm chưa có học kỳ nào.</div></div>`;
+  const k=KHOAS.includes(g.khoa)?g.khoa:kDef;
   const ord=s=>k?(parseInt(s.nam,10)-entryYear(k))*2+(s.ky===3?2:s.ky):0;
   const seen={};
   const secs=R.sems.map(s=>{
@@ -1271,7 +1280,7 @@ function renderGrades(){
       <div class="tbl"><table><thead><tr><th>Mã HP</th><th>Học phần</th><th>TC</th><th>Điểm 10</th><th>Điểm chữ</th><th>Hệ 4</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
   }).reverse().join("");
   const noTc=R.no.reduce((a,x)=>a+x.tc,0);
-  return wrap(`<div class="kpis">
+  return `<div class="kpis">
      <div class="kpi"><b>${D.fmt(R.cum.gpa)}<small> / 4</small></b><span>GPA tích lũy</span>${R.cum.gpa!=null?`<br><span class="rk">${D.rank(R.cum.gpa)}</span>`:""}</div>
      <div class="kpi"><b>${R.cum.tc}<small> TC</small></b><span>tín chỉ tích lũy (đã đạt)</span></div>
      <div class="kpi"><b>${D.fmt(last.gpa)}</b><span>GPA ${D.semName(last).toLowerCase()}</span></div>
@@ -1279,7 +1288,7 @@ function renderGrades(){
     ${R.no.length?`<div class="note warn"><b>Cần học lại:</b> ${R.no.map(x=>`${esc(x.t)} (${esc(x.m)}, ${x.tc} TC, điểm ${x.d.toFixed(1)})`).join("; ")}.</div>`:""}
     ${gChart(R.sems)}
     ${secs}
-    <p class="hint">Cập nhật bảng điểm: ${fmtTime(grades.capNhat)}. GPA học kỳ tính mọi học phần có điểm trong kỳ, kể cả điểm F. GPA tích lũy lấy điểm cao nhất của mỗi học phần và chỉ tính học phần đã đạt (từ 4,0). Học phần điều kiện không tính. Thang quy đổi: A+ ≥9,0 · A ≥8,5 · B+ ≥8,0 · B ≥7,0 · C+ ≥6,5 · C ≥5,5 · D+ ≥5,0 · D ≥4,0 · F &lt;4,0. Kết quả để tham khảo; bảng điểm chính thức là bảng điểm trên hệ thống đào tạo của nhà trường.</p>`);
+    <p class="hint">Cập nhật bảng điểm: ${fmtTime(g.capNhat)}. GPA học kỳ tính mọi học phần có điểm trong kỳ, kể cả điểm F. GPA tích lũy lấy điểm cao nhất của mỗi học phần và chỉ tính học phần đã đạt (từ 4,0). Học phần điều kiện không tính. Thang quy đổi: A+ ≥9,0 · A ≥8,5 · B+ ≥8,0 · B ≥7,0 · C+ ≥6,5 · C ≥5,5 · D+ ≥5,0 · D ≥4,0 · F &lt;4,0. Kết quả để tham khảo; bảng điểm chính thức là bảng điểm trên hệ thống đào tạo của nhà trường.</p>`;
 }
 
 // ---------- theo dõi lớp (giảng viên) ----------
@@ -1330,10 +1339,15 @@ function classRows(){
     recent:(a,b)=>String(b.r.capNhat||"").localeCompare(String(a.r.capNhat||""))}[clsSort];
   list.sort(cmp);return {rows,list};
 }
+// Các học kỳ có trong bảng điểm của danh sách đang xem (cột GPA từng kỳ).
+const semKeys=list=>[...new Set(list.flatMap(x=>x.g?x.g.R.sems.map(s=>s.key):[]))].sort();
+const semShort=k=>{const [n,ky]=k.split("_");return `${ky==="3"?"Hè":"HK"+ky} ${n.slice(2,4)}-${n.slice(7,9)}`;};
+const semOf=(x,k)=>x.g?x.g.R.sems.find(s=>s.key===k):null;
 function miniBar(v,max){return `<div class="mini"><span class="num">${v}/${max}</span><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`;}
 function renderClass(){
   if(clsErr)return `<div class="cls"><div class="note warn">Không đọc được dữ liệu lớp (${esc(clsErr)}). Tải lại trang để thử lại.</div></div>`;
   const {rows,list}=classRows();
+  if(openRow){const i=list.findIndex(x=>x.r.id===openRow);if(i>=0)return renderStudent(list,i);openRow=null;}
   const inK=clsKhoa==="all"?rows:rows.filter(x=>x.k===clsKhoa);const n=inK.length;
   const pr=inK.filter(x=>!x.r.noProg),nP=pr.length;
   const avg=nP?Math.round(pr.reduce((a,x)=>a+x.e.tong,0)/nP):0;
@@ -1349,16 +1363,11 @@ function renderClass(){
   const noK=rows.filter(x=>!x.k).length;
   const tabs=[["all","Tất cả các lớp",[rows.length,tcAvg(rows)]]].concat(KHOAS.map(k=>[k,"Lớp "+k,kAvg(k)]));
   const body=list.map(x=>{
-    const r=x.r,e=x.e,op=openRow===r.id;
-    let h=`<tr class="r" data-row="${esc(r.id)}" aria-expanded="${op}"><td class="n">${esc(r.mssv)}</td><td style="white-space:nowrap">${esc(r.hoTen||"")}</td><td>${x.k||'<span class="tmp">chưa chọn</span>'}</td><td>${esc(x.email||"—")}</td>
+    const r=x.r,e=x.e;
+    return `<tr class="r" data-row="${esc(r.id)}" title="Bấm để xem kết quả học tập và tiến độ"><td class="n">${esc(r.mssv)}</td><td style="white-space:nowrap"><span class="lnk">${esc(r.hoTen||"")}</span></td><td>${x.k||'<span class="tmp">chưa chọn</span>'}</td><td>${esc(x.email||"—")}</td>
       <td>${r.noProg?"—":e.track?"Định hướng "+e.track:'<span class="tmp">chưa chọn</span>'}</td>${gpaCell(x)}<td>${r.noProg?'<span class="tmp">chưa đăng nhập</span>':miniBar(e.tong,165)}</td>
       ${r.noProg?'<td class="n">—</td>'.repeat(7):`${e.blk.map((v,i)=>`<td class="n">${v}/${G[BLOCKS[i]].req}</td>`).join("")}<td class="n">${e.dk}/15</td>
-      <td class="n">${e.warn.length?`<span class="pre">${e.warn.length}</span>`:"0"}</td>`}<td class="n">${r.noProg?"—":fmtTime(r.capNhat)}</td></tr>`;
-    const G2=x.g&&x.g.R;
-    if(op)h+=`<tr class="det"><td colspan="16">${G2?`<p class="hint" style="margin:0 0 6px"><b>Bảng điểm:</b> ${G2.sems.map(s=>`${s.ky===3?"Hè":"HK"+s.ky} ${s.nam}: GPA ${D.fmt(s.gpa)}${s.truot?` (trượt ${s.truot} TC)`:""}`).join(" · ")} · <b>tích lũy ${D.fmt(G2.cum.gpa)}, ${G2.cum.tc} TC${G2.cum.gpa!=null?", "+D.rank(G2.cum.gpa):""}</b></p>
-      ${G2.no.length?`<p class="alert" style="margin:0 0 6px">Cần học lại: ${G2.no.map(n=>`${esc(n.t)} (${esc(n.m)}, ${n.d.toFixed(1)})`).join("; ")}</p>`:""}`:'<p class="hint" style="margin:0 0 6px">Chưa có bảng điểm.</p>'}<div class="grid">${e.leaves.map(l=>`<div class="${l.e<l.g.req?"lack":""}"><span>${esc(l.g.short||l.g.name)}</span><span class="num">${l.e}/${l.g.req} TC</span></div>`).join("")}</div>
-      ${e.warn.length?`<p class="alert">Đã đánh dấu nhưng thiếu tiên quyết: ${e.warn.join(", ")}</p>`:""}</td></tr>`;
-    return h;}).join("");
+      <td class="n">${e.warn.length?`<span class="pre">${e.warn.length}</span>`:"0"}</td>`}<td class="n">${r.noProg?"—":fmtTime(r.capNhat)}</td></tr>`;}).join("");
   return `<div class="cls">
    <div><span class="ctl-label">Chia lớp</span><div class="kseg" role="group" aria-label="Chọn lớp">${tabs.map(([k,l,[c,a]])=>`<button type="button" data-ck="${k}" aria-pressed="${clsKhoa===k}"><b>${l}</b><span>${c} SV · TB ${a} TC</span></button>`).join("")}</div>
     ${noK?`<p class="hint">${noK} sinh viên chưa chọn lớp; chỉ hiện ở “Tất cả các lớp”.</p>`:""}</div>
@@ -1369,20 +1378,38 @@ function renderClass(){
    <div class="clsbar"><input type="search" id="clsSearch" placeholder="Tìm theo MSSV, họ tên, email" value="${esc(clsQ)}" aria-label="Tìm sinh viên">
     <select id="clsSort" aria-label="Sắp xếp">${[["khoa","Sắp xếp: lớp, rồi MSSV"],["mssv","Sắp xếp: MSSV"],["low","Tiến độ thấp trước"],["gpa","GPA thấp trước"],["high","Tiến độ cao trước"],["recent","Cập nhật gần nhất"]].map(([v,t])=>`<option value="${v}"${v===clsSort?" selected":""}>${t}</option>`).join("")}</select>
     <button type="button" class="iconbtn" id="csvBtn">Tải CSV</button><button type="button" class="iconbtn" id="copyBtn">Sao chép bảng</button></div>
-   ${n?`<div class="tbl"><table class="wide"><thead><tr><th>MSSV</th><th>Họ tên</th><th>Lớp</th><th>Email</th><th>Định hướng</th><th>GPA TL</th><th>TC TL</th><th>Tổng (đánh dấu)</th><th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th><th>HP điều kiện</th><th>Thiếu TQ</th><th>Cập nhật</th></tr></thead><tbody>${body||'<tr><td colspan="16" class="empty">Không có sinh viên khớp từ khóa.</td></tr>'}</tbody></table></div>`
+   ${n?`<div class="tbl"><table class="wide"><thead><tr><th>MSSV</th><th>Họ tên</th><th>Lớp</th><th>Email</th><th>Định hướng</th><th>GPA TL</th><th>TC TL</th><th>Tổng (đánh dấu)</th><th>I</th><th>II</th><th>III</th><th>IV</th><th>V</th><th>HP điều kiện</th><th>Thiếu TQ</th><th>Cập nhật</th></tr></thead><tbody>${body||`<tr><td colspan="16" class="empty">Không có sinh viên khớp từ khóa.</td></tr>`}</tbody></table></div>`
      :`<div class="tbl"><div class="empty">${rows.length?`Lớp ${clsKhoa} chưa có sinh viên nào lưu tiến độ.`:"Chưa có sinh viên nào lưu tiến độ. Khi sinh viên đăng nhập, nhập MSSV, chọn lớp và đánh dấu học phần, danh sách sẽ hiện ở đây."}</div></div>`}
-   <p class="hint">Cột I–V là năm khối kiến thức (26 · 34 · 30 · 20 · 55 TC). Bấm vào một dòng để xem tiến độ từng nhóm học phần. Số TC được tính lại từ các học phần sinh viên đánh dấu. GPA TL và TC TL lấy từ bảng điểm do quản trị viên nhập (TC TL chỉ gồm học phần đã đạt); GPA dưới 2,00 tô màu cảnh báo.</p></div>`;
+   <p class="hint">Bấm vào một sinh viên để xem GPA từng học kỳ, điểm từng môn và tiến độ từng nhóm học phần. Cột I–V là năm khối kiến thức (26 · 34 · 30 · 20 · 55 TC). Số TC được tính lại từ các học phần sinh viên đánh dấu. GPA TL và TC TL lấy từ bảng điểm do quản trị viên nhập (TC TL chỉ gồm học phần đã đạt); GPA dưới 2,00 tô màu cảnh báo.</p></div>`;
+}
+// Trang một sinh viên (giảng viên bấm vào dòng): giống trang "Kết quả học tập" của sinh viên + tiến độ lộ trình.
+function renderStudent(list,i){
+  const x=list[i],r=x.r,e=x.e,pv=list[i-1],nx=list[i+1];
+  const nav=y=>y?`data-go="${esc(y.r.id)}"`:"disabled";
+  const prog=r.noProg?`<p class="hint">Sinh viên chưa đăng nhập trang lộ trình nên chưa có học phần tự đánh dấu.</p>`
+    :`<div class="grid">${e.leaves.map(l=>`<div class="${l.e<l.g.req?"lack":""}"><span>${esc(l.g.short||l.g.name)}</span><span class="num">${l.e}/${l.g.req} TC</span></div>`).join("")}</div>
+      ${e.warn.length?`<p class="alert">Đã đánh dấu nhưng thiếu tiên quyết: ${e.warn.join(", ")}</p>`:""}`;
+  return `<div class="kq">
+    <div class="svbar"><button type="button" class="iconbtn" id="clsBack">← Danh sách lớp</button>
+      <span class="sp"></span><button type="button" class="iconbtn" ${nav(pv)}>‹ Sinh viên trước</button><span class="hint">${i+1}/${list.length}</span><button type="button" class="iconbtn" ${nav(nx)}>Sinh viên sau ›</button></div>
+    <div class="svh"><h2>${esc(r.hoTen||"(chưa có tên)")}</h2><p>MSSV <b>${esc(r.mssv)}</b> · Lớp ${x.k||"—"}${x.email?" · "+esc(x.email):""}${!r.noProg&&e.track?" · Định hướng "+e.track:""}</p></div>
+    ${x.g?gradesBody(x.g,x.k):`<div class="tbl"><div class="empty">Chưa có bảng điểm của sinh viên này trên hệ thống.</div></div>`}
+    <section class="kqs det"><h3><span>Tiến độ lộ trình (sinh viên tự đánh dấu)</span>${r.noProg?"":`<small>${e.tong}/165 TC</small>`}</h3>${prog}</section></div>`;
 }
 function tableData(){
-  const head=["MSSV","Họ tên","Lớp","Email","Định hướng","GPA tích lũy","TC tích lũy","GPA học kỳ gần nhất","TC chưa đạt","Tổng TC đánh dấu (/165)"].concat(BLOCKS.map(id=>`${G[id].short} (/${G[id].req})`),["HP điều kiện (/15)","Số HP thiếu tiên quyết","Cập nhật"]);
-  return [head].concat(classRows().list.map(x=>[x.r.mssv,x.r.hoTen||"",x.k,x.email,x.e.track||"",...(x.g?[D.fmt(x.g.R.cum.gpa),x.g.R.cum.tc,D.fmt(x.g.R.sems[x.g.R.sems.length-1].gpa),x.g.R.no.reduce((a,n)=>a+n.tc,0)]:["","","",""]),x.r.noProg?"":x.e.tong,...x.e.blk,x.e.dk,x.e.warn.length,fmtTime(x.r.capNhat)]));
+  const list=classRows().list,sk=semKeys(list);
+  const head=["MSSV","Họ tên","Lớp","Email","Định hướng","GPA tích lũy","TC tích lũy","GPA học kỳ gần nhất","TC chưa đạt","Tổng TC đánh dấu (/165)"].concat(BLOCKS.map(id=>`${G[id].short} (/${G[id].req})`),["HP điều kiện (/15)","Số HP thiếu tiên quyết","Cập nhật"],sk.map(k=>"GPA "+semShort(k)));
+  return [head].concat(list.map(x=>[x.r.mssv,x.r.hoTen||"",x.k,x.email,x.e.track||"",...(x.g?[D.fmt(x.g.R.cum.gpa),x.g.R.cum.tc,D.fmt(x.g.R.sems[x.g.R.sems.length-1].gpa),x.g.R.no.reduce((a,n)=>a+n.tc,0)]:["","","",""]),x.r.noProg?"":x.e.tong,...x.e.blk,x.e.dk,x.e.warn.length,fmtTime(x.r.capNhat),...sk.map(k=>{const s=semOf(x,k);return s?D.fmt(s.gpa):"";})]));
 }
 document.addEventListener("input",e=>{if(e.target.id==="clsSearch"){clsQ=e.target.value;render();}});
 document.addEventListener("change",e=>{if(e.target.id==="clsSort"){clsSort=e.target.value;render();}});
 document.addEventListener("click",e=>{
   const id=e.target.id;
   const row=e.target.closest("tr[data-row]");
-  if(row){openRow=openRow===row.dataset.row?null:row.dataset.row;render();return;}
+  if(row){clsY=window.scrollY;openRow=row.dataset.row;render();document.getElementById("main").scrollIntoView();return;}
+  const go=e.target.closest("[data-go]");
+  if(go){openRow=go.dataset.go;render();document.getElementById("main").scrollIntoView();return;}
+  if(id==="clsBack"){openRow=null;render();window.scrollTo(0,clsY);return;}
   const ck=e.target.closest("[data-ck]");
   if(ck){clsKhoa=ck.dataset.ck;openRow=null;render();return;}
   if(id==="editProfile"){showGate("profile");return;}
