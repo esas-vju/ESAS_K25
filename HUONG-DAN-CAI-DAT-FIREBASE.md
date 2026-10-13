@@ -143,7 +143,7 @@ Thêm giảng viên khác: chọn collection `lecturers`, bấm **+ Add document
 
 ### 4b. Cấp quyền nhập bảng điểm (quản trị viên)
 
-Làm giống bước 4 nhưng với collection **`admins`**: *Collection ID* `admins`, *Document ID* là email người được nhập điểm (viết thường), thêm trường `ten`. Chỉ người có trong `admins` mới lưu được bảng điểm. Một người có thể nằm ở cả `lecturers` và `admins`.
+Làm giống bước 4 nhưng với collection **`admins`**: *Collection ID* `admins`, *Document ID* là email người được nhập điểm (viết thường), thêm trường `ten`. Chỉ người có trong `admins` mới lưu được bảng điểm. Một người có thể nằm ở cả `lecturers` và `admins`. Giảng viên có trong cả hai danh sách sẽ thấy nút **📝 Nhập điểm** trên trang chính (thanh tài khoản và mục *Theo dõi lớp*), bấm vào sẽ mở `nhap-diem.html`.
 
 > Nếu bạn đã dán `firestore.rules` trước khi có tính năng bảng điểm, hãy **dán lại tệp `firestore.rules` mới** (bước 2.5) và bấm **Publish**.
 

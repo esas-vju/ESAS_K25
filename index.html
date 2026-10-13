@@ -155,6 +155,8 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 .acct .st::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--branch)}
 .acct .st.ok::before{background:var(--accent)} .acct .st.err{color:var(--warn)} .acct .st.err::before{background:var(--warn)}
 .acct .sp{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.gradebtn{display:inline-flex;align-items:center;gap:4px;background:var(--accent);color:var(--accent-ink);border-radius:8px;padding:4px 12px;font-size:13.5px;font-weight:600;text-decoration:none}
+.gradebtn:hover{filter:brightness(1.1)}
 .linkbtn{border:0;background:none;color:var(--accent);cursor:pointer;padding:0;font-size:13.5px;text-decoration:underline}
 .gate{margin-top:18px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:12px;max-width:560px}
 .gate h2{margin:0;font-family:var(--f-display);font-size:21px}
@@ -1412,7 +1414,7 @@ function render(){
 // Giảng viên có email trong bộ sưu tập "lecturers" đọc được cả 5 lớp (xem firestore.rules).
 const DOMAIN="@st.vju.ac.vn";
 const FB="https://www.gstatic.com/firebasejs/10.12.2/";
-let mode="loading",FA=null,FS=null,auth=null,fs=null,ME=null,isOwner=false,myRef=null,profile=null,unsubClass=null;
+let mode="loading",FA=null,FS=null,auth=null,fs=null,ME=null,isOwner=false,canGrade=false,myRef=null,profile=null,unsubClass=null;
 let sync={state:"idle",at:null},writing=false,dirty=false,wTimer=null,loginErr="";
 let roster=[],clsQ="",clsSort="khoa",clsKhoa="all",openRow=null,clsY=0,clsErr=null;
 // bảng điểm: grades_k22_25/<MSSV>, MSSV lấy từ email sinh viên
@@ -1463,7 +1465,7 @@ function renderAcct(){
   if(mode==="loading")h=`<span class="st">Đang kết nối tài khoản…</span>`;
   else if(mode==="local")h=`<span class="st err">Chế độ thử: trang chưa được cấu hình Firebase nên tiến độ chỉ lưu trên trình duyệt này.</span>`;
   else if(mode==="offline")h=`<span class="st err">Không kết nối được hệ thống lưu trữ. Tiến độ tạm lưu trên trình duyệt này; tải lại trang khi có mạng.</span>`;
-  else if(mode==="owner")h=`<span class="who">${esc(ME.email)}</span><span class="st ok">Giảng viên · xem tiến độ từng lớp K22–K26 ở mục “Theo dõi lớp”</span><span class="sp">${out}</span>`;
+  else if(mode==="owner")h=`<span class="who">${esc(ME.email)}</span><span class="st ok">Giảng viên · xem tiến độ từng lớp K22–K26 ở mục “Theo dõi lớp”</span><span class="sp">${canGrade?`<a class="gradebtn" href="nhap-diem.html">📝 Nhập điểm</a>`:""}${out}</span>`;
   else if(mode==="ready"||mode==="noPerm"){
     h=`<span class="who">${esc(profile.hoTen)} · ${esc(profile.mssv)}${S.khoa?" · Lớp "+S.khoa:""}</span><span>${esc(ME.email)}</span>`;
     h+=mode==="noPerm"?`<span class="st err">Chưa lưu được vào tài khoản. Tải lại trang hoặc báo giảng viên.</span>`
@@ -1567,7 +1569,7 @@ async function getRetry(ref){
 }
 async function onUser(u){
   if(unsubClass){unsubClass();unsubClass=null;}
-  isOwner=false;profile=null;myRef=null;sync={state:"idle",at:null};grades=null;gState="idle";gTicked=false;gRoster={};gErr=null;
+  isOwner=false;canGrade=false;profile=null;myRef=null;sync={state:"idle",at:null};grades=null;gState="idle";gTicked=false;gRoster={};gErr=null;
   if(!u){ME=null;mode="login";showGate("login");render();return;}
   const email=(u.email||"").toLowerCase();
   ME={email,name:u.displayName||""};
@@ -1591,7 +1593,11 @@ async function onUser(u){
   // không phải email sinh viên: kiểm tra danh sách giảng viên
   let lec=null;
   try{lec=await getRetry(FS.doc(fs,"lecturers",email));}catch(e){}
-  if(lec&&lec.exists()){isOwner=true;mode="owner";showGate(null);render();watchClass();return;}
+  if(lec&&lec.exists()){
+    // giảng viên có thêm tài liệu admins/<email> thì thấy nút "Nhập điểm"
+    try{const ad=await getRetry(FS.doc(fs,"admins",email));canGrade=!!(ad&&ad.exists());}catch(e){}
+    isOwner=true;mode="owner";showGate(null);render();watchClass();return;
+  }
   mode="domain";showGate("domain");render();
 }
 
@@ -1770,6 +1776,7 @@ function renderClass(){
       ${r.noProg?'<td class="n">—</td>'.repeat(nb+2):`${CP?e.blk.map((v,i)=>`<td class="n">${v}/${CP.G[CP.BLOCKS[i]].req}</td>`).join(""):""}<td class="n">${e.dk}/15</td>
       <td class="n">${e.warn.length?`<span class="pre">${e.warn.length}</span>`:"0"}</td>`}<td class="n">${r.noProg?"—":fmtTime(r.capNhat)}</td></tr>`;}).join("");
   return `<div class="cls">
+   ${canGrade?`<div><a class="gradebtn" href="nhap-diem.html">📝 Nhập điểm</a> <span class="hint">Tải bảng điểm mới của các lớp lên hệ thống.</span></div>`:""}
    <div><span class="ctl-label">Chia lớp</span><div class="kseg" role="group" aria-label="Chọn lớp">${tabs.map(([k,l,[c,a]])=>`<button type="button" data-ck="${k}" aria-pressed="${clsKhoa===k}"><b>${l}</b><span>${c} SV · TB ${a} TC</span></button>`).join("")}</div>
     ${noK?`<p class="hint">${noK} sinh viên chưa chọn lớp; chỉ hiện ở “Tất cả các lớp”.</p>`:""}</div>
    <div class="kpis"><div class="kpi"><b>${nP}</b><span>sinh viên${clsKhoa==="all"?"":" lớp "+clsKhoa} đã đăng nhập trang${n>nP?` (+${n-nP} chỉ có bảng điểm)`:""}</span></div><div class="kpi"><b>${avg}</b><span>TC trung bình / 165</span></div>
