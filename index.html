@@ -294,6 +294,7 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 .ct table{min-width:640px}
 .ct td.n,.ct th.n{text-align:right}
 .ct tr.grp td{background:var(--accent-soft);font-weight:600}
+.ct tr.total{display:table-row}
 .ct tr.total td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:480px){.tree ul{padding-left:16px}.tree ul ul>li::before,.tree ul ul>li::after{left:-11px}.tree ul ul>li::after{width:9px}}
@@ -1243,17 +1244,29 @@ function guide26(){
   const chk=gradChecks(),okN=chk.filter(i=>i.ok).length;
   const li=a=>a.map(s=>`<li>${s}</li>`).join("");
   const sec=(id,title,body)=>`<section class="gsec" id="gd-${id}" aria-labelledby="gh-${id}"><h2 id="gh-${id}">${title}</h2>${body}</section>`;
-  const jump=[["dk","Điều kiện tốt nghiệp"],["chon","Chọn hướng nào?"],["huong","Chi tiết định hướng"],["ss","So sánh nhanh"],["nam","Mốc từng năm"]];
+  const jump=[["ct","Cấu trúc 165 TC"],["chon","Chọn hướng nào?"],["huong","Chi tiết định hướng"],["ss","So sánh nhanh"],["nam","Mốc từng năm"],["dk","Điều kiện tốt nghiệp"]];
   return `<div class="guide">
   <nav class="jump" aria-label="Mục lục cẩm nang">${jump.map(([k,l])=>`<button type="button" class="iconbtn" data-jump="gd-${k}">${l}</button>`).join("")}</nav>
-  ${sec("dk",`Điều kiện xét tốt nghiệp · bạn đạt ${okN}/${chk.length} mục`,`
-   <p class="muted">Thiếu một trong các mục dưới đây thì không được xét tốt nghiệp, dù chọn hướng nào. Danh sách tự cập nhật theo các học phần bạn đã đánh dấu. Dư TC ở khối tự chọn này không bù cho khối khác.</p>
-   <ul class="chk">${chk.map(i=>`<li class="${i.ok?"ok":"no"}"><span class="ic">${i.ok?"✓":"○"}</span><span>${i.label}</span><span class="v">${i.v}</span></li>`).join("")}
-    <li class="self"><span class="ic">•</span><span>Đạt chuẩn đầu ra Tiếng Anh bậc 4 (B2) theo Khung năng lực ngoại ngữ 6 bậc dùng cho Việt Nam</span><span class="v">tự kiểm tra</span></li>
-    <li class="self"><span class="ic">•</span><span>Điểm trung bình chung tích luỹ đạt mức tối thiểu theo Quy chế đào tạo của ĐHQGHN</span><span class="v">tự kiểm tra</span></li>
-    <li class="self"><span class="ic">•</span><span>Không trong thời gian bị truy cứu trách nhiệm hình sự hoặc kỷ luật đình chỉ học tập</span><span class="v">tự kiểm tra</span></li></ul>
-   <div class="note"><b>Học phần thế kỷ 21:</b> mọi học phần đều 2 TC, nên chọn đúng 4 học phần thuộc ít nhất 2 nhóm. AET2013 cần Giải tích 1; AET2016 và VJU2051 cần cả Giải tích 1 và Đại số tuyến tính 1, nên học từ HK4 trở đi.</div>
-   <div class="note"><b>Lưu ý tiên quyết khi đăng ký:</b> lộ trình chuẩn xếp AET2016 Thuật toán ở HK2, nhưng học phần này cần Đại số tuyến tính 1 (HK3). PEC1008 Kinh tế chính trị cần PHI1006 Triết học, nhưng cả hai đều ở HK1. Hãy hỏi cố vấn học tập hoặc Phòng Đào tạo trước khi đăng ký.</div>`)}
+  ${sec("ct","Cấu trúc chương trình – 165 tín chỉ",`
+   <p class="muted">Hai định hướng dùng chung 149 tín chỉ. Khác biệt nằm ở 16 TC chuyên sâu (6 học phần của định hướng), và được định hình thêm bởi 12 TC tự chọn khác, 8 TC học phần thế kỷ 21, 3 TC ngoại ngữ chuyên ngành và đề tài đồ án.</p>
+   <div class="stack" role="img" aria-label="Phân bổ tín chỉ theo khối kiến thức">
+    ${[[41,"#6b7a72","1 · 41"],[47,"#4f7f9a","2.1 · 47"],[62,"#2f6b3c","2.2 · 62"],[15,"#8a7a4a","3 · 15"]].map(([n,c,k])=>`<div style="flex:${n};background:${c}">${k}</div>`).join("")}</div>
+   <div class="slegend">${[["#6b7a72","1. Giáo dục đại cương"],["#4f7f9a","2.1 Cơ sở ngành"],["#2f6b3c","2.2 Cốt lõi ngành"],["#8a7a4a","3. Thực tập và tốt nghiệp"]].map(([c,l])=>`<span><i style="background:${c}"></i>${l}</span>`).join("")}</div>
+   <div class="tbl ct"><table>
+    <thead><tr><th>Khối kiến thức</th><th class="n">Bắt buộc</th><th class="n">Tự chọn</th><th class="n">Tổng</th><th>Ghi chú tư vấn</th></tr></thead>
+    <tbody>
+     <tr class="grp"><td colspan="5">1. Giáo dục đại cương – 41 TC</td></tr>
+     <tr><td>&nbsp;&nbsp;Kiến thức bắt buộc ĐHQGHN</td><td class="n">26</td><td class="n">–</td><td class="n">26</td><td>Lý luận chính trị và Pháp luật 13 · Công nghệ số và AI 3 · Tiếng Anh B1, B2 10. Không gồm GDTC, GDQP-AN và Kỹ năng bổ trợ (15 TC), nhưng đây là điều kiện xét tốt nghiệp</td></tr>
+     <tr><td>&nbsp;&nbsp;Kiến thức đại cương ĐH Việt Nhật</td><td class="n">7</td><td class="n">8</td><td class="n">15</td><td>Bắt buộc: Tiếng Nhật sơ cấp 1–2, Phương pháp luận NCKH. Tự chọn: <b>4 học phần thế kỷ 21 (2 TC/học phần) thuộc ít nhất 2 nhóm</b> trong 5 nhóm A–E</td></tr>
+     <tr class="grp"><td colspan="5">2. Cơ sở và cốt lõi ngành – 109 TC</td></tr>
+     <tr><td>&nbsp;&nbsp;Cơ sở ngành</td><td class="n">44</td><td class="n">3</td><td class="n">47</td><td>Toán và khoa học cơ bản 14 · Cơ sở ngành 30 · chọn 1 trong 2: Tiếng Anh chuyên ngành <i>hoặc</i> Tiếng Nhật chuyên ngành</td></tr>
+     <tr><td>&nbsp;&nbsp;Cốt lõi ngành bắt buộc</td><td class="n">34</td><td class="n">–</td><td class="n">34</td><td>Gồm Học theo dự án (3 TC) và Ứng dụng công nghệ trong quản lý trang trại</td></tr>
+     <tr><td>&nbsp;&nbsp;Định hướng chuyên sâu</td><td class="n">–</td><td class="n">16</td><td class="n">16</td><td><b>Chọn 1 định hướng (A hoặc B), học đủ cả 6 học phần của hướng đó</b></td></tr>
+     <tr><td>&nbsp;&nbsp;Tự chọn khác</td><td class="n">–</td><td class="n">12</td><td class="n">12</td><td>Lộ trình chuẩn xếp sẵn 8 TC ở HK7, cộng 4 TC chọn theo mục tiêu (xem mục Chi tiết định hướng)</td></tr>
+     <tr><td>3. Thực tập và tốt nghiệp</td><td class="n">15</td><td class="n">–</td><td class="n">15</td><td>Thực tập nghề nghiệp 3 · Thực hành hướng nghiệp 2 · Đồ án tốt nghiệp 10</td></tr>
+     <tr class="total"><td>Tổng cộng</td><td class="n">126</td><td class="n">39</td><td class="n">165</td><td></td></tr>
+    </tbody></table></div>
+   <div class="note"><b>Khác với K22–K25:</b> khung K26 có 3 khối kiến thức thay vì 5, có 2 định hướng (A, B) thay vì 3, và học phần định hướng 16 TC (6 học phần) thay vì 14 TC. Một số học phần mới đang dùng <b>mã tạm</b> (SAS30xx); kiểm tra mã chính thức khi đăng ký.</div>`)}
   ${sec("chon","Bạn phù hợp với hướng nào?",`
    <p class="muted">Chốt định hướng vào <b>cuối học kỳ 5</b>, trước khi đăng ký 4 học phần chuyên sâu đầu tiên ở HK6. Dùng các câu hỏi dưới đây để trao đổi với cố vấn học tập.</p>
    <div class="cols">${["A","B"].map(k=>{const X=TRK[k];return `<div class="card${S.track===k?" me":""}"><h3>${X.icon} ${k} · ${X.name}</h3>
@@ -1296,6 +1309,14 @@ function guide26(){
       ["Năm 4 · HK8","Thực tập và tốt nghiệp","Thực tập nghề nghiệp (3 TC), Thực hành hướng nghiệp (2 TC), Đồ án tốt nghiệp (10 TC).","Thực tập và đồ án cùng một chủ đề; chuẩn bị CV, portfolio, ứng tuyển song song."]]
      .map(([a,b,c,d])=>`<div><b>${a}</b><span><b>${b}.</b> ${c}<br><span class="muted">Việc cần làm: ${d}</span></span></div>`).join("")}</div>
    <div class="note"><b>Để kết thúc lộ trình tốt nhất:</b> nối Học theo dự án (HK7) → Thực tập nghề nghiệp → Đồ án tốt nghiệp vào cùng một chủ đề, thống nhất với định hướng đã chọn. Khi ra trường bạn sẽ có một sản phẩm rõ ràng cho hồ sơ xin việc, khởi nghiệp hoặc xin học bổng sau đại học.</div>`)}
+  ${sec("dk",`Điều kiện xét tốt nghiệp · bạn đạt ${okN}/${chk.length} mục`,`
+   <p class="muted">Thiếu một trong các mục dưới đây thì không được xét tốt nghiệp, dù chọn hướng nào. Danh sách tự cập nhật theo các học phần bạn đã đánh dấu. Dư TC ở khối tự chọn này không bù cho khối khác.</p>
+   <ul class="chk">${chk.map(i=>`<li class="${i.ok?"ok":"no"}"><span class="ic">${i.ok?"✓":"○"}</span><span>${i.label}</span><span class="v">${i.v}</span></li>`).join("")}
+    <li class="self"><span class="ic">•</span><span>Đạt chuẩn đầu ra Tiếng Anh bậc 4 (B2) theo Khung năng lực ngoại ngữ 6 bậc dùng cho Việt Nam</span><span class="v">tự kiểm tra</span></li>
+    <li class="self"><span class="ic">•</span><span>Điểm trung bình chung tích luỹ đạt mức tối thiểu theo Quy chế đào tạo của ĐHQGHN</span><span class="v">tự kiểm tra</span></li>
+    <li class="self"><span class="ic">•</span><span>Không trong thời gian bị truy cứu trách nhiệm hình sự hoặc kỷ luật đình chỉ học tập</span><span class="v">tự kiểm tra</span></li></ul>
+   <div class="note"><b>Học phần thế kỷ 21:</b> mọi học phần đều 2 TC, nên chọn đúng 4 học phần thuộc ít nhất 2 nhóm. AET2013 cần Giải tích 1; AET2016 và VJU2051 cần cả Giải tích 1 và Đại số tuyến tính 1, nên học từ HK4 trở đi.</div>
+   <div class="note"><b>Lưu ý tiên quyết khi đăng ký:</b> lộ trình chuẩn xếp AET2016 Thuật toán ở HK2, nhưng học phần này cần Đại số tuyến tính 1 (HK3). PEC1008 Kinh tế chính trị cần PHI1006 Triết học, nhưng cả hai đều ở HK1. Hãy hỏi cố vấn học tập hoặc Phòng Đào tạo trước khi đăng ký.</div>`)}
   <p class="muted">Các gợi ý học phần tự chọn, kỹ năng và vị trí việc làm mang tính tham khảo. Điều kiện xét tốt nghiệp chính thức theo Quy chế đào tạo của ĐHQGHN và thông báo của Trường tại thời điểm xét.</p>
   </div>`;
 }
