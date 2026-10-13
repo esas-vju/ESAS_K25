@@ -6,7 +6,9 @@ Sinh viên đăng nhập bằng email `@st.vju.ac.vn` và chọn lớp của mì
 
 | Tệp | Nội dung |
 |---|---|
-| `index.html` | Trang lộ trình: sơ đồ cây 5 khối, 8 học kỳ, cẩm nang tư vấn 3 định hướng, theo dõi lớp |
+| `index.html` | Trang lộ trình: sơ đồ cây 5 khối, 8 học kỳ, cẩm nang tư vấn 3 định hướng, cơ hội việc làm, theo dõi lớp |
+| `viec-lam.txt` | Danh sách tin tuyển dụng hiện ở mục *Cơ hội việc làm*. Sửa tệp này để thêm tin |
+| `HUONG-DAN-THEM-VIEC-LAM.md` | Cách thêm, ẩn, xoá tin tuyển dụng ngay trên GitHub |
 | `huong-dan.html` | Hướng dẫn cho sinh viên (gửi link này kèm link trang chính) |
 | `firestore.rules` | Quy tắc bảo mật dữ liệu, dán vào Firebase. Dùng được cho cả trang K2026 |
 | `HUONG-DAN-CAI-DAT-FIREBASE.md` | Hướng dẫn cài đặt chi tiết từng bước |

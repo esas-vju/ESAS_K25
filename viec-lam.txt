@@ -1,0 +1,44 @@
+# =====================================================================
+# DANH SÁCH CƠ HỘI VIỆC LÀM – hiển thị ở mục "Cơ hội việc làm" trên trang
+# ---------------------------------------------------------------------
+# Cách thêm tin mới:
+#   1. Chép mẫu dưới đây, dán vào ngay SAU dòng "TIN TUYỂN DỤNG" (tin mới để trên cùng).
+#   2. Sửa nội dung sau dấu hai chấm. Dòng nào không có thông tin thì xoá đi.
+#   3. Mỗi tin ngăn cách với tin khác bằng một dòng chỉ có ba dấu gạch: ---
+#   4. Bấm "Commit changes". Khoảng 1–2 phút sau trang web tự cập nhật.
+#
+# Ghi chú:
+#   - Ngày viết dạng ngày/tháng/năm, ví dụ 13/10/2026.
+#   - Tin quá "Hạn nộp" tự chuyển xuống cuối và ghi "Đã hết hạn".
+#   - Tin đăng trong vòng 30 ngày có nhãn "Mới".
+#   - Muốn tạm ẩn một tin mà không xoá: thêm dòng   Ẩn: có
+#   - Sau dòng "Nội dung:" viết tự do, xuống dòng thoải mái; link và email tự bấm được.
+#   - Dòng bắt đầu bằng dấu # là ghi chú, không hiện lên trang.
+#
+# MẪU (chép từ dòng "Công ty" đến dòng "---"):
+#
+# Công ty: Tên công ty
+# Website: https://...
+# Vị trí: Thực tập sinh / Kỹ sư ...
+# Hình thức: Toàn thời gian / Bán thời gian / Hybrid (online + onsite)
+# Địa điểm: Hà Nội
+# Ngày đăng: 13/10/2026
+# Hạn nộp: 30/11/2026
+# Liên hệ: Tên người liên hệ – email@vju.ac.vn
+# Nội dung:
+# Mô tả công việc, yêu cầu, quyền lợi...
+# ---
+# =====================================================================
+
+# ===== TIN TUYỂN DỤNG =====
+
+Công ty: Green Carbon (doanh nghiệp Nhật Bản)
+Website: https://green-carbon.vn/
+Vị trí: Thực tập sinh (Internship)
+Hình thức: Hybrid – vừa online vừa onsite
+Ngày đăng: 13/10/2026
+Nội dung:
+Công ty Nhật Bản đã liên hệ với chương trình để tuyển dụng nhân lực. Hiện tại, sinh viên có thể vào làm Internship tại công ty dưới dạng Hybrid (vừa online vừa onsite).
+Lịch làm việc sẽ được sắp xếp trực tiếp với bộ phận tuyển dụng của công ty trong quá trình phỏng vấn.
+Liên hệ cô Hoàng Thị Thu Duyến để biết thêm chi tiết
+---

@@ -235,6 +235,39 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 .kseg b{display:block;font-size:14px}
 .kseg span{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
 .cmp3 table{min-width:760px}
+/* Giảng viên chính */
+.gv{margin-top:36px;display:grid;gap:10px}
+.gv h2{margin:0;font-family:var(--f-display);font-size:21px}
+.gv .muted{margin:0;color:var(--muted);font-size:13.5px}
+.gv-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.gv-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:3px;align-content:start;min-width:0}
+.gv-card b{font-size:15px}
+.gv-role{color:var(--muted);font-size:13px;margin-bottom:4px}
+.gv-card a{font-size:13.5px;overflow-wrap:anywhere}
+/* Cơ hội việc làm: đọc từ tệp viec-lam.txt */
+.vl{margin-top:22px;display:grid;gap:16px}
+.vl-head{display:grid;gap:6px}
+.vl-head h2{margin:0;font-family:var(--f-display);font-size:21px}
+.vl-head p{margin:0;color:var(--muted);font-size:13.5px;max-width:75ch}
+.vl-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:10px;min-width:0}
+.vl-card.old{opacity:.6}
+.vl-card h3{margin:0;font-family:var(--f-display);font-size:19px;line-height:1.3;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.vl-card .pos{font-weight:600}
+.vl-meta{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:0;font-size:14px}
+.vl-meta dt{color:var(--muted)}
+.vl-meta dd{margin:0;overflow-wrap:anywhere}
+.vl-body{margin:0;white-space:pre-line;max-width:75ch;overflow-wrap:anywhere}
+.vl-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:18px;color:var(--muted)}
+@media (max-width:480px){.vl-meta{grid-template-columns:1fr}.vl-meta dd{margin-bottom:6px}}
+/* Cẩm nang · cấu trúc 165 TC */
+.stack{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line)}
+.stack div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden}
+.slegend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.slegend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.ct table{min-width:640px}
+.ct td.n,.ct th.n{text-align:right}
+.ct tr.grp td{background:var(--accent-soft);font-weight:600}
+.ct tr.total td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media (max-width:480px){.tree ul{padding-left:16px}.tree ul ul>li::before,.tree ul ul>li::after{left:-11px}.tree ul ul>li::after{width:9px}}
 </style>
@@ -288,6 +321,7 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
         <button type="button" id="vTree" data-view="tree">Sơ đồ cây</button>
         <button type="button" id="vSem" data-view="sem">Theo 8 học kỳ</button>
         <button type="button" id="vGuide" data-view="guide">Cẩm nang tư vấn</button>
+        <button type="button" id="vJobs" data-view="jobs">Cơ hội việc làm</button>
         <button type="button" id="vClass" data-view="class" hidden>Theo dõi lớp</button>
       </div>
     </div>
@@ -300,6 +334,17 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 
   <main id="main"></main>
   </div>
+
+  <section class="gv" id="giang-vien" aria-labelledby="gv-h">
+    <h2 id="gv-h">Giảng viên chính của chương trình</h2>
+    <p class="muted">Liên hệ khi cần tư vấn chọn định hướng, học phần tự chọn, thực tập hoặc cơ hội việc làm.</p>
+    <div class="gv-list">
+      <div class="gv-card"><b>TS. Hoàng Thị Thu Duyến</b><span class="gv-role">Giám đốc chương trình</span><a href="mailto:htt.duyen@vju.ac.vn">htt.duyen@vju.ac.vn</a></div>
+      <div class="gv-card"><b>GS.TS. Kamoshita Akihiko</b><span class="gv-role">Đồng giám đốc chương trình</span><a href="mailto:a.kamoshita@vju.ac.vn">a.kamoshita@vju.ac.vn</a><a href="mailto:akamoshita@aness.u-tokyo.ac.jp">akamoshita@aness.u-tokyo.ac.jp</a></div>
+      <div class="gv-card"><b>TS. Tạ Kim Nhung</b><span class="gv-role">Giảng viên</span><a href="mailto:tk.nhung@vju.ac.vn">tk.nhung@vju.ac.vn</a></div>
+      <div class="gv-card"><b>TS. Lê Viết Lan Hương</b><span class="gv-role">Giảng viên</span><a href="mailto:lvl.huong@vju.ac.vn">lvl.huong@vju.ac.vn</a></div>
+    </div>
+  </section>
 
   <footer class="foot">
     <p>Nguồn: Khung chương trình đào tạo sau điều chỉnh (ESAS5, 2024), Quyển chương trình đào tạo Kỹ sư Nông nghiệp thông minh và bền vững (ESAS1, mục 5.2 Lộ trình đào tạo) và Cẩm nang tư vấn định hướng chuyên sâu NNTMBV. Lộ trình áp dụng chung cho K22, K23, K24 và K25. Học kỳ của học phần tự chọn là gợi ý; sinh viên chọn học phần tự chọn khác trong cùng nhóm sau khi tham vấn cố vấn học tập. Các học phần điều kiện (Giáo dục thể chất, Giáo dục quốc phòng – an ninh, Kỹ năng bổ trợ) không tính vào 165 tín chỉ.</p>
@@ -318,10 +363,10 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 // Để trống apiKey thì trang chạy ở chế độ thử, chỉ lưu trên trình duyệt.
 // =====================================================================
 const FIREBASE_CONFIG={
-  apiKey:"AIzaSyAFoaHn_RqlTBa4w-JhX06eJNZ6juNG8JM",
-  authDomain:"esas-k22-k25.firebaseapp.com",
-  projectId:"esas-k22-k25",
-  appId:"1:164637607192:web:361f440f4ed9df07920a6d"
+  apiKey:"",
+  authDomain:"",
+  projectId:"",
+  appId:""
 };
 // Bộ sưu tập Firestore riêng cho K22–K25, không lẫn với dữ liệu K2026 ("progress").
 const COL="progress_k22_25";
@@ -799,19 +844,29 @@ function renderGuide(){
   const chk=gradChecks(),okN=chk.filter(i=>i.ok).length;
   const li=a=>a.map(s=>`<li>${s}</li>`).join("");
   const sec=(id,title,body)=>`<section class="gsec" id="gd-${id}" aria-labelledby="gh-${id}"><h2 id="gh-${id}">${title}</h2>${body}</section>`;
-  const jump=[["dk","Điều kiện tốt nghiệp"],["chon","Chọn hướng nào?"],["huong","Chi tiết định hướng"],["ss","So sánh nhanh"],["nam","Mốc từng năm"]];
+  const jump=[["ct","Cấu trúc 165 TC"],["chon","Chọn hướng nào?"],["huong","Chi tiết định hướng"],["ss","So sánh nhanh"],["nam","Mốc từng năm"],["dk","Điều kiện tốt nghiệp"]];
   const sumTc=a=>a.reduce((s,id)=>s+C[id].tc,0);
   return `<div class="guide">
   <nav class="jump" aria-label="Mục lục cẩm nang">${jump.map(([k,l])=>`<button type="button" class="iconbtn" data-jump="gd-${k}">${l}</button>`).join("")}</nav>
-  ${sec("dk",`Điều kiện xét tốt nghiệp · bạn đạt ${okN}/${chk.length} mục`,`
-   <p class="muted">Thiếu một trong các mục dưới đây thì không được xét tốt nghiệp, dù chọn hướng nào. Danh sách tự cập nhật theo các học phần bạn đã đánh dấu. Dư TC ở khối tự chọn này không bù cho khối khác.</p>
-   <ul class="chk">${chk.map(i=>`<li class="${i.ok?"ok":"no"}"><span class="ic">${i.ok?"✓":"○"}</span><span>${i.label}</span><span class="v">${i.v}</span></li>`).join("")}
-    <li class="self"><span class="ic">•</span><span>Đạt chuẩn đầu ra Tiếng Anh bậc 4 (B2) theo Khung năng lực ngoại ngữ 6 bậc dùng cho Việt Nam</span><span class="v">tự kiểm tra</span></li>
-    <li class="self"><span class="ic">•</span><span>Điểm trung bình chung tích luỹ đạt mức tối thiểu theo Quy chế đào tạo của ĐHQGHN</span><span class="v">tự kiểm tra</span></li>
-    <li class="self"><span class="ic">•</span><span>Không trong thời gian bị truy cứu trách nhiệm hình sự hoặc kỷ luật đình chỉ học tập</span><span class="v">tự kiểm tra</span></li></ul>
-   <div class="note"><b>Khối II.2 (7 TC):</b> mọi học phần trong danh mục M2 có 2 hoặc 4 TC, nên trên thực tế cần tích luỹ 8 TC (4 học phần 2 TC, hoặc 1 học phần 4 TC và 2 học phần 2 TC). Mỗi học kỳ đăng ký tối thiểu 16 TC.</div>
-   <div class="note"><b>Không tính vào điểm trung bình:</b> Tiếng Anh B1, B2 và Tiếng Nhật cơ sở 1 được tính vào 165 TC nhưng không tính vào điểm trung bình. GDTC, GDQP-AN không tính vào 165 TC và điểm trung bình.</div>
-   <div class="note"><b>Tiên quyết cần nhớ:</b> Sinh học 1 → Sinh học 2 → Sinh lý thực vật, Di truyền, Thống kê sinh học; Hoá học 1 → Hoá học 2 → Hoá phân tích, Hoá sinh; Triết học → Kinh tế chính trị. Ở khối II.2, AET2013 cần VJU2004 Toán 3, và nhóm E (AET2018–AET2022) học theo chuỗi.</div>`)}
+  ${sec("ct","Cấu trúc chương trình – 165 tín chỉ",`
+   <p class="muted">Ba định hướng dùng chung 151 tín chỉ. Khác biệt nằm ở 14 TC chuyên sâu (V.2), và được định hình thêm bởi 9 TC tự chọn khác (V.3), 7 TC tự chọn theo lĩnh vực (II.2), 3 TC ngoại ngữ chuyên ngành (III.2) và đề tài đồ án.</p>
+   <div class="stack" role="img" aria-label="Phân bổ tín chỉ theo khối kiến thức">
+    ${[[26,"#6b7a72","I"],[34,"#4f7f9a","II"],[30,"#5c8a5a","III"],[20,"#8a7a4a","IV"],[55,"#2f6b3c","V"]].map(([n,c,k])=>`<div style="flex:${n};background:${c}">${k} · ${n}</div>`).join("")}</div>
+   <div class="slegend">${[["#6b7a72","I. Kiến thức chung"],["#4f7f9a","II. Theo lĩnh vực"],["#5c8a5a","III. Theo khối ngành"],["#8a7a4a","IV. Theo nhóm ngành"],["#2f6b3c","V. Theo ngành"]].map(([c,l])=>`<span><i style="background:${c}"></i>${l}</span>`).join("")}</div>
+   <div class="tbl ct"><table>
+    <thead><tr><th>Khối kiến thức</th><th class="n">Bắt buộc</th><th class="n">Tự chọn</th><th class="n">Tổng</th><th>Ghi chú tư vấn</th></tr></thead>
+    <tbody>
+     <tr><td>I. Kiến thức chung (đại cương 16 + ngoại ngữ 10)</td><td class="n">26</td><td class="n">–</td><td class="n">26</td><td>Không gồm GDTC (4) và GDQP-AN (8) – nhưng 2 chứng chỉ này là điều kiện xét tốt nghiệp</td></tr>
+     <tr><td>II. Theo lĩnh vực</td><td class="n">27</td><td class="n">7</td><td class="n">34</td><td>Tự chọn 7 TC trong danh mục chung của Trường (khối M2)</td></tr>
+     <tr><td>III. Theo khối ngành</td><td class="n">27</td><td class="n">3</td><td class="n">30</td><td>Chọn 1 trong 2: Tiếng Anh chuyên ngành <i>hoặc</i> Tiếng Nhật chuyên ngành</td></tr>
+     <tr><td>IV. Theo nhóm ngành</td><td class="n">20</td><td class="n">–</td><td class="n">20</td><td>Toàn bộ bắt buộc</td></tr>
+     <tr class="grp"><td colspan="5">V. Theo ngành – 55 TC</td></tr>
+     <tr><td>&nbsp;&nbsp;V.1 Học phần chung bắt buộc</td><td class="n">17</td><td class="n">–</td><td class="n">17</td><td>Gồm Học theo dự án (2 TC)</td></tr>
+     <tr><td>&nbsp;&nbsp;V.2 Định hướng chuyên sâu</td><td class="n">–</td><td class="n">14</td><td class="n">14</td><td><b>Chọn 1 định hướng, học đủ cả 5 học phần của hướng đó</b></td></tr>
+     <tr><td>&nbsp;&nbsp;V.3 Tự chọn khác</td><td class="n">–</td><td class="n">9</td><td class="n">9</td><td>Chọn theo hướng dẫn của Khoa cho từng định hướng (xem gợi ý ở mục Chi tiết định hướng)</td></tr>
+     <tr><td>&nbsp;&nbsp;V.4 Thực tập và tốt nghiệp</td><td class="n">15</td><td class="n">–</td><td class="n">15</td><td>Thực tập nghề nghiệp 3 · Thực hành hướng nghiệp 2 · Đồ án tốt nghiệp 10</td></tr>
+     <tr class="total"><td>Tổng cộng</td><td class="n">132</td><td class="n">33</td><td class="n">165</td><td></td></tr>
+    </tbody></table></div>`)}
   ${sec("chon","Bạn phù hợp với hướng nào?",`
    <p class="muted">Chốt định hướng vào <b>học kỳ 5</b>, trước khi đăng ký học phần V.2 đầu tiên ở HK6. Dùng các câu hỏi dưới đây làm điểm khởi đầu cho buổi trao đổi với cố vấn học tập.</p>
    <div class="cols">${TRACKS.map(k=>{const X=TRK[k];return `<div class="card${S.track===k?" me":""}"><h3>${X.icon} ${k} · ${X.name}</h3>
@@ -854,8 +909,68 @@ function renderGuide(){
       ["HK9 (nếu cần)","Hoàn thiện","Học bù, cải thiện điểm.","Nộp chứng chỉ ngoại ngữ, GDTC, GDQP-AN và hoàn tất hồ sơ xét tốt nghiệp."]]
      .map(([a,b,c,d])=>`<div><b>${a}</b><span><b>${b}.</b> ${c}<br><span class="muted">Việc cần làm: ${d}</span></span></div>`).join("")}</div>
    <div class="note"><b>Để kết thúc lộ trình tốt nhất:</b> nối Học theo dự án → Thực tập nghề nghiệp → Đồ án tốt nghiệp vào cùng một chủ đề, thống nhất với định hướng đã chọn. Khi ra trường bạn sẽ có một sản phẩm rõ ràng cho hồ sơ xin việc, khởi nghiệp hoặc xin học bổng sau đại học.</div>`)}
+  ${sec("dk",`Điều kiện xét tốt nghiệp · bạn đạt ${okN}/${chk.length} mục`,`
+   <p class="muted">Thiếu một trong các mục dưới đây thì không được xét tốt nghiệp, dù chọn hướng nào. Danh sách tự cập nhật theo các học phần bạn đã đánh dấu. Dư TC ở khối tự chọn này không bù cho khối khác.</p>
+   <ul class="chk">${chk.map(i=>`<li class="${i.ok?"ok":"no"}"><span class="ic">${i.ok?"✓":"○"}</span><span>${i.label}</span><span class="v">${i.v}</span></li>`).join("")}
+    <li class="self"><span class="ic">•</span><span>Đạt chuẩn đầu ra Tiếng Anh bậc 4 (B2) theo Khung năng lực ngoại ngữ 6 bậc dùng cho Việt Nam</span><span class="v">tự kiểm tra</span></li>
+    <li class="self"><span class="ic">•</span><span>Điểm trung bình chung tích luỹ đạt mức tối thiểu theo Quy chế đào tạo của ĐHQGHN</span><span class="v">tự kiểm tra</span></li>
+    <li class="self"><span class="ic">•</span><span>Không trong thời gian bị truy cứu trách nhiệm hình sự hoặc kỷ luật đình chỉ học tập</span><span class="v">tự kiểm tra</span></li></ul>
+   <div class="note"><b>Khối II.2 (7 TC):</b> mọi học phần trong danh mục M2 có 2 hoặc 4 TC, nên trên thực tế cần tích luỹ 8 TC (4 học phần 2 TC, hoặc 1 học phần 4 TC và 2 học phần 2 TC). Mỗi học kỳ đăng ký tối thiểu 16 TC.</div>
+   <div class="note"><b>Không tính vào điểm trung bình:</b> Tiếng Anh B1, B2 và Tiếng Nhật cơ sở 1 được tính vào 165 TC nhưng không tính vào điểm trung bình. GDTC, GDQP-AN không tính vào 165 TC và điểm trung bình.</div>
+   <div class="note"><b>Tiên quyết cần nhớ:</b> Sinh học 1 → Sinh học 2 → Sinh lý thực vật, Di truyền, Thống kê sinh học; Hoá học 1 → Hoá học 2 → Hoá phân tích, Hoá sinh; Triết học → Kinh tế chính trị. Ở khối II.2, AET2013 cần VJU2004 Toán 3, và nhóm E (AET2018–AET2022) học theo chuỗi.</div>`)}
   <p class="muted">Các gợi ý học phần tự chọn, kỹ năng và vị trí việc làm mang tính tham khảo. Điều kiện xét tốt nghiệp chính thức theo Quy chế đào tạo của ĐHQGHN và thông báo của Trường tại thời điểm xét.</p>
   </div>`;
+}
+
+// ---------- cơ hội việc làm ----------
+// Tin tuyển dụng nằm trong tệp viec-lam.txt (cùng thư mục). Giảng viên sửa tệp đó trên GitHub, không cần sửa index.html.
+// Cách viết tin: xem phần chú thích đầu tệp viec-lam.txt và HUONG-DAN-THEM-VIEC-LAM.md.
+let jobs=null,jobsErr=null,jobsLoading=false;
+const VL_KEYS={"công ty":"cty","website":"web","vị trí":"pos","hình thức":"form","địa điểm":"place","ngày đăng":"date","hạn nộp":"due","liên hệ":"contact","ẩn":"hide"};
+function vlDate(t){const m=/(\d{1,2})\s*[\/.-]\s*(\d{1,2})\s*[\/.-]\s*(\d{4})/.exec(t||"");return m?new Date(+m[3],+m[2]-1,+m[1]):null;}
+function parseJobs(txt){
+  const out=[];let cur=null,inBody=false;
+  const flush=()=>{if(cur&&(cur.cty||cur.pos||cur.body.trim()))out.push(cur);cur=null;inBody=false;};
+  for(const raw of txt.replace(/\r/g,"").split("\n")){
+    const l=raw.trim();
+    if(l.startsWith("#"))continue;
+    if(/^-{3,}$/.test(l)){flush();continue;}
+    if(!cur){if(!l)continue;cur={body:""};}
+    const m=!inBody&&/^([^:]{2,20}):\s*(.*)$/.exec(l);
+    const k=m&&m[1].trim().toLowerCase().normalize("NFC");
+    if(m&&k==="nội dung"){inBody=true;if(m[2])cur.body+=m[2]+"\n";continue;}
+    if(m&&VL_KEYS[k]){cur[VL_KEYS[k]]=m[2].trim();continue;}
+    cur.body+=raw.trimEnd()+"\n";
+  }
+  flush();
+  return out.filter(j=>!/^(có|co|x|yes)$/i.test(j.hide||""));
+}
+function loadJobs(){
+  if(jobsLoading)return;jobsLoading=true;
+  fetch("viec-lam.txt",{cache:"no-cache"}).then(r=>{if(!r.ok)throw new Error(r.status);return r.text();})
+   .then(t=>{jobs=parseJobs(t.normalize("NFC"));jobsErr=null;})
+   .catch(e=>{jobsErr=String(e.message||e);})
+   .finally(()=>{jobsLoading=false;if(S.view==="jobs")render();});
+}
+function linkify(s){
+  return esc(s).replace(/\b(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g,'<a href="$1" target="_blank" rel="noopener">$1</a>')
+   .replace(/(^|[\s(])([\w.+-]+@[\w-]+(\.[\w-]+)+)/g,'$1<a href="mailto:$2">$2</a>');
+}
+function renderJobs(){
+  const head=`<div class="vl-head"><h2>Cơ hội việc làm và thực tập</h2><p>Các doanh nghiệp, đặc biệt là doanh nghiệp Nhật Bản, liên hệ với Khoa để tuyển sinh viên thực tập và làm việc. Tin mới nhất ở trên cùng. Muốn ứng tuyển, làm theo phần “Liên hệ” của từng tin hoặc hỏi <a href="#giang-vien">giảng viên của chương trình</a>.</p></div>`;
+  if(jobs===null&&!jobsErr){loadJobs();return `<div class="vl">${head}<div class="vl-empty">Đang tải danh sách tin tuyển dụng…</div></div>`;}
+  if(jobsErr)return `<div class="vl">${head}<div class="vl-empty">Chưa tải được danh sách tin (${esc(jobsErr)}). Kiểm tra kết nối mạng rồi tải lại trang. Nếu đang mở tệp trực tiếp trên máy (đường dẫn bắt đầu bằng file://), trình duyệt sẽ chặn đọc tệp viec-lam.txt; hãy xem trên trang GitHub Pages.</div></div>`;
+  const today=new Date();today.setHours(0,0,0,0);
+  const list=jobs.map(j=>{const d=vlDate(j.date),due=vlDate(j.due);return {...j,d,old:!!due&&due<today,fresh:!!d&&(today-d)/864e5<=30};})
+   .sort((a,b)=>(a.old-b.old)||((b.d||0)-(a.d||0)));
+  if(!list.length)return `<div class="vl">${head}<div class="vl-empty">Hiện chưa có tin tuyển dụng. Quay lại sau nhé.</div></div>`;
+  const row=(t,v,link)=>v?`<dt>${t}</dt><dd>${link?linkify(v):esc(v)}</dd>`:"";
+  return `<div class="vl">${head}${list.map(j=>`<article class="vl-card${j.old?" old":""}">
+   <h3>${esc(j.cty||"Doanh nghiệp")}${j.fresh&&!j.old?' <span class="tag now">Mới</span>':""}${j.old?' <span class="tag alt">Đã hết hạn</span>':""}</h3>
+   ${j.pos?`<div class="pos">${esc(j.pos)}</div>`:""}
+   <dl class="vl-meta">${row("Hình thức",j.form)}${row("Địa điểm",j.place)}${row("Website",j.web,1)}${row("Ngày đăng",j.date)}${row("Hạn nộp",j.due)}${row("Liên hệ",j.contact,1)}</dl>
+   ${j.body.trim()?`<p class="vl-body">${linkify(j.body.trim())}</p>`:""}
+  </article>`).join("")}</div>`;
 }
 
 function render(){
@@ -874,10 +989,10 @@ function render(){
   document.getElementById("vClass").hidden=!isOwner;
   const view=S.view==="class"&&!isOwner?"tree":S.view;
   document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.view===view));
-  document.querySelector(".summary").hidden=view==="class";
-  document.getElementById("khoaCtl").hidden=view==="class"||mode==="owner";
-  document.querySelector(".legend").hidden=view==="class"||view==="guide";
-  document.getElementById("main").innerHTML=view==="class"?renderClass():view==="sem"?renderSem():view==="guide"?renderGuide():renderTree();
+  document.querySelector(".summary").hidden=view==="class"||view==="jobs";
+  document.getElementById("khoaCtl").hidden=view==="class"||view==="jobs"||mode==="owner";
+  document.querySelector(".legend").hidden=view==="class"||view==="guide"||view==="jobs";
+  document.getElementById("main").innerHTML=view==="class"?renderClass():view==="sem"?renderSem():view==="guide"?renderGuide():view==="jobs"?renderJobs():renderTree();
   renderAcct();
   if(fid){const el=document.getElementById(fid);if(el){el.focus({preventScroll:true});if(el.tagName==="INPUT"&&el.type==="search")el.setSelectionRange(el.value.length,el.value.length);}}
 }
@@ -989,7 +1104,8 @@ document.addEventListener("submit",async e=>{
 const AUTH_MSG={"auth/unauthorized-domain":"Địa chỉ trang chưa được khai báo trong Firebase (Authorized domains). Hãy báo giảng viên.",
   "auth/popup-blocked":"Trình duyệt chặn cửa sổ đăng nhập. Hãy cho phép cửa sổ bật lên rồi bấm lại.",
   "auth/network-request-failed":"Không có kết nối mạng. Kiểm tra mạng rồi thử lại.",
-  "auth/operation-not-allowed":"Firebase chưa bật đăng nhập bằng Google. Hãy báo giảng viên."};
+  "auth/operation-not-allowed":"Firebase chưa bật đăng nhập bằng Google. Hãy báo giảng viên.",
+  "auth/configuration-not-found":"Firebase chưa bật Authentication cho dự án này. Hãy báo giảng viên."};
 async function login(student){
   const p=new FA.GoogleAuthProvider();
   p.setCustomParameters(student?{hd:DOMAIN.slice(1),prompt:"select_account"}:{prompt:"select_account"});
