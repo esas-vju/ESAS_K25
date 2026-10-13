@@ -2,8 +2,8 @@ rules_version = '2';
 // Quy tắc bảo mật cho trang Lộ trình học tập NNTM&BV.
 // Tệp này dùng được cho cả hai trang, nên có thể đặt chung một dự án Firebase:
 //   - progress/<uid>          : trang K2026
-//   - progress_k22_25/<uid>   : trang K22–K25 (có thêm trường "khoa": K22, K23, K24, K25)
-//   - grades_k22_25/<MSSV>    : bảng điểm K22–K25
+//   - progress_k22_25/<uid>   : trang K22–K26 (có thêm trường "khoa": K22, K23, K24, K25, K26)
+//   - grades_k22_25/<MSSV>    : bảng điểm K22–K26
 // - Sinh viên (email @st.vju.ac.vn đã xác minh) chỉ đọc/ghi tiến độ của chính mình, và chỉ đọc
 //   được bảng điểm có MSSV trùng với email của mình (MSSV@st.vju.ac.vn).
 // - Giảng viên có tài liệu lecturers/<email viết thường> đọc được toàn bộ tiến độ và bảng điểm, không sửa được.
@@ -44,7 +44,7 @@ service cloud.firestore {
     function validProgressK22() {
       let d = request.resource.data;
       return baseProgress(d)
-        && d.khoa in ['K22', 'K23', 'K24', 'K25']
+        && d.khoa in ['K22', 'K23', 'K24', 'K25', 'K26']
         && d.keys().hasOnly(['email', 'mssv', 'hoTen', 'khoa', 'track', 'done', 'tong', 'khoi', 'dieuKien', 'canhBao', 'capNhat', 'v']);
     }
 
@@ -55,14 +55,14 @@ service cloud.firestore {
       allow delete: if false;
     }
 
-    // Trang K22–K25
+    // Trang K22–K26 (K26 học khung chương trình mới, cùng bộ sưu tập)
     match /progress_k22_25/{uid} {
       allow read: if (isStudent() && request.auth.uid == uid) || isLecturer();
       allow create, update: if isStudent() && request.auth.uid == uid && validProgressK22();
       allow delete: if false;
     }
 
-    // Bảng điểm K22–K25 (nhập từ trang nhap-diem.html)
+    // Bảng điểm K22–K26 (nhập từ trang nhap-diem.html)
     match /grades_k22_25/{mssv} {
       allow read: if isAdmin() || isLecturer() || (isStudent() && email() == mssv.lower() + '@st.vju.ac.vn');
       allow create, update: if isAdmin()

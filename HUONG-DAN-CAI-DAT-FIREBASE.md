@@ -1,4 +1,4 @@
-# Hướng dẫn cài đặt trang Lộ trình NNTM&BV K22–K25 trên GitHub Pages + Firebase
+# Hướng dẫn cài đặt trang Lộ trình NNTM&BV K22–K26 trên GitHub Pages + Firebase
 
 > **Đã có Firebase cho trang K2026?** Không cần làm lại từ đầu. Xem *Cách 1* trong `README.md`: dùng chung dự án, chỉ cần chép `FIREBASE_CONFIG` và dán lại tệp `firestore.rules` mới. Hướng dẫn dưới đây dành cho trường hợp tạo dự án Firebase riêng.
 
@@ -154,7 +154,7 @@ Làm giống bước 4 nhưng với collection **`admins`**: *Collection ID* `ad
 Mở trang bằng **Chrome hoặc Safari**:
 
 - [ ] **Giảng viên:** bấm dòng nhỏ *"đăng nhập bằng email giảng viên"* và chọn email đã thêm ở bước 4. Phải thấy nút **Theo dõi lớp**.
-- [ ] **Sinh viên:** bấm **Đăng xuất**, rồi bấm **Đăng nhập bằng Google (email trường)** với một email `@st.vju.ac.vn`. Nhập MSSV, họ tên, **chọn lớp** (K22–K25) và đánh dấu vài môn. Dòng trạng thái phải báo **"Đã lưu lúc …"**.
+- [ ] **Sinh viên:** bấm **Đăng xuất**, rồi bấm **Đăng nhập bằng Google (email trường)** với một email `@st.vju.ac.vn`. Nhập MSSV, họ tên, **chọn lớp** (K22–K26) và đánh dấu vài môn. Dòng trạng thái phải báo **"Đã lưu lúc …"**.
 - [ ] Tải lại trang: các môn đã đánh dấu vẫn còn.
 - [ ] Đăng nhập lại bằng email giảng viên, mở **Theo dõi lớp**: sinh viên thử hiện trong bảng, đúng lớp đã chọn. Bấm nút lớp đó ở hàng *Chia lớp*, rồi thử **Tải CSV**.
 - [ ] Đăng nhập bằng một Gmail cá nhân không có trong `lecturers`: trang báo **"Email chưa đúng"**.

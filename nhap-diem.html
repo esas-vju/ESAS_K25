@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<title>Nhập bảng điểm K22–K25</title>
+<title>Nhập bảng điểm K22–K26</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Lora:wght@600;700&family=JetBrains+Mono:wght@500;600&display=swap">
@@ -69,7 +69,7 @@ code{font-family:var(--f-mono);font-size:12.5px}
 <body>
 <div class="wrap">
   <header>
-    <span class="cohort">Dành cho quản trị viên · K22 · K23 · K24 · K25</span>
+    <span class="cohort">Dành cho quản trị viên · K22 · K23 · K24 · K25 · K26</span>
     <h1>Nhập bảng điểm</h1>
     <p class="sub">Tải lên tệp “Bảng điểm theo lớp” xuất từ hệ thống đào tạo (.xls). Mỗi tệp là một lớp trong một học kỳ. Sau khi lưu, sinh viên đăng nhập trang lộ trình sẽ thấy điểm, GPA từng học kỳ và GPA tích lũy của mình ở mục <b>Kết quả học tập</b>.</p>
   </header>
@@ -114,7 +114,7 @@ code{font-family:var(--f-mono);font-size:12.5px}
 
 <script type="module">
 import {parseExport,semStats,isCond,frameId,fmt} from "./diem.js";
-const KHOAS=["K22","K23","K24","K25"];
+const KHOAS=["K22","K23","K24","K25","K26"];
 const GCOL="grades_k22_25";
 const FB="https://www.gstatic.com/firebasejs/10.12.2/";
 const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
@@ -132,7 +132,7 @@ async function readIndex(){
       const get=k=>{const m=new RegExp(k+'\\s*:\\s*"([^"]*)"').exec(blk[1]);return m?m[1]:"";};
       cfg={apiKey:get("apiKey"),authDomain:get("authDomain"),projectId:get("projectId"),appId:get("appId")};
     }
-    FRAME=new Set([...t.matchAll(/\b(?:c|h|k2|k3|m2)\("([A-Z]{3}\d{4})"/g)].map(m=>m[1]));
+    FRAME=new Set([...t.matchAll(/\b(?:c|h|k2|k3|m2|n2|n3|s2|e2)\("([A-Z]{3}\d{4})"/g)].map(m=>m[1]));
     FRAME.add("SAS3048-TMDT");
   }catch(e){}
 }
@@ -155,7 +155,7 @@ async function addFiles(list){
     const text=await f.text();
     let data=null,err="";
     try{data=parseExport(text);}catch(e){err=e.message||String(e);}
-    if(data&&!KHOAS.includes(data.khoa))err=`Lớp ${data.lop} (${data.khoa||"?"}) không thuộc K22–K25. Trang này chỉ nhận bảng điểm K22–K25.`;
+    if(data&&!KHOAS.includes(data.khoa))err=`Lớp ${data.lop} (${data.khoa||"?"}) không thuộc K22–K26. Trang này chỉ nhận bảng điểm K22–K26.`;
     parsed=parsed.filter(p=>!(p.data&&data&&p.data.lop===data.lop&&p.data.key===data.key));
     parsed.push({name:f.name,data:err?null:data,err});
   }
@@ -174,7 +174,7 @@ function renderPreview(){
       if(o!=null&&st.gpa!=null){cmp++;const diff=Math.abs(o-st.gpa);if(diff<0.005){ok++;chk='<span class="tag ok">khớp</span>';}else chk=`<span class="tag w">lệch ${diff.toFixed(2)}</span>`;}
       return `<tr><td class="n">${esc(s.mssv)}</td><td>${esc(s.hoTen)}</td><td class="n">${s.mon.length}</td><td class="n">${st.tc}</td><td class="n">${st.truot||""}</td><td class="n">${fmt(st.gpa)}</td><td class="n">${o==null?"—":o.toFixed(2)}</td><td>${chk}</td></tr>`;
     }).join("");
-    const out=FRAME?d.courses.filter(c=>!isCond(c.code,c.ten)&&!FRAME.has(frameId(c.code,c.ten))):[];
+    const out=FRAME?d.courses.filter(c=>!isCond(c.code,c.ten)&&!FRAME.has(frameId(c.code,c.ten))&&!FRAME.has(c.code)):[];
     const mapped=d.courses.filter(c=>frameId(c.code,c.ten)!==c.code);
     return `<div class="card" style="padding:12px">
       <div class="meta"><span>Tệp <b>${esc(p.name)}</b></span><span>Lớp <b>${esc(d.lop)}</b> (${d.khoa})</span><span><b>Học kỳ ${d.ky===3?"hè":d.ky}</b> năm học <b>${d.nam}</b></span><span><b>${d.students.length}</b> sinh viên</span><span><b>${d.courses.length}</b> học phần</span>
