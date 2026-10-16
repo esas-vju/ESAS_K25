@@ -273,6 +273,14 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 .gv-card b{font-size:15px}
 .gv-role{color:var(--muted);font-size:13px;margin-bottom:4px}
 .gv-card a{font-size:13.5px;overflow-wrap:anywhere}
+.qr{margin-top:36px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+.qr img{width:150px;height:150px;flex:none;background:#fff;padding:8px;border-radius:10px;border:1px solid var(--line);image-rendering:pixelated}
+.qr div{display:grid;gap:6px;min-width:0;flex:1 1 240px}
+.qr h2{margin:0;font-family:var(--f-display);font-size:21px}
+.qr p{margin:0;color:var(--muted);font-size:13.5px}
+.qr .qr-url{font-family:var(--f-mono);font-size:13.5px;overflow-wrap:anywhere}
+.qr .qr-act{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.qr .qr-act a{text-decoration:none;color:var(--ink)}
 /* Cơ hội việc làm: đọc từ tệp viec-lam.txt */
 .vl{margin-top:22px;display:grid;gap:16px}
 .vl-head{display:grid;gap:6px}
@@ -376,6 +384,19 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
     </div>
   </section>
 
+  <section class="qr" aria-labelledby="qr-h">
+    <img src="qr.png" alt="Mã QR mở trang Lộ trình học tập" width="150" height="150">
+    <div>
+      <h2 id="qr-h">Chia sẻ trang này</h2>
+      <p>Quét mã QR bằng camera điện thoại để mở trang, hoặc gửi đường dẫn cho các bạn cùng lớp.</p>
+      <a class="qr-url" id="qrUrl" href="./">./</a>
+      <div class="qr-act">
+        <button class="iconbtn" type="button" id="qrCopy">Sao chép đường dẫn</button>
+        <a class="iconbtn" href="qr.png" download="QR-lo-trinh-NNTMBV.png">Tải mã QR</a>
+      </div>
+    </div>
+  </section>
+
   <footer class="foot">
     <p><span id="srcNote"></span> Học kỳ của học phần tự chọn là gợi ý; sinh viên chọn học phần tự chọn khác trong cùng nhóm sau khi tham vấn cố vấn học tập. Các học phần điều kiện (Giáo dục thể chất, Giáo dục quốc phòng – an ninh, Kỹ năng bổ trợ) không tính vào 165 tín chỉ.</p>
     <p><a href="huong-dan.html">Hướng dẫn sử dụng cho sinh viên</a></p>
@@ -385,6 +406,16 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden><span id="toastMsg"></span><button type="button" id="toastX" aria-label="Đóng">×</button></div>
 
+<script>
+(function(){
+  var u=location.origin+location.pathname.replace(/index\.html$/,''),a=document.getElementById('qrUrl'),b=document.getElementById('qrCopy');
+  a.href=u;a.textContent=u;
+  b.addEventListener('click',function(){
+    var done=function(){b.textContent='Đã sao chép';setTimeout(function(){b.textContent='Sao chép đường dẫn'},1800)};
+    if(navigator.clipboard)navigator.clipboard.writeText(u).then(done,function(){prompt('Sao chép đường dẫn:',u)});else prompt('Sao chép đường dẫn:',u);
+  });
+})();
+</script>
 <script type="module">
 // =====================================================================
 // CẤU HÌNH FIREBASE: dán cấu hình web app từ Firebase Console vào đây
