@@ -4,10 +4,10 @@ Trang web giúp sinh viên các lớp **K22, K23, K24, K25 và K26** ngành Nôn
 
 | | K22, K23, K24, K25 | K26 |
 |---|---|---|
-| Khung | ESAS5 (2024) | ESAS5, sheet ESAS2026 |
-| Khối kiến thức | 5 khối I–V (26 · 34 · 30 · 20 · 55 TC) | 3 khối: Đại cương 41 · Cơ sở và cốt lõi ngành 109 · Thực tập và tốt nghiệp 15 |
+| Khung | QĐ 1489/QĐ-ĐHVN ngày 29/12/2023 | ESAS5, sheet ESAS2026 |
+| Khối kiến thức | 5 khối I–V (26 · 33 · 30 · 20 · 56 TC) | 3 khối: Đại cương 41 · Cơ sở và cốt lõi ngành 109 · Thực tập và tốt nghiệp 15 |
 | Định hướng chuyên sâu | 1 · Nông nghiệp sinh thái, 2 · Nông nghiệp tiên tiến Nhật Bản, 3 · Doanh nghiệp nông nghiệp (14 TC) | A · Nông nghiệp thông minh, B · Doanh nghiệp nông nghiệp (16 TC) |
-| Quy tắc riêng | Tự chọn II.2 tối thiểu 7 TC (thực tế 8), V.3 tối thiểu 9 TC | Thế kỷ 21: 8 TC từ ít nhất 2 nhóm; tự chọn khác 12 TC; học phần mã tạm (SAS20xx, SAS30xx) |
+| Quy tắc riêng | Tự chọn II.2: 6 TC, có cả II.2.1 và II.2.2; V.3 tối thiểu 10 TC | Thế kỷ 21: 8 TC từ ít nhất 2 nhóm; tự chọn khác 12 TC; học phần mã tạm (SAS20xx, SAS30xx) |
 
 Sinh viên đăng nhập bằng email `@st.vju.ac.vn` và chọn lớp của mình. Giảng viên được cấp quyền xem tiến độ theo từng lớp hoặc cả 5 lớp, và tải về dạng CSV.
 
@@ -92,7 +92,7 @@ Không ai xoá được dữ liệu từ trang web. Quản trị viên xoá đư
 - **Sinh viên phải mở bằng trình duyệt** (Chrome, Safari). Google chặn đăng nhập bên trong Zalo, Messenger và Facebook; trang tự nhắc khi phát hiện trường hợp này.
 - **Năm học theo lớp:** trang tính năm nhập học = 2000 + số khóa (K25 → 2025). Học kỳ lẻ tính từ tháng 9 đến tháng 1, học kỳ chẵn từ tháng 2 đến tháng 8. Đây là lịch dự kiến, chỉ dùng để nhắc tiến độ.
 - **Mã tạm (K26):** các học phần `SAS20xx`, `SAS30xx` chưa có mã chính thức. Khi có mã, chỉ sửa tham số đầu tiên (mã hiển thị) trong khối `P26` của `index.html` và giữ nguyên mã nội bộ ở tham số cuối (ví dụ `SAS20xx-vimo`), để tiến độ đã lưu không bị mất.
-- **Mã trùng (K22–K25):** khung ESAS5 ghi cùng mã `SAS3048` cho *Tài chính nông nghiệp* (V.1) và *Thương mại điện tử nông sản* (V.2.3). Trang gắn nhãn “trùng mã” cho môn thứ hai. Khi có mã chính thức, chỉ sửa tham số đầu tiên (mã hiển thị) trong `index.html` và giữ nguyên mã nội bộ `SAS3048-TMDT` ở tham số cuối, để tiến độ đã lưu không bị mất.
+- **Mã học phần K22–K25:** QĐ 1489 đổi mã một số học phần (ví dụ Sinh lý thực vật SAS2001 → SAS2030, Tài chính nông nghiệp SAS3048 → SAS3047, Thương mại điện tử nông sản → SAS3055). Trong khối `P22` của `index.html`, tham số đầu tiên là mã hiển thị (mã mới), tham số cuối giữ mã nội bộ cũ để tiến độ đã lưu không bị mất. Bảng `ALIAS` trong `diem.js` ánh xạ mã mới trên bảng điểm sang mã nội bộ này.
 - **Cập nhật khung chương trình:** dữ liệu nằm trong `index.html`, khối `P22` (K22–K25) và `P26` (K26). Mỗi khối có `TREE` (cấu trúc 165 TC), `ROAD` (lộ trình 8 học kỳ), `TODO` (việc cần làm từng học kỳ) và `TRK` (gợi ý cho từng định hướng); cẩm nang của từng khung ở hàm `guide22`/`guide26`, điều kiện tốt nghiệp ở `checks22`/`checks26`. Danh sách lớp nằm ở hằng `KHOAS`, lớp nào dùng khung nào ở hàm `progOf`. Muốn thêm lớp, sửa hai chỗ này trong `index.html`, danh sách `KHOAS` trong `nhap-diem.html` và danh sách `['K22', 'K23', 'K24', 'K25', 'K26']` trong `firestore.rules`.
 
-Nguồn dữ liệu: ESAS5 – Khung chương trình đào tạo sau điều chỉnh (2024, Sheet1 và khối M2; sheet ESAS2026 cho K26), ESAS1 – Quyển chương trình đào tạo (mục 5.2 Lộ trình đào tạo), Cẩm nang tư vấn định hướng chuyên sâu NNTMBV và Cẩm nang tư vấn lộ trình học tập K2026.
+Nguồn dữ liệu: Quyết định 1489/QĐ-ĐHVN ngày 29/12/2023 ban hành CTĐT ngành Nông nghiệp thông minh và bền vững (điều chỉnh) cho K22–K25; ESAS5 – sheet ESAS2026 cho K26, ESAS1 – Quyển chương trình đào tạo (mục 5.2 Lộ trình đào tạo), Cẩm nang tư vấn định hướng chuyên sâu NNTMBV và Cẩm nang tư vấn lộ trình học tập K2026.

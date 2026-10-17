@@ -11,16 +11,31 @@
 //   quốc phòng – an ninh, Kỹ năng bổ trợ [VJU-BT]).
 // =====================================================================
 
-// Mã trên hệ thống đào tạo → mã trong khung chương trình (ESAS5) khi hai mã khác nhau.
+// Mã trên hệ thống đào tạo (mã theo QĐ 1489/QĐ-ĐHVN) → id học phần trong khung K22–K25 của index.html.
+// Các học phần đổi mã giữ id cũ để không mất tiến độ sinh viên đã lưu.
 export const ALIAS={
   SAS2030:"SAS2001", // Sinh lý thực vật
   SAS2031:"SAS2004", // Cơ sở hóa học phân tích
   SAS2032:"SAS2005", // Cơ sở vi sinh vật học
   SAS2033:"SAS2006", // Thống kê sinh học
-  SAS2034:"SAS2009"  // Khí tượng nông nghiệp
+  SAS2034:"SAS2009", // Khí tượng nông nghiệp
+  SAS2035:"SAS2015", // Kỹ thuật thông tin trong khoa học môi trường và sinh học
+  SAS2051:"SAS2020", // Nhập môn quản lý kinh doanh nông nghiệp
+  SAS3047:"SAS3048", // Tài chính nông nghiệp
+  SAS3052:"SAS3005", // Học theo dự án
+  SAS3053:"SAS3014", // Điều khiển tự động trong nông nghiệp
+  SAS3054:"SAS3041", // Kỹ thuật xây dựng nhà kính và hệ thủy canh
+  SAS3055:"SAS3048-TMDT", // Thương mại điện tử nông sản
+  SAS3056:"SAS3046", // Quản trị hợp tác xã nông nghiệp
+  FTH2017:"FTH2022", // Các kỹ thuật sinh học phân tử
+  FTH2002:"FTH0002", // Sinh học người
+  FTH2009:"FTH2014", // Những cơ bản trong Khoa học và Công nghệ thực phẩm
+  SAS2070:"SAS4002", // Thực hành hướng nghiệp
+  SAS2071:"SAS4003", // Đồ án tốt nghiệp
+  VJU2033:"THL2003"  // Giới thiệu về hệ thống pháp luật Việt Nam
 };
-// Mã khung tương ứng (id dùng trong index.html). SAS3048 bị trùng mã trong khung: tên có
-// "thương mại điện tử" thì là học phần V.2.3.
+// Mã khung tương ứng (id dùng trong index.html). Bảng điểm cũ có thể ghi Thương mại điện tử
+// nông sản là SAS3048 (trùng với Tài chính nông nghiệp): tên có "thương mại điện tử" thì là học phần V.2.3.
 export function frameId(code,name){
   if(code==="SAS3048"&&/thương mại điện tử/i.test(name||""))return "SAS3048-TMDT";
   return ALIAS[code]||code;

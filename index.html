@@ -12,7 +12,7 @@
 html,body{margin:0}
 a{color:var(--accent)}
 /* Layout: summary band on top, then a collapsible outline tree (root → khối → nhóm → học phần) or an 8-semester grid.
-   Hai khung chương trình: K22–K25 (ESAS5, 2024) và K26 (ESAS2026); trang dùng khung theo lớp của sinh viên. */
+   Hai khung chương trình: K22–K25 (QĐ 1489/QĐ-ĐHVN, 2023) và K26 (ESAS2026); trang dùng khung theo lớp của sinh viên. */
 :root{
   --bg:#f2f5f0; --surface:#ffffff; --ink:#16231b; --muted:#5a6a60; --line:#d5ded3; --branch:#9fb3a5;
   --accent:#2c7547; --accent-ink:#ffffff; --accent-soft:#e1efe5;
@@ -364,7 +364,6 @@ h1{font-family:var(--f-display);font-size:clamp(24px,4.4vw,34px);line-height:1.2
   </div>
   <p class="note prog" id="progNote" hidden></p>
   <div class="legend">
-    <span id="lgDup"><span class="dup">trùng mã</span> mã học phần đang trùng trong khung, kiểm tra mã chính thức khi đăng ký</span>
     <span id="lgTmp"><span class="tmp">mã tạm</span> mã học phần chưa chính thức</span>
     <span><span class="pre">VJU2010</span> tiên quyết chưa hoàn thành</span>
     <span><span class="pre ok">VJU2010</span> tiên quyết đã hoàn thành</span>
@@ -433,7 +432,7 @@ const FIREBASE_CONFIG={
 const COL="progress_k22_25";
 // Họ tên chưa hợp lệ: có chữ số (thường là tên tài khoản Google "25115031 VJU"), chỉ một từ, hoặc còn chữ "name".
 const badName=n=>{n=String(n||"").trim();return !n||/\d/.test(n)||!/\s/.test(n)||/^(name|họ tên|ho ten)\b/i.test(n);};
-// Các lớp và khung chương trình: K22–K25 học khung ESAS5 (2024), K26 học khung ESAS2026. Năm nhập học = 2000 + số khóa.
+// Các lớp và khung chương trình: K22–K25 học khung QĐ 1489/QĐ-ĐHVN (29/12/2023), K26 học khung ESAS2026. Năm nhập học = 2000 + số khóa.
 const KHOAS=["K26","K25","K24","K23","K22"];
 const entryYear=k=>2000+parseInt(k.slice(1),10);
 const progOf=k=>k==="K26"?"K26":"K22";
@@ -442,69 +441,70 @@ const progOf=k=>k==="K26"?"K26":"K22";
 // c(code, tên Việt, tên Anh, TC, LT, TH, tự học, [tiên quyết], id riêng nếu mã trùng hoặc mã tạm)
 function c(code,vn,en,tc,lt,th,td,pre,id){return {code,vn,en,tc,lt,th,td,pre:pre||[],id:id||code}}
 
-// ===================== Khung K22–K25 (ESAS5, 2024) =====================
+// ===================== Khung K22–K25 (QĐ 1489/QĐ-ĐHVN ngày 29/12/2023) =====================
 const P22=(()=>{
-const h=(code,vn,en,tc,lt,th,pre,id)=>c(code,vn,en,tc,lt,th,null,pre,id);
-const m2=(code,vn,en,pre)=>h(code,vn,en,2,26,4,pre);
-const k2=(code,vn,en,pre)=>h(code,vn,en,2,20,10,pre);
-const k3=(code,vn,en,pre)=>h(code,vn,en,3,30,15,pre);
+// Học phần đổi mã theo QĐ 1489 giữ id cũ (tham số cuối) để không mất tiến độ đã lưu.
+const k2=(code,vn,en,pre,id)=>c(code,vn,en,2,20,20,60,pre,id);
+const k3=(code,vn,en,pre,id)=>c(code,vn,en,3,30,30,90,pre,id);
+const m2=(code,vn,en,pre,id)=>c(code,vn,en,2,26,8,66,pre,id);
 
 const TREE={id:"root",name:"Cấu trúc 165 tín chỉ ngành Nông nghiệp thông minh và bền vững",req:165,children:[
  {id:"g1",col:"I",name:"I. Khối kiến thức chung",short:"I. Kiến thức chung",req:26,children:[
   {id:"g11",name:"Lý luận chính trị, Tin học cơ sở & Pháp luật",req:16,courses:[
-   k3("PHI1006","Triết học Mác - Lênin","Marxist – Leninist Philosophy"),
+   c("PHI1006","Triết học Mác - Lênin","Marxist – Leninist Philosophy",3,42,6,102),
    k2("PEC1008","Kinh tế chính trị Mác - Lênin","Marxist – Leninist Political Economy",["PHI1006"]),
-   h("PHI1002","Chủ nghĩa xã hội khoa học","Scientific Socialism",2,30,null),
-   k2("HIS1001","Lịch sử Đảng Cộng sản Việt Nam","History of the Communist Party of Vietnam"),
-   k2("POL1001","Tư tưởng Hồ Chí Minh","Ho Chi Minh Ideology"),
+   c("PHI1002","Chủ nghĩa xã hội khoa học","Scientific Socialism",2,28,4,68),
+   c("HIS1001","Lịch sử Đảng Cộng sản Việt Nam","History of the Communist Party of Vietnam",2,28,4,68),
+   c("POL1001","Tư tưởng Hồ Chí Minh","Ho Chi Minh Ideology",2,28,4,68),
    k3("VJU1001","Tin học cơ sở","Basic Informatics"),
-   k2("THL1057","Nhà nước và pháp luật đại cương","General Issues of State and Law")]},
+   k2("THL1057","Nhà nước và pháp luật đại cương","General State and Law")]},
   {id:"g12",name:"Ngoại ngữ",req:10,courses:[
-   c("FLF1107","Tiếng Anh B1","English B1",5,20,35,20),
-   c("FLF1108","Tiếng Anh B2","English B2",5,20,35,20)]},
+   c("FLF1107","Tiếng Anh B1","English B1",5,20,70,160),
+   c("FLF1108","Tiếng Anh B2","English B2",5,20,70,160)]},
   {id:"g13",name:"Học phần điều kiện",req:15,excluded:true,courses:[
    c("—","Giáo dục thể chất","Physical Education",4,null,null,null,[],"DK-GDTC"),
    c("—","Giáo dục quốc phòng - an ninh","National Defense Education",8,null,null,null,[],"DK-GDQP"),
-   c("—","Kỹ năng bổ trợ","Supplementary Skills",3,30,15,null,[],"DK-KNBT")]}]},
- {id:"g2",col:"II",name:"II. Khối kiến thức theo lĩnh vực",short:"II. Theo lĩnh vực",req:34,children:[
+   c("—","Kỹ năng bổ trợ","Soft Skills",3,null,null,null,[],"DK-KNBT")]}]},
+ {id:"g2",col:"II",name:"II. Khối kiến thức theo lĩnh vực",short:"II. Theo lĩnh vực",req:33,children:[
   {id:"g21",name:"II.1.1 · Cơ bản theo lĩnh vực (bắt buộc)",short:"Cơ bản theo lĩnh vực",req:21,courses:[
-   h("VJU2031","Tiếng Nhật cơ sở 1","Japanese A1",3,20,25),
-   h("VJU2032","Tiếng Nhật cơ sở 2","Japanese A2",2,15,15),
-   h("VJU2001","Phương pháp luận nghiên cứu khoa học","Research Methodology",2,26,4),
-   k2("VJU2002","Giải tích","Calculus"),
+   c("VJU2031","Tiếng Nhật sơ cấp 1","General Japanese 1",3,0,90,60),
+   c("VJU2032","Tiếng Nhật sơ cấp 2","General Japanese 2",2,0,60,40,["VJU2031"]),
+   m2("VJU2001","Phương pháp luận nghiên cứu khoa học","Research Methodology"),
+   k2("VJU2002","Giải tích 1","Calculus 1"),
    k2("VJU2003","Đại số tuyến tính 1","Linear Algebra 1"),
-   k2("VJU2005","Vật lý 1","Physics 1"),
    k2("VJU2007","Hóa học 1","Chemistry 1"),
    k2("VJU2008","Hóa học 2","Chemistry 2",["VJU2007"]),
    k2("VJU2009","Sinh học 1","Biology 1"),
-   k2("VJU2010","Sinh học 2","Biology 2",["VJU2009"])]},
+   k2("VJU2010","Sinh học 2","Biology 2",["VJU2009"]),
+   k2("VJU2005","Vật lý 1","Physics 1")]},
   {id:"g22",name:"II.1.2 · Thế kỷ 21 bắt buộc (Khoa học bền vững, Khoa học thông tin)",short:"Thế kỷ 21 bắt buộc",req:6,courses:[
    m2("VJU2012","Khoa học toàn cầu và môi trường","Global and Environmental Sciences"),
-   h("AET2014","Nhập môn lập trình","Introduction to Programming",2,15,15),
+   c("AET2014","Nhập môn lập trình","Introduction to Programming",2,15,30,55),
    k2("AET2015","Nhập môn hệ thống máy tính","Introduction to Computer Systems")]},
-  {id:"g23",name:"II.2 · Tự chọn theo lĩnh vực (khối M2)",short:"Tự chọn II.2",req:7,cap:8,pool:true,
-   rule:"Chọn tối thiểu <b>7 TC</b> trong danh mục chung của Trường, trên cơ sở tham vấn cố vấn học tập. Học phần có 2 hoặc 4 TC nên thực tế cần tích luỹ <b>8 TC</b>: 4 học phần 2 TC, hoặc 1 học phần 4 TC và 2 học phần 2 TC.",children:[
-   {id:"g23F",name:"Kiến thức cơ bản theo lĩnh vực",courses:[
-    h("THL2003","Giới thiệu về hệ thống pháp luật Việt Nam","Introduction to Vietnamese Legal System",4,50,10),
-    h("INE2004","Nguyên lý kinh tế","Principle of Economics",4,50,10),
-    k2("VJU2004","Toán 3 (Thống kê)","Mathematics 3 (Statistics)"),
+  {id:"g23",name:"II.2 · Học phần tự chọn",short:"Tự chọn II.2",req:6,pool:true,minGroups:2,
+   groupMsg:"Tự chọn II.2 phải gồm học phần ở <b>cả II.2.1 và II.2.2</b>. Hãy chọn học phần này ở nhóm còn lại.",
+   rule:"Chọn <b>6 TC</b> từ ít nhất 2 nhóm: <b>II.2.1</b> (Cơ bản theo lĩnh vực) và <b>II.2.2</b> (Khối học phần thế kỷ 21, nhóm A–E), trên cơ sở tham vấn cố vấn học tập.",children:[
+   {id:"g23F",side:"II.2.1",name:"II.2.1 · Cơ bản theo lĩnh vực",courses:[
+    k2("VJU2033","Giới thiệu về hệ thống pháp luật Việt Nam","Introduction to Vietnamese Legal System",[],"THL2003"),
+    k2("VJU2004","Thống kê","Statistics"),
+    c("INE2004","Nguyên lý kinh tế","Principle of Economics",4,50,20,130),
     m2("SOC2005","Xã hội học đại cương","Introduction of Sociology"),
     m2("MNS2006","Khoa học quản lý đại cương","Introduction of Management Science"),
     k2("VJU2006","Vật lý 2","Physics 2"),
     m2("VJU2011","Khoa học Trái đất","Earth Science")]},
-   {id:"g23A",name:"Thế kỷ 21 · Nhóm A · Khoa học bền vững",courses:[
+   {id:"g23A",side:"II.2.2",name:"II.2.2 · Thế kỷ 21 · Nhóm A · Khoa học bền vững",courses:[
     m2("VJU2013","Sự phát triển và Năng lượng ở Châu Á (Kinh tế năng lượng, Kỹ thuật năng lượng)","Development and Energy in Asia (Energy Economy, Energy Engineering)"),
     m2("VJU2014","Khoa học cơ bản về biến đổi khí hậu","Basic Science of Climate Change"),
     m2("VJU2015","Thực phẩm, nước và sức khỏe","Food, Water and Health"),
     m2("VJU2016","An ninh và phát triển bền vững","Sustainable Development and Security"),
     m2("VJU2017","Khoa học, Công nghệ và Xã hội","Science, Technology and Society")]},
-   {id:"g23B",name:"Thế kỷ 21 · Nhóm B · Toàn cầu hóa và Khoa học xã hội",courses:[
+   {id:"g23B",side:"II.2.2",name:"II.2.2 · Thế kỷ 21 · Nhóm B · Toàn cầu hóa và Khoa học xã hội",courses:[
     m2("VJU2018","Toàn cầu hóa và Khu vực hóa","Globalization and Regionalization"),
     m2("VJU2019","Phát triển quốc tế và Khu vực","International and Regional Development"),
     m2("VJU2020","Tôn giáo, Văn hóa và Xã hội","Religion, Culture and Society"),
     m2("VJU2021","Luật và Xã hội","Law and Society"),
     k2("VJU2022","Quản trị kinh doanh","Business Administration")]},
-   {id:"g23C",name:"Thế kỷ 21 · Nhóm C · Nghiên cứu Nhật Bản",courses:[
+   {id:"g23C",side:"II.2.2",name:"II.2.2 · Thế kỷ 21 · Nhóm C · Nghiên cứu Nhật Bản",courses:[
     k2("VJU2023","Các vấn đề đương đại ở Đông Á","Contemporary Issues in East Asia"),
     m2("VJU2024","Văn hóa và lịch sử Nhật Bản","Japanese History and Culture"),
     m2("VJU2025","Kinh doanh Nhật Bản - Việt Nam","Japanese and Vietnamese Business"),
@@ -512,29 +512,29 @@ const TREE={id:"root",name:"Cấu trúc 165 tín chỉ ngành Nông nghiệp th�
     m2("VJU2027","So sánh xã hội Nhật Bản với xã hội Việt Nam","Japanese Society in Comparison with Vietnamese Society"),
     m2("VJU2028","So sánh Việt Nam và Nhật Bản","Vietnam in Comparison with Japan"),
     m2("VJU2029","Giới thiệu về giảng dạy tiếng Nhật như một ngoại ngữ","Introduction to Teaching Japanese as a Foreign Language")]},
-   {id:"g23D",name:"Thế kỷ 21 · Nhóm D · Khoa học thông tin",courses:[
+   {id:"g23D",side:"II.2.2",name:"II.2.2 · Thế kỷ 21 · Nhóm D · Khoa học thông tin",courses:[
     m2("AET2012","Khoa học thông tin","Information Science"),
-    m2("AET2013","Phân tích dữ liệu khoa học","Scientific Data Analyses",["VJU2002","VJU2003","VJU2004"]),
+    m2("AET2013","Phân tích dữ liệu khoa học","Scientific Data Analyses",["VJU2002"]),
     m2("INE1052","Kinh tế lượng","Econometrics"),
     k2("AET2016","Thuật toán","Computer Algorithms",["VJU2002","VJU2003"]),
     k2("AET2017","Mô phỏng toán học","Mathematical Simulation")]},
-   {id:"g23E",name:"Thế kỷ 21 · Nhóm E · Kỹ thuật cho nghiên cứu nâng cao",courses:[
-    k2("AET2018","Vật liệu tiên tiến và kết cấu tiên tiến ứng dụng trong kỹ thuật","Advanced Materials and Advanced Structures Applied in Engineering",["VJU2002","VJU2003","VJU2004","VJU2005"]),
-    k2("AET2019","Nhiệt động lực học","Thermodynamics",["VJU2002","VJU2004"]),
-    k2("AET2020","Kỹ thuật truyền nhiệt","Heat Transfer",["VJU2002","VJU2004"]),
-    k2("AET2021","Thí nghiệm trong khoa học và kỹ thuật 1","Experiment on Science and Engineering 1",["AET2018","AET2019","AET2020"]),
-    k2("AET2022","Thí nghiệm trong khoa học và kỹ thuật 2","Experiment on Science and Engineering 2",["AET2021"])]}]}]},
+   {id:"g23E",side:"II.2.2",name:"II.2.2 · Thế kỷ 21 · Nhóm E · Kỹ thuật cho nghiên cứu nâng cao",courses:[
+    k2("AET2018","Vật liệu tiên tiến và kết cấu tiên tiến ứng dụng trong kỹ thuật","Advanced Materials and Advanced Structures Applied in Engineering",["VJU2002"]),
+    k2("AET2019","Nhiệt động lực học","Thermodynamics",["VJU2002"]),
+    k2("AET2020","Kỹ thuật truyền nhiệt","Heat Transfer",["VJU2002"]),
+    k2("AET2021","Thí nghiệm trong khoa học và kỹ thuật 1","Experiment on Science and Engineering 1",["VJU2005"]),
+    k2("AET2022","Thí nghiệm trong khoa học và kỹ thuật 2","Experiment on Science and Engineering 2")]}]}]},
  {id:"g3",col:"III",name:"III. Khối kiến thức theo khối ngành",short:"III. Theo khối ngành",req:30,children:[
   {id:"g31",name:"III.1 · Bắt buộc",short:"Khối ngành bắt buộc",req:27,courses:[
-   h("SAS2001","Sinh lý thực vật","Plant Physiology",3,25,20,["VJU2010"]),
+   c("SAS2030","Sinh lý thực vật","Plant Physiology",3,25,40,85,["VJU2010"],"SAS2001"),
    k3("SAS2002","Di truyền học thực vật","Plant Genetics",["VJU2010"]),
-   k3("SAS2003","Cơ sở hóa sinh và hóa lý","Basic Biochemistry and Physical Chemistry",["VJU2008","VJU2010"]),
-   k3("SAS2004","Cơ sở hóa học phân tích","Basics in Analytical Chemistry",["VJU2008"]),
-   k3("SAS2005","Cơ sở vi sinh vật học","Basic Microbiology"),
-   h("SAS2006","Thống kê sinh học","Biostatistics",3,20,25,["VJU2010"]),
+   k3("SAS2003","Cơ sở hóa sinh và hóa lý","Basic Biochemistry and Physical Chemistry",["VJU2008"]),
+   k3("SAS2031","Cơ sở hóa học phân tích","Basics in Analytical Chemistry",["VJU2008"],"SAS2004"),
+   k3("SAS2032","Cơ sở vi sinh vật học","Basic Microbiology",[],"SAS2005"),
+   c("SAS2033","Thống kê sinh học","Biostatistics",3,20,50,80,["VJU2010"],"SAS2006"),
    k3("SAS2021","Kinh tế học đại cương","General Economics"),
-   k3("SAS2009","Khí tượng nông nghiệp","Agri-meteorology"),
-   k3("SAS2010","Hệ thống kiểm định chất lượng nông sản, thực phẩm","Quality Control System for Food and Agricultural Products",["VJU2010","VJU2008"])]},
+   k3("SAS2034","Khí tượng nông nghiệp","Agri-meteorology",[],"SAS2009"),
+   k3("SAS2010","Hệ thống kiểm định chất lượng nông sản, thực phẩm","Quality Control System for Food and Agricultural Products")]},
   {id:"g32",name:"III.2 · Ngoại ngữ chuyên ngành tự chọn",short:"Ngoại ngữ chuyên ngành",req:3,elective:true,
    rule:"Chọn <b>1 trong 2</b> học phần (3 TC).",courses:[
    k3("SAS2011","Tiếng Anh chuyên ngành","English for Special Purposes"),
@@ -542,42 +542,42 @@ const TREE={id:"root",name:"Cấu trúc 165 tín chỉ ngành Nông nghiệp th�
  {id:"g4",col:"IV",name:"IV. Khối kiến thức theo nhóm ngành",short:"IV. Theo nhóm ngành",req:20,courses:[
    k3("SAS2013","Nhập môn nông nghiệp thông minh và bền vững","Introduction of Smart Agriculture and Sustainability"),
    k3("SAS2014","Sinh thái học cây trồng nông nghiệp","Crop Ecology"),
-   k3("SAS2015","Kỹ thuật thông tin trong khoa học môi trường và sinh học","Biological and Environmental Information Engineering"),
+   k3("SAS2035","Kỹ thuật thông tin trong khoa học môi trường và sinh học","Biological and Environmental Information Engineering",[],"SAS2015"),
    k3("SAS2016","Thổ nhưỡng học","Pedosphere Science"),
    k2("SAS2017","Thủy nông","Agricultural Hydrology"),
-   h("SAS3039","Ứng dụng công nghệ trong quản lý trang trại","Technologies for Farming",3,20,25),
-   k3("SAS2020","Nhập môn quản lý kinh doanh nông nghiệp","Fundamentals of Agribusiness Management")]},
- {id:"g5",col:"V",name:"V. Khối kiến thức theo ngành",short:"V. Theo ngành",req:55,children:[
+   c("SAS3039","Ứng dụng công nghệ trong quản lý trang trại","Technologies for Farming",3,20,50,80),
+   k3("SAS2051","Nhập môn quản lý kinh doanh nông nghiệp","Fundamentals of Agribusiness Management",[],"SAS2020")]},
+ {id:"g5",col:"V",name:"V. Khối kiến thức theo ngành",short:"V. Theo ngành",req:56,children:[
   {id:"g51",name:"V.1 · Học phần chung bắt buộc",short:"Chung bắt buộc V.1",req:17,courses:[
    k3("SAS3001","Quy tắc trong sinh thái học nông nghiệp","Principles of Agroecology"),
    k3("SAS3002","Kĩ thuật thông tin nông nghiệp","Agricultural Information Engineering"),
-   k3("SAS3048","Tài chính nông nghiệp","Agricultural Finance"),
+   k3("SAS3047","Tài chính nông nghiệp","Agricultural Finance",[],"SAS3048"),
    k3("SAS3004","Luật và chính sách nông nghiệp Nhật Bản và Việt Nam","Comparative Study on Agricultural Law and Policy between Japan and Vietnam"),
-   k3("FTH3005","Quản lý thực phẩm cơ sở","Institutional Food Management"),
-   h("SAS3005","Học theo dự án","Project-based Training",2,5,25)]},
+   c("FTH3005","Quản lý thực phẩm cơ sở","Institutional Food Management",2,20,10,70),
+   c("SAS3052","Học theo dự án","Project-based Training",3,5,50,95,[],"SAS3005")]},
   {id:"g52",name:"V.2 · Tự chọn định hướng chuyên sâu",short:"Định hướng chuyên sâu",req:14,orient:true,children:[
    {id:"track1",track:"1",name:"Định hướng 1 · Nông nghiệp sinh thái",req:14,courses:[
     k3("SAS3006","Hóa học nông nghiệp","Agricultural Chemistry"),
     k3("SAS3007","Khoa học cây ăn quả","Horticultural Science"),
     k3("SAS3009","Quản lý dinh dưỡng cây trồng tổng hợp","Integrated Plant Nutrient Management"),
     k3("SAS3010","Các biện pháp quản lý sinh học","Biological Management"),
-    k2("FTH2022","Các kỹ thuật sinh học phân tử","Molecular Biology Techniques")]},
+    c("FTH2017","Các kỹ thuật sinh học phân tử","Molecular Biology Techniques",2,30,0,70,[],"FTH2022")]},
    {id:"track2",track:"2",name:"Định hướng 2 · Nông nghiệp tiên tiến Nhật Bản",req:14,courses:[
     k3("SAS3012","Máy nông nghiệp","Agricultural Mechanics"),
     k3("SAS3013","Công nghệ sau thu hoạch","Postharvest Technology"),
-    k3("SAS3014","Điều khiển tự động trong nông nghiệp","Agricultural IoT"),
+    k3("SAS3053","Điều khiển tự động trong nông nghiệp","Agricultural IoT",[],"SAS3014"),
     k3("SAS3037","Kỹ thuật kiểm soát trong trồng trọt","Crop Monitoring"),
-    h("SAS3041","Kỹ thuật xây dựng nhà kính và hệ thủy canh","Greenhouse Technology and Hydroponics",2,15,15)]},
+    c("SAS3054","Kỹ thuật xây dựng nhà kính và hệ thủy canh","Greenhouse Technology and Hydroponics",2,15,30,55,[],"SAS3041")]},
    {id:"track3",track:"3",name:"Định hướng 3 · Tạo lập và quản trị doanh nghiệp nông nghiệp",req:14,courses:[
     k3("SAS3017","Phân tích tiếp thị và phân phối thực phẩm","Marketing and Food Distribution Analysis"),
     k3("SAS3018","Nguyên lý kế toán","Principles of Accounting"),
     k3("SAS3019","Quản lý chuỗi cung ứng nông sản","Agri-food Supply Chain Management"),
     k3("SAS3020","Phân tích chuỗi giá trị sản phẩm nông nghiệp","Value Chain Analysis of Agricultural Products"),
-    h("SAS3048","Thương mại điện tử nông sản","Agriculture Electronic Commerce",2,15,15,[],"SAS3048-TMDT")]}]},
-  {id:"g53",name:"V.3 · Học phần tự chọn khác",short:"Tự chọn V.3",req:9,cap:10,elective:true,
-   rule:"Chọn tối thiểu <b>9 TC</b> theo hướng dẫn của Khoa cho định hướng của bạn. Gói gợi ý cho từng hướng có ở mục <b>Cẩm nang tư vấn</b>.",courses:[
+    c("SAS3055","Thương mại điện tử nông sản","Agriculture Electronic Commerce",2,15,30,55,[],"SAS3048-TMDT")]}]},
+  {id:"g53",name:"V.3 · Học phần tự chọn khác",short:"Tự chọn V.3",req:10,cap:11,elective:true,
+   rule:"Chọn tối thiểu <b>10 TC</b> theo hướng dẫn của Khoa cho định hướng của bạn. Nếu đã chọn 3 học phần 3 TC thì học phần thứ tư (2 TC) đưa tổng lên 11 TC. Gói gợi ý cho từng hướng có ở mục <b>Cẩm nang tư vấn</b>.",courses:[
    k2("SAS3021","Sinh trắc học","Biometrics"),
-   k3("SAS3022","Công nghệ cải tiến sinh trưởng thực vật","Plant Improvement Science"),
+   k3("SAS3022","Công nghệ cải tiến sinh trưởng thực vật","Plant Improvement Engineering"),
    k3("SAS3023","Bệnh cây đại cương","Plant Pathology"),
    k3("SAS3024","Quản lý nông nghiệp theo vùng miền","Regional Management of Agriculture"),
    k2("SAS3025","Côn trùng học","Entomology"),
@@ -587,9 +587,9 @@ const TREE={id:"root",name:"Cấu trúc 165 tín chỉ ngành Nông nghiệp th�
    k2("SAS3029","Cỏ dại","Weed Science (including Pharmaceutical Botany)"),
    k3("SAS3030","Hệ môi trường thực vật","Plant-environment System"),
    k2("SAS3031","Tin sinh học","Bioinformatics"),
-   h("FTH3022","Thực phẩm chức năng","Functional Foods",2,15,15),
+   c("FTH3022","Thực phẩm chức năng","Functional Foods",2,15,30,55),
    k2("SAS3033","Đa dạng sinh học và tiến hóa","Biodiversity and Evolution"),
-   h("SAS3032","Đạo đức nông nghiệp","Agricultural Ethics",2,15,15),
+   c("SAS3032","Đạo đức nông nghiệp","Agricultural Ethics",2,15,30,55),
    k3("SAS3034","Toán học ứng dụng trong nông nghiệp","Applied Mathematics in Agriculture"),
    k3("SAS3035","Dự án nông nghiệp quốc tế","International Agricultural Project"),
    k3("SAS3036","Các yếu tố môi trường sinh học","Bioenvironmental Element Science"),
@@ -599,38 +599,38 @@ const TREE={id:"root",name:"Cấu trúc 165 tín chỉ ngành Nông nghiệp th�
    k2("SAS3043","Quy hoạch phát triển nông thôn","Rural Planning"),
    k2("SAS3044","Kinh tế phát triển nông thôn","Rural Development Economics"),
    k3("SAS3045","Giao dịch và đàm phán kinh doanh nông nghiệp","Communication and Negotiation in Agriculture Business"),
-   k2("SAS3046","Quản trị hợp tác xã nông nghiệp","Principles of Cooperative Management"),
+   k2("SAS3056","Quản trị hợp tác xã nông nghiệp","Principles of Cooperative Management",[],"SAS3046"),
    k2("SAS3049","Nhập môn khảo cứu nông thôn","Introduction to Rural Survey"),
    k2("SAS2007","Sinh học tế bào","Cell Biology"),
    k3("SAS3008","Sinh thái học phân tử cây trồng","Plant Molecular Ecology"),
    k3("SAS3016","Quản lý kinh doanh trang trại","Farm Business Management"),
-   h("SAS3003","Lý thuyết kinh tế tài nguyên nông nghiệp","Agricultural Resource Economics General Theory",3,25,20),
+   c("SAS3003","Kinh tế tài nguyên nông nghiệp","Agricultural Resource Economics General Theory",3,25,20,105),
    k2("SAS3050","Du lịch nông nghiệp","Agricultural Tourism"),
-   h("FTH2001","Miễn dịch học","Immunology",2,30,0),
-   h("FTH0002","Sinh học người","Human Biology",2,30,0),
+   c("FTH2001","Miễn dịch học","Immunology",2,30,0,70),
+   c("FTH2002","Sinh học người","Human Biology",2,30,0,70,[],"FTH0002"),
    k2("FTH2003","Enzyme trong công nghệ thực phẩm","Enzyme in Food Technology"),
-   h("FTH2005","Kinh tế học thực phẩm","Food Economics",3,45,0),
-   h("FTH2006","Chuyển đổi số trong công nghiệp thực phẩm","Digital Transformation in Food Industry",2,30,0),
-   h("FTH2014","Cơ bản trong Khoa học và Công nghệ thực phẩm","Basics in Food Science and Technology",3,45,0),
-   h("MJM3012","Cơ học kỹ thuật","Engineering Mechanics",3,45,null),
-   h("MJM3023","Kỹ thuật điều khiển tự động","Control Systems Engineering",2,30,null),
-   h("MJM3033","Kỹ thuật tự động hóa","Engineering Automation",2,30,null),
-   h("MJM3018","Nhập môn cơ điện tử","Fundamentals of Mechatronics",2,30,null)]},
+   c("FTH2005","Kinh tế học thực phẩm","Food Economics",3,45,0,105),
+   c("FTH2006","Chuyển đổi số trong công nghiệp thực phẩm","Digital Transformation in Food Industry",2,30,0,70),
+   c("FTH2009","Những cơ bản trong Khoa học và Công nghệ thực phẩm","Basics in Food Science and Technology",3,45,0,105,[],"FTH2014"),
+   c("MJM3012","Cơ học kỹ thuật","Engineering Mechanics",3,45,0,105),
+   c("MJM3023","Kỹ thuật điều khiển tự động","Control Systems Engineering",2,30,0,70),
+   c("MJM3033","Kỹ thuật tự động hóa","Engineering Automation",2,30,0,70),
+   c("MJM3018","Nhập môn cơ điện tử","Fundamentals of Mechatronics",2,30,0,70)]},
   {id:"g54",name:"V.4 · Thực tập và tốt nghiệp",short:"Thực tập & tốt nghiệp",req:15,courses:[
-   h("SAS4001","Thực tập nghề nghiệp","Professional Internship",3,null,45),
-   h("SAS4002","Thực hành hướng nghiệp","Practical Career Design",2,null,30),
-   c("SAS4003","Đồ án tốt nghiệp","Graduation Thesis",10,null,100,50)]}]}
+   c("SAS4001","Thực tập nghề nghiệp","Professional Internship",3,0,120,30),
+   c("SAS2070","Thực hành hướng nghiệp","Practical Career Design",2,0,60,40,[],"SAS4002"),
+   c("SAS2071","Đồ án tốt nghiệp","Graduation Thesis",10,0,200,300,[],"SAS4003")]}]}
 ]};
 // Lộ trình 8 học kỳ (ESAS1, mục 5.2). {g, tc, s}: chỗ tự chọn của nhóm g, tổng tc TC, gợi ý s. {o}: chỗ học phần định hướng o TC.
-// Khung ghi II.2 = 7 TC (HK3: 2, HK4: 5); vì học phần có 2 hoặc 4 TC nên lộ trình dưới đây dành 8 TC.
+// Theo QĐ 1489: II.2 = 6 TC (HK3: 2, HK4: 4), V.3 = 10 TC. Mảng dùng id học phần (id cũ với môn đổi mã).
 const ROAD=[
  ["PHI1006","FLF1107","VJU1001","VJU2002","VJU2031","VJU2009","VJU2007"],
  ["PEC1008","FLF1108","VJU2032","VJU2003","VJU2008","VJU2010","VJU2005","VJU2012","AET2014"],
  ["HIS1001","VJU2001","AET2015",{g:"g23",tc:2},"SAS2004","SAS2005","SAS2001","SAS2021",{g:"g32",tc:3,s:["SAS2011"]}],
- ["PHI1002",{g:"g23",tc:6},"SAS2002","SAS2003","SAS2006","SAS2009","SAS2016"],
+ ["PHI1002",{g:"g23",tc:4},"SAS2002","SAS2003","SAS2006","SAS2009","SAS2016"],
  ["POL1001","THL1057","SAS2010","SAS2013","SAS2014","SAS2015","SAS2017","SAS2020"],
  ["SAS3039","SAS3001","SAS3002","SAS3048","SAS3004","FTH3005","SAS3005",{o:3}],
- [{o:3},{o:3},{o:3},{o:2},{g:"g53",tc:9}],
+ [{o:3},{o:3},{o:3},{o:2},{g:"g53",tc:10}],
  ["SAS4001","SAS4002","SAS4003"]
 ];
 
@@ -639,10 +639,10 @@ const TODO=[
  "Học Tiếng Anh B1 và Tin học cơ sở; bắt đầu tìm hiểu 3 định hướng chuyên sâu. GDTC, GDQP-AN tính riêng theo kế hoạch của ĐHQGHN.",
  "Đạt chuẩn Tiếng Anh B2 sớm. Hoàn thành Kỹ năng bổ trợ (tính riêng, không vào 165 TC).",
  "Chọn học phần tự chọn II.2 và ngoại ngữ chuyên ngành (Tiếng Anh hoặc Tiếng Nhật) theo định hướng dự kiến.",
- "Hoàn thành đủ 8 TC tự chọn II.2. Lưu ý AET2013 cần VJU2004 Toán 3 (Thống kê); nhóm E cần Giải tích và Toán 3.",
+ "Hoàn thành đủ 6 TC tự chọn II.2, có ít nhất một học phần ở II.2.1 và một học phần ở II.2.2. Lưu ý AET2013, AET2016 và nhóm E cần Giải tích 1 (AET2016 cần thêm Đại số tuyến tính 1, AET2021 cần Vật lý 1).",
  "<b>Mốc quan trọng:</b> chốt định hướng với cố vấn học tập trước khi đăng ký HK6.",
  "Học toàn bộ V.1 (17 TC) và học phần định hướng đầu tiên; chọn giảng viên hướng dẫn, định hình đề tài đồ án.",
- "Hoàn thành 14 TC định hướng và 9 TC tự chọn V.3; tìm nơi thực tập.",
+ "Hoàn thành 14 TC định hướng và 10 TC tự chọn V.3; tìm nơi thực tập.",
  "Thực tập và đồ án cùng một chủ đề; chuẩn bị CV, portfolio, ứng tuyển song song khi làm đồ án."
 ];
 const TRK={
@@ -651,9 +651,9 @@ const TRK={
   fit:["Thích sinh học, cây trồng, đất, làm việc ở phòng thí nghiệm và ngoài đồng ruộng","Quan tâm canh tác hữu cơ, giảm hoá chất, thích ứng biến đổi khí hậu","Muốn làm nghiên cứu hoặc học lên thạc sĩ, tiến sĩ"],
   good:"Sinh lý thực vật, Di truyền, Vi sinh, Thổ nhưỡng, Sinh thái học cây trồng",
   need:["Đồ án tốt nghiệp có đề tài thuộc lĩnh vực sinh thái, cây trồng, đất, bảo vệ thực vật hoặc sinh học nông nghiệp.","Thực tập nghề nghiệp tại phòng thí nghiệm, viện nghiên cứu, trang trại hoặc doanh nghiệp vật tư nông nghiệp."],
-  v3:["SAS3023","SAS3025","SAS3029","SAS3026"],
-  alt:["SAS3008","SAS3022","SAS3030","SAS3031","SAS2007","SAS3027","SAS3033","SAS3038"],
-  g23:["VJU2004","VJU2014","VJU2011","VJU2015"],g23note:"",
+  v3:["SAS3023","SAS3022","SAS3025","SAS3029"],
+  alt:["SAS3026","SAS3008","SAS3030","SAS3031","SAS2007","SAS3027","SAS3033","SAS3038"],
+  g23:["VJU2004","VJU2011","VJU2014"],g23note:"Có thể thay Khoa học Trái đất (VJU2011) bằng Thực phẩm, nước và sức khỏe (VJU2015); giữ ít nhất một học phần ở II.2.1.",
   g32:["SAS2011"],g32note:"Tiếng Anh chuyên ngành (SAS2011): thuận lợi đọc tài liệu, viết bài báo khoa học và chuẩn bị học lên cao.",
   topics:["Đánh giá hiệu quả chế phẩm vi sinh hoặc phân hữu cơ lên sinh trưởng cây trồng","Quản lý dịch hại tổng hợp (IPM) cho một cây trồng chủ lực ở địa phương","Chỉ thị phân tử trong chọn giống chống chịu hạn, mặn","Đánh giá tính bền vững của một mô hình canh tác hữu cơ hoặc nông lâm kết hợp"],
   skills:["Kỹ năng phòng thí nghiệm: phân tích đất và phân bón, PCR, nuôi cấy mô","Xử lý số liệu thí nghiệm bằng R hoặc Python; GIS cơ bản (QGIS)","Hiểu biết tiêu chuẩn VietGAP, GlobalGAP, hữu cơ (TCVN 11041, USDA/EU Organic)","Tiếng Anh học thuật (IELTS 6.0–6.5 nếu định học thạc sĩ ở nước ngoài)","Tham gia nhóm nghiên cứu của giảng viên từ năm 3 để có bài báo hoặc báo cáo hội nghị"],
@@ -664,9 +664,9 @@ const TRK={
   fit:["Thích công nghệ, máy móc, lập trình, cảm biến, IoT","Muốn vận hành nhà kính, thuỷ canh, nhà máy trồng cây, nông nghiệp chính xác","Muốn làm việc cho doanh nghiệp Nhật hoặc làm việc tại Nhật"],
   good:"Nhập môn lập trình, Hệ thống máy tính, Vật lý, Kỹ thuật thông tin trong KH môi trường và sinh học, Thuỷ nông",
   need:["Đồ án tốt nghiệp có sản phẩm hoặc thiết kế kỹ thuật: hệ thống cảm biến, điều khiển, mô hình nhà kính hoặc thuỷ canh, quy trình sau thu hoạch.","Thực tập tại trang trại công nghệ cao, doanh nghiệp máy nông nghiệp hoặc doanh nghiệp FDI Nhật Bản, hoặc thực tập tại Nhật nếu có chương trình trao đổi."],
-  v3:["MJM3023","MJM3033","MJM3018","SAS3030"],
-  alt:["MJM3012","SAS3040","SAS3034","SAS3036","SAS3038","SAS3021","FTH2006"],
-  g23:["VJU2004","AET2013","AET2016","VJU2006"],g23note:"Học VJU2004 Toán 3 trước, vì AET2013 yêu cầu đã học VJU2002, VJU2003 và VJU2004.",
+  v3:["MJM3023","MJM3012","MJM3018","SAS3030"],
+  alt:["MJM3033","SAS3040","SAS3034","SAS3036","SAS3038","SAS3021","FTH2006"],
+  g23:["VJU2004","AET2013","AET2016"],g23note:"AET2013 cần Giải tích 1 (VJU2002); AET2016 cần Giải tích 1 và Đại số tuyến tính 1 (VJU2003). Có thể thay VJU2004 Thống kê bằng VJU2006 Vật lý 2 (cùng nhóm II.2.1).",
   g32:["SAS2012"],g32note:"Tiếng Nhật chuyên ngành (SAS2012): lợi thế lớn khi ứng tuyển doanh nghiệp Nhật hoặc làm việc tại Nhật.",
   topics:["Thiết kế hệ thống tưới tự động dựa trên cảm biến độ ẩm đất và dữ liệu thời tiết","Giám sát sinh trưởng cây trồng bằng ảnh và xử lý ảnh, AI cơ bản","Tối ưu dung dịch dinh dưỡng và điều kiện ánh sáng trong hệ thuỷ canh hoặc nhà máy trồng cây","Đánh giá công nghệ bảo quản lạnh hoặc MAP để kéo dài thời gian bảo quản nông sản"],
   skills:["Lập trình Python; vi điều khiển Arduino, ESP32, Raspberry Pi; giao thức IoT (MQTT)","Vẽ kỹ thuật, CAD (AutoCAD, Fusion 360) cho thiết kế nhà kính, thiết bị","Tiếng Nhật JLPT N3 trở lên (N2 nếu muốn làm kỹ sư tại Nhật)","Hiểu văn hoá doanh nghiệp Nhật: 5S, Kaizen, Hō-Ren-Sō","Portfolio dự án thực tế từ Học theo dự án, cuộc thi khởi nghiệp, sáng tạo kỹ thuật"],
@@ -676,10 +676,10 @@ const TRK={
   desc:"Đào tạo kỹ sư có tư duy kinh tế và khởi nghiệp: tiếp thị và phân phối thực phẩm, kế toán, chuỗi cung ứng, chuỗi giá trị và thương mại điện tử nông sản. Chương trình vẫn giữ nền tảng kỹ thuật canh tác.",
   fit:["Thích kinh doanh, thị trường, số liệu tài chính, giao tiếp","Muốn khởi nghiệp, quản lý trang trại hoặc HTX, làm chuỗi cung ứng hay xuất nhập khẩu","Quan tâm thương mại điện tử và chính sách nông nghiệp"],
   good:"Kinh tế học đại cương, Nhập môn quản lý kinh doanh NN, Tài chính NN, Luật và chính sách NN",
-  need:["Đồ án tốt nghiệp về kinh tế, quản trị, thị trường, chuỗi giá trị hoặc kế hoạch kinh doanh nông nghiệp có phân tích tài chính.","Thực tập tại doanh nghiệp, HTX, chuỗi bán lẻ, công ty xuất nhập khẩu, tổ chức tín dụng hoặc cơ quan quản lý nông nghiệp.","Thương mại điện tử nông sản đang trùng mã SAS3048 với Tài chính nông nghiệp (V.1). Khi đăng ký, kiểm tra mã chính thức trên hệ thống đào tạo."],
-  v3:["SAS3016","SAS3045","SAS3042"],
-  alt:["SAS3046","SAS3003","FTH2005","SAS3044","SAS3043","SAS3050","SAS3028","SAS3049","SAS3035"],
-  g23:["VJU2022","VJU2025","INE1052","MNS2006"],g23note:"",
+  need:["Đồ án tốt nghiệp về kinh tế, quản trị, thị trường, chuỗi giá trị hoặc kế hoạch kinh doanh nông nghiệp có phân tích tài chính.","Thực tập tại doanh nghiệp, HTX, chuỗi bán lẻ, công ty xuất nhập khẩu, tổ chức tín dụng hoặc cơ quan quản lý nông nghiệp."],
+  v3:["SAS3016","SAS3045","SAS3046","SAS3044"],
+  alt:["SAS3042","SAS3003","FTH2005","SAS3043","SAS3050","SAS3028","SAS3049","SAS3035"],
+  g23:["MNS2006","VJU2022","VJU2025"],g23note:"Có thể thay Kinh doanh Nhật Bản - Việt Nam (VJU2025) bằng Kinh tế lượng (INE1052); giữ ít nhất một học phần ở II.2.1.",
   g32:["SAS2011","SAS2012"],g32note:"Tiếng Anh chuyên ngành nếu hướng tới xuất nhập khẩu và thị trường quốc tế; Tiếng Nhật chuyên ngành nếu hướng tới đối tác hoặc thị trường Nhật Bản.",
   topics:["Kế hoạch kinh doanh cho một mô hình nông nghiệp thông minh, có phân tích NPV/IRR","Phân tích chuỗi giá trị một nông sản chủ lực (vải, cà phê, rau an toàn…)","Đánh giá kênh thương mại điện tử và truy xuất nguồn gốc đối với nông sản OCOP","Hiệu quả hoạt động của hợp tác xã nông nghiệp kiểu mới"],
   skills:["Excel nâng cao, Power BI hoặc Tableau; phần mềm kế toán cơ bản","Nghiệp vụ xuất nhập khẩu (Incoterms, chứng từ, kiểm dịch thực vật), logistics","Digital marketing, vận hành gian hàng trên sàn thương mại điện tử","Kỹ năng thuyết trình, gọi vốn; tham gia các cuộc thi khởi nghiệp sinh viên","Hiểu chính sách: OCOP, nông nghiệp hữu cơ, tín dụng nông nghiệp, cam kết FTA (CPTPP, EVFTA)"],
@@ -688,7 +688,7 @@ const TRK={
 };
 return {id:"K22",label:"K22–K25",TREE,ROAD,TODO,TRK,TRACKS:["1","2","3"],dk:"g13",closed:["g23","g53"],
   trackBtn:{"1":"1 · Nông nghiệp sinh thái","2":"2 · Tiên tiến Nhật Bản","3":"3 · Doanh nghiệp nông nghiệp"},
-  source:"Nguồn (K22–K25): Khung chương trình đào tạo sau điều chỉnh (ESAS5, 2024), Quyển chương trình đào tạo Kỹ sư Nông nghiệp thông minh và bền vững (ESAS1, mục 5.2 Lộ trình đào tạo) và Cẩm nang tư vấn định hướng chuyên sâu NNTMBV. Lộ trình áp dụng chung cho K22, K23, K24 và K25.",
+  source:"Nguồn (K22–K25): Quyết định số 1489/QĐ-ĐHVN ngày 29/12/2023 ban hành Chương trình đào tạo ngành Nông nghiệp thông minh và bền vững (điều chỉnh), Quyển chương trình đào tạo Kỹ sư Nông nghiệp thông minh và bền vững (ESAS1, mục 5.2 Lộ trình đào tạo) và Cẩm nang tư vấn định hướng chuyên sâu NNTMBV. Lộ trình áp dụng chung cho K22, K23, K24 và K25.",
   semText(x){
     const g=x.group;
     if(g.track)return "HK6–HK7";
@@ -957,7 +957,6 @@ function setProg(id){P=PROGS[id];({TREE,ROAD,C,G,byCode,PARENT,SEM,TODO,TRK,SUG,
 function withProg(id,fn){const old=P.id;setProg(id);try{return fn();}finally{setProg(old);}}
 setProg("K22");
 const isTemp=x=>x.code.includes("xx");
-const isDup=x=>x.id!==x.code&&x.code!=="—"&&!isTemp(x);
 function semText(x){return SEM[x.id]||P.semText(x);}
 // "1, 2 hoặc 3" / "A hoặc B"
 const trackList=()=>TRACKS.length>1?TRACKS.slice(0,-1).join(", ")+" hoặc "+TRACKS[TRACKS.length-1]:TRACKS[0];
@@ -986,7 +985,7 @@ function earned(n){
   return n.req?Math.min(s,n.req):s;
 }
 function limitOf(x){let g=x.group;while(g){if(g.pool||g.elective)return g;g=PARENT[g.id];}return null;}
-function subOf(x){return x.group.id;}
+function subOf(x){return x.group.side||x.group.id;}
 function pickedIn(g){return allCourses(g).filter(x=>done.has(x.id));}
 const capOf=g=>g.cap||g.req;
 
@@ -1009,7 +1008,7 @@ function toggle(id,want){
     if(cur+x.tc>capOf(lim)){toast(`Nhóm <b>${lim.short||lim.name}</b> cần ${lim.req} TC và bạn đã chọn ${cur} TC. Bỏ chọn một học phần khác trong nhóm nếu muốn đổi.`,true);render();return;}
     if(lim.minGroups&&cur+x.tc>=lim.req){
       const gs=new Set(pickedIn(lim).map(subOf));gs.add(subOf(x));
-      if(gs.size<lim.minGroups){toast(`Khối thế kỷ 21 phải gồm học phần từ <b>ít nhất ${lim.minGroups} nhóm</b>. Hãy chọn học phần này ở một nhóm khác.`,true);render();return;}
+      if(gs.size<lim.minGroups){toast(lim.groupMsg||`Khối thế kỷ 21 phải gồm học phần từ <b>ít nhất ${lim.minGroups} nhóm</b>. Hãy chọn học phần này ở một nhóm khác.`,true);render();return;}
     }
   }
   done.add(id);
@@ -1025,7 +1024,7 @@ function hours(x){
   const p=[];if(x.lt!=null)p.push(x.lt+" LT");if(x.th!=null)p.push(x.th+" TH");if(x.td)p.push(x.td+" tự học");
   return p.join(" · ")+" giờ";
 }
-const codeTag=x=>isDup(x)?'<span class="dup" title="Mã đang trùng với Tài chính nông nghiệp (V.1). Kiểm tra mã chính thức trên hệ thống đào tạo khi đăng ký.">trùng mã</span>':isTemp(x)?'<span class="tmp" title="Mã học phần chưa chính thức">mã tạm</span>':"";
+const codeTag=x=>isTemp(x)?'<span class="tmp" title="Mã học phần chưa chính thức">mã tạm</span>':"";
 function courseCard(x){
   const on=done.has(x.id);const lim=limitOf(x);
   let off=false,hint="";
@@ -1161,12 +1160,12 @@ function checks22(){
   const t=earned(TREE);add(t>=165,"Tích luỹ đủ 165 TC",`${t}/165`);
   const req=[["g11","I · Lý luận chính trị, Tin học cơ sở, Pháp luật"],["g12","I · Tiếng Anh B1, B2"],["g21","II.1.1 · Cơ bản theo lĩnh vực"],["g22","II.1.2 · Thế kỷ 21 bắt buộc"]];
   req.forEach(([id,l])=>{const [e,r]=full(id);add(e>=r,l,`${e}/${r}`);});
-  const [e23]=full("g23");add(e23>=7,"II.2 · Tự chọn theo lĩnh vực (tối thiểu 7 TC)",`${e23}/7`);
+  const [e23]=full("g23");const s23=new Set(pickedIn(G.g23).map(subOf)).size;add(e23>=6&&s23>=2,"II.2 · Tự chọn 6 TC, có cả II.2.1 và II.2.2",`${e23}/6`);
   [["g31","III.1 · Khối ngành bắt buộc"]].forEach(([id,l])=>{const [e,r]=full(id);add(e>=r,l,`${e}/${r}`);});
   const [e32]=full("g32");add(e32>=3,"III.2 · Ngoại ngữ chuyên ngành",`${e32}/3`);
   [["g4","IV · Theo nhóm ngành"],["g51","V.1 · Học phần chung bắt buộc (gồm Học theo dự án)"]].forEach(([id,l])=>{const [e,r]=full(id);add(e>=r,l,`${e}/${r}`);});
   const e52=earned(G.g52);add(!!S.track&&e52>=14,S.track?`V.2 · Định hướng ${S.track}: đủ 5 học phần`:"V.2 · Định hướng chuyên sâu (chưa chọn)",`${e52}/14`);
-  const [e53]=full("g53");add(e53>=9,"V.3 · Tự chọn khác (tối thiểu 9 TC)",`${e53}/9`);
+  const [e53]=full("g53");add(e53>=10,"V.3 · Tự chọn khác (tối thiểu 10 TC)",`${e53}/10`);
   const [e54,r54]=full("g54");add(e54>=r54,"V.4 · Thực tập nghề nghiệp, Thực hành hướng nghiệp, Đồ án tốt nghiệp",`${e54}/${r54}`);
   const w=warnCount();add(w===0,"Không có học phần đã đánh dấu mà thiếu tiên quyết",w?`${w} môn`:"");
   const [edk]=full("g13");add(edk>=15,"Giáo dục thể chất, GDQP-AN, Kỹ năng bổ trợ",`${edk}/15`);
@@ -1182,21 +1181,21 @@ function guide22(){
   return `<div class="guide">
   <nav class="jump" aria-label="Mục lục cẩm nang">${jump.map(([k,l])=>`<button type="button" class="iconbtn" data-jump="gd-${k}">${l}</button>`).join("")}</nav>
   ${sec("ct","Cấu trúc chương trình – 165 tín chỉ",`
-   <p class="muted">Ba định hướng dùng chung 151 tín chỉ. Khác biệt nằm ở 14 TC chuyên sâu (V.2), và được định hình thêm bởi 9 TC tự chọn khác (V.3), 7 TC tự chọn theo lĩnh vực (II.2), 3 TC ngoại ngữ chuyên ngành (III.2) và đề tài đồ án.</p>
+   <p class="muted">Ba định hướng dùng chung 151 tín chỉ. Khác biệt nằm ở 14 TC chuyên sâu (V.2), và được định hình thêm bởi 10 TC tự chọn khác (V.3), 6 TC tự chọn theo lĩnh vực (II.2), 3 TC ngoại ngữ chuyên ngành (III.2) và đề tài đồ án.</p>
    <div class="stack" role="img" aria-label="Phân bổ tín chỉ theo khối kiến thức">
-    ${[[26,"#6b7a72","I"],[34,"#4f7f9a","II"],[30,"#5c8a5a","III"],[20,"#8a7a4a","IV"],[55,"#2f6b3c","V"]].map(([n,c,k])=>`<div style="flex:${n};background:${c}">${k} · ${n}</div>`).join("")}</div>
+    ${[[26,"#6b7a72","I"],[33,"#4f7f9a","II"],[30,"#5c8a5a","III"],[20,"#8a7a4a","IV"],[56,"#2f6b3c","V"]].map(([n,c,k])=>`<div style="flex:${n};background:${c}">${k} · ${n}</div>`).join("")}</div>
    <div class="slegend">${[["#6b7a72","I. Kiến thức chung"],["#4f7f9a","II. Theo lĩnh vực"],["#5c8a5a","III. Theo khối ngành"],["#8a7a4a","IV. Theo nhóm ngành"],["#2f6b3c","V. Theo ngành"]].map(([c,l])=>`<span><i style="background:${c}"></i>${l}</span>`).join("")}</div>
    <div class="tbl ct"><table>
     <thead><tr><th>Khối kiến thức</th><th class="n">Bắt buộc</th><th class="n">Tự chọn</th><th class="n">Tổng</th><th>Ghi chú tư vấn</th></tr></thead>
     <tbody>
      <tr><td>I. Kiến thức chung (đại cương 16 + ngoại ngữ 10)</td><td class="n">26</td><td class="n">–</td><td class="n">26</td><td>Không gồm GDTC (4) và GDQP-AN (8) – nhưng 2 chứng chỉ này là điều kiện xét tốt nghiệp</td></tr>
-     <tr><td>II. Theo lĩnh vực</td><td class="n">27</td><td class="n">7</td><td class="n">34</td><td>Tự chọn 7 TC trong danh mục chung của Trường (khối M2)</td></tr>
+     <tr><td>II. Theo lĩnh vực</td><td class="n">27</td><td class="n">6</td><td class="n">33</td><td>Tự chọn 6 TC từ ít nhất 2 nhóm: II.2.1 (Cơ bản theo lĩnh vực) và II.2.2 (Thế kỷ 21)</td></tr>
      <tr><td>III. Theo khối ngành</td><td class="n">27</td><td class="n">3</td><td class="n">30</td><td>Chọn 1 trong 2: Tiếng Anh chuyên ngành <i>hoặc</i> Tiếng Nhật chuyên ngành</td></tr>
      <tr><td>IV. Theo nhóm ngành</td><td class="n">20</td><td class="n">–</td><td class="n">20</td><td>Toàn bộ bắt buộc</td></tr>
-     <tr class="grp"><td colspan="5">V. Theo ngành – 55 TC</td></tr>
-     <tr><td>&nbsp;&nbsp;V.1 Học phần chung bắt buộc</td><td class="n">17</td><td class="n">–</td><td class="n">17</td><td>Gồm Học theo dự án (2 TC)</td></tr>
+     <tr class="grp"><td colspan="5">V. Theo ngành – 56 TC</td></tr>
+     <tr><td>&nbsp;&nbsp;V.1 Học phần chung bắt buộc</td><td class="n">17</td><td class="n">–</td><td class="n">17</td><td>Gồm Học theo dự án (3 TC)</td></tr>
      <tr><td>&nbsp;&nbsp;V.2 Định hướng chuyên sâu</td><td class="n">–</td><td class="n">14</td><td class="n">14</td><td><b>Chọn 1 định hướng, học đủ cả 5 học phần của hướng đó</b></td></tr>
-     <tr><td>&nbsp;&nbsp;V.3 Tự chọn khác</td><td class="n">–</td><td class="n">9</td><td class="n">9</td><td>Chọn theo hướng dẫn của Khoa cho từng định hướng (xem gợi ý ở mục Chi tiết định hướng)</td></tr>
+     <tr><td>&nbsp;&nbsp;V.3 Tự chọn khác</td><td class="n">–</td><td class="n">10</td><td class="n">10</td><td>Chọn theo hướng dẫn của Khoa cho từng định hướng (xem gợi ý ở mục Chi tiết định hướng)</td></tr>
      <tr><td>&nbsp;&nbsp;V.4 Thực tập và tốt nghiệp</td><td class="n">15</td><td class="n">–</td><td class="n">15</td><td>Thực tập nghề nghiệp 3 · Thực hành hướng nghiệp 2 · Đồ án tốt nghiệp 10</td></tr>
      <tr class="total"><td>Tổng cộng</td><td class="n">132</td><td class="n">33</td><td class="n">165</td><td></td></tr>
     </tbody></table></div>`)}
@@ -1213,12 +1212,12 @@ function guide22(){
    <div class="cols">
     <div class="card"><h3><span class="pill can">CẦN</span>14 TC chuyên sâu (V.2)</h3><ul class="cl">${G["track"+t].courses.map(x=>cRow(x.id)).join("")}</ul>
      ${T.need.map(s=>`<p><span class="pill can">CẦN</span>${s}</p>`).join("")}</div>
-    <div class="card"><h3><span class="pill du">ĐỦ</span>Tự chọn khác V.3 (9 TC)</h3>
+    <div class="card"><h3><span class="pill du">ĐỦ</span>Tự chọn khác V.3 (10 TC)</h3>
      <div class="muted">Gói đề xuất, ${sumTc(T.v3)} TC:</div><ul class="cl">${T.v3.map(cRow).join("")}</ul>
      <div class="muted">Có thể thay thế bằng:</div><ul class="cl">${T.alt.map(cRow).join("")}</ul></div>
    </div>
    <div class="cols">
-    <div class="card"><h3><span class="pill du">ĐỦ</span>Tự chọn II.2 (8 TC)</h3><ul class="cl">${T.g23.map(cRow).join("")}</ul>${T.g23note?`<p class="muted">${T.g23note}</p>`:""}</div>
+    <div class="card"><h3><span class="pill du">ĐỦ</span>Tự chọn II.2 (6 TC)</h3><ul class="cl">${T.g23.map(cRow).join("")}</ul>${T.g23note?`<p class="muted">${T.g23note}</p>`:""}</div>
     <div class="card"><h3><span class="pill du">ĐỦ</span>Ngoại ngữ chuyên ngành III.2 (3 TC)</h3><ul class="cl">${T.g32.map(cRow).join("")}</ul><p class="muted">${T.g32note}</p></div>
    </div>
    <div class="cols"><div><h3>Gợi ý đề tài đồ án</h3><ul>${li(T.topics)}</ul></div><div><h3>Kỹ năng và chứng chỉ nên bổ sung</h3><ul>${li(T.skills)}</ul></div></div>
@@ -1227,17 +1226,17 @@ function guide22(){
    <p class="muted"><b>Học lên cao:</b> ${T.grad}</p>`)}
   ${sec("ss","So sánh nhanh ba định hướng",`<div class="tbl cmp cmp3"><table><thead><tr><th></th>${TRACKS.map(k=>`<th>${TRK[k].icon} ${k} · ${TRK[k].name}</th>`).join("")}</tr></thead><tbody>
    ${[["Trọng tâm","Sinh học, đất, cây trồng, canh tác bền vững","Kỹ thuật, tự động hoá, IoT, nhà kính","Kinh tế, thị trường, quản trị, khởi nghiệp"],
-      ["Tự chọn II.2 gợi ý","Toán 3, Biến đổi khí hậu, Khoa học Trái đất, Thực phẩm – nước – sức khoẻ","Toán 3, Phân tích dữ liệu khoa học, Thuật toán, Vật lý 2","Quản trị kinh doanh, Kinh doanh Nhật–Việt, Kinh tế lượng, Khoa học quản lý"],
+      ["Tự chọn II.2 gợi ý","Thống kê, Khoa học Trái đất, Biến đổi khí hậu","Thống kê, Phân tích dữ liệu khoa học, Thuật toán","Khoa học quản lý, Quản trị kinh doanh, Kinh doanh Nhật–Việt"],
       ["Ngoại ngữ chuyên ngành","Tiếng Anh","Tiếng Nhật","Tiếng Anh hoặc Tiếng Nhật"],
-      ["V.3 gợi ý","Bệnh cây, Côn trùng, Cỏ dại, Ức chế sinh học","Điều khiển tự động, Tự động hoá, Cơ điện tử, Hệ môi trường TV","QL kinh doanh trang trại, Đàm phán, Thương mại quốc tế"],
+      ["V.3 gợi ý","Bệnh cây, Cải tiến sinh trưởng TV, Côn trùng, Cỏ dại","Điều khiển tự động, Cơ học kỹ thuật, Cơ điện tử, Hệ môi trường TV","QL kinh doanh trang trại, Đàm phán, Quản trị HTX, Kinh tế PT nông thôn"],
       ["Môi trường làm việc","Phòng thí nghiệm, đồng ruộng, viện nghiên cứu","Trang trại công nghệ cao, nhà máy, doanh nghiệp công nghệ","Văn phòng doanh nghiệp, chuỗi bán lẻ, ngân hàng, HTX"],
       ["Chứng chỉ nên có","VietGAP/GlobalGAP, IELTS","JLPT N3–N2","Nghiệp vụ XNK, công cụ phân tích dữ liệu"]].map(r=>`<tr>${r.map(v=>`<td>${v}</td>`).join("")}</tr>`).join("")}
    </tbody></table></div>`)}
   ${sec("nam","Mốc từng năm",`<div class="yr">
-   ${[["Năm 1 · HK1–HK2","Nền tảng","Lý luận chính trị, Tin học cơ sở, Tiếng Anh B1–B2, Tiếng Nhật cơ sở 1–2, Toán, Lý, Hoá, Sinh, Nhập môn lập trình, Khoa học toàn cầu và môi trường.","Đạt chuẩn Tiếng Anh sớm; bắt đầu tìm hiểu 3 định hướng."],
+   ${[["Năm 1 · HK1–HK2","Nền tảng","Lý luận chính trị, Tin học cơ sở, Tiếng Anh B1–B2, Tiếng Nhật sơ cấp 1–2, Toán, Lý, Hoá, Sinh, Nhập môn lập trình, Khoa học toàn cầu và môi trường.","Đạt chuẩn Tiếng Anh sớm; bắt đầu tìm hiểu 3 định hướng."],
       ["Năm 2 · HK3–HK4","Khối ngành","Sinh lý thực vật, Di truyền, Hoá sinh, Hoá phân tích, Vi sinh, Thống kê sinh học, Kinh tế học đại cương, Khí tượng NN, Thổ nhưỡng, ngoại ngữ chuyên ngành, tự chọn II.2.","Hoàn thành các học phần tự chọn II.2 theo định hướng dự kiến."],
       ["Năm 3 · HK5","Nhóm ngành","Nhập môn NNTMBV, Sinh thái học cây trồng, Kỹ thuật thông tin trong KH môi trường và sinh học, Thuỷ nông, Nhập môn quản lý kinh doanh NN, Kiểm định chất lượng nông sản.","<b>Mốc quan trọng:</b> chốt định hướng với cố vấn học tập."],
-      ["Năm 3–4 · HK6–HK7","Chuyên sâu","Ứng dụng công nghệ trong quản lý trang trại, toàn bộ V.1 (gồm Học theo dự án), 14 TC V.2 của hướng đã chọn và 9 TC V.3.","Chọn giảng viên hướng dẫn, định hình đề tài đồ án, tìm nơi thực tập."],
+      ["Năm 3–4 · HK6–HK7","Chuyên sâu","Ứng dụng công nghệ trong quản lý trang trại, toàn bộ V.1 (gồm Học theo dự án), 14 TC V.2 của hướng đã chọn và 10 TC V.3.","Chọn giảng viên hướng dẫn, định hình đề tài đồ án, tìm nơi thực tập."],
       ["Năm 4 · HK8","Thực tập và tốt nghiệp","Thực tập nghề nghiệp (3 TC), Thực hành hướng nghiệp (2 TC), Đồ án tốt nghiệp (10 TC).","Chuẩn bị CV, portfolio; ứng tuyển song song khi làm đồ án."],
       ["HK9 (nếu cần)","Hoàn thiện","Học bù, cải thiện điểm.","Nộp chứng chỉ ngoại ngữ, GDTC, GDQP-AN và hoàn tất hồ sơ xét tốt nghiệp."]]
      .map(([a,b,c,d])=>`<div><b>${a}</b><span><b>${b}.</b> ${c}<br><span class="muted">Việc cần làm: ${d}</span></span></div>`).join("")}</div>
@@ -1248,9 +1247,9 @@ function guide22(){
     <li class="self"><span class="ic">•</span><span>Đạt chuẩn đầu ra Tiếng Anh bậc 4 (B2) theo Khung năng lực ngoại ngữ 6 bậc dùng cho Việt Nam</span><span class="v">tự kiểm tra</span></li>
     <li class="self"><span class="ic">•</span><span>Điểm trung bình chung tích luỹ đạt mức tối thiểu theo Quy chế đào tạo của ĐHQGHN</span><span class="v">tự kiểm tra</span></li>
     <li class="self"><span class="ic">•</span><span>Không trong thời gian bị truy cứu trách nhiệm hình sự hoặc kỷ luật đình chỉ học tập</span><span class="v">tự kiểm tra</span></li></ul>
-   <div class="note"><b>Khối II.2 (7 TC):</b> mọi học phần trong danh mục M2 có 2 hoặc 4 TC, nên trên thực tế cần tích luỹ 8 TC (4 học phần 2 TC, hoặc 1 học phần 4 TC và 2 học phần 2 TC). Mỗi học kỳ đăng ký tối thiểu 16 TC.</div>
-   <div class="note"><b>Không tính vào điểm trung bình:</b> Tiếng Anh B1, B2 và Tiếng Nhật cơ sở 1 được tính vào 165 TC nhưng không tính vào điểm trung bình. GDTC, GDQP-AN không tính vào 165 TC và điểm trung bình.</div>
-   <div class="note"><b>Tiên quyết cần nhớ:</b> Sinh học 1 → Sinh học 2 → Sinh lý thực vật, Di truyền, Thống kê sinh học; Hoá học 1 → Hoá học 2 → Hoá phân tích, Hoá sinh; Triết học → Kinh tế chính trị. Ở khối II.2, AET2013 cần VJU2004 Toán 3, và nhóm E (AET2018–AET2022) học theo chuỗi.</div>`)}
+   <div class="note"><b>Khối II.2 (6 TC):</b> chọn từ ít nhất 2 nhóm, tức là có ít nhất một học phần ở II.2.1 (Cơ bản theo lĩnh vực) và một học phần ở II.2.2 (Thế kỷ 21), ví dụ 3 học phần 2 TC, hoặc Nguyên lý kinh tế (4 TC) và 1 học phần 2 TC ở II.2.2. Mỗi học kỳ đăng ký tối thiểu 16 TC.</div>
+   <div class="note"><b>Không tính vào điểm trung bình:</b> Tiếng Anh B1, B2 và Tiếng Nhật sơ cấp 1 được tính vào 165 TC nhưng không tính vào điểm trung bình. GDTC, GDQP-AN không tính vào 165 TC và điểm trung bình.</div>
+   <div class="note"><b>Tiên quyết cần nhớ:</b> Sinh học 1 → Sinh học 2 → Sinh lý thực vật, Di truyền, Thống kê sinh học; Hoá học 1 → Hoá học 2 → Hoá phân tích, Hoá sinh; Triết học → Kinh tế chính trị. Tiếng Nhật sơ cấp 1 → Tiếng Nhật sơ cấp 2. Ở khối II.2, AET2013 và AET2018–AET2020 cần Giải tích 1, AET2016 cần Giải tích 1 và Đại số tuyến tính 1, AET2021 cần Vật lý 1.</div>`)}
   <p class="muted">Các gợi ý học phần tự chọn, kỹ năng và vị trí việc làm mang tính tham khảo. Điều kiện xét tốt nghiệp chính thức theo Quy chế đào tạo của ĐHQGHN và thông báo của Trường tại thời điểm xét.</p>
   </div>`;
 }
@@ -1417,7 +1416,7 @@ function render(){
     return `<div class="blk"><div class="row"><b>${b.short}</b><span class="num">${e}/${b.req} TC</span></div><div class="bar"><i style="width:${e/b.req*100}%"></i></div></div>`;}).join("");
   // điều khiển: nút định hướng, chú thích và nguồn theo khung đang dùng
   document.getElementById("trackSeg").innerHTML=TRACKS.map(k=>`<button type="button" id="tr-${k}" data-track="${k}" aria-pressed="${k===S.track}">${P.trackBtn[k]}</button>`).join("");
-  document.getElementById("lgDup").hidden=P.id!=="K22";document.getElementById("lgTmp").hidden=P.id!=="K26";
+  document.getElementById("lgTmp").hidden=P.id!=="K26";
   document.getElementById("srcNote").textContent=P.source;
   document.getElementById("lblKhoa").textContent=isOwner?"Xem khung chương trình của lớp":"Lớp của bạn";
   const pn=document.getElementById("progNote");
@@ -1645,9 +1644,9 @@ async function loadGrades(mssv){
   autoTick();
 }
 // Mã trong bảng điểm → id học phần trong khung đang dùng: bảng ALIAS của diem.js (khung K22–K25),
-// rồi mã gốc (khung K26 dùng mã mới), rồi tên học phần (học phần đang có mã tạm SAS20xx, SAS30xx).
+// rồi mã hiển thị trong khung đang dùng, rồi mã gốc, rồi tên học phần (học phần đang có mã tạm SAS20xx, SAS30xx).
 function frameOf(m,t){
-  const id=D.frameId(m,t);if(C[id])return id;if(C[m])return m;
+  const id=D.frameId(m,t);if(C[id])return id;if(byCode[m])return byCode[m];if(C[m])return m;
   return P.byName[normName(t)]||id;
 }
 // Học phần đã đạt theo bảng điểm được đánh dấu "đã học" trên sơ đồ (chỉ thêm, không bỏ).
