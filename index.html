@@ -1604,6 +1604,14 @@ async function onUser(u){
   const email=(u.email||"").toLowerCase();
   ME={email,name:u.displayName||""};
   mode="loading";showGate(null);render();
+  // kiểm tra danh sách giảng viên trước, kể cả email đuôi sinh viên (vd. tài khoản phòng đào tạo @st.vju.ac.vn)
+  let lec=null;
+  try{lec=await getRetry(FS.doc(fs,"lecturers",email));}catch(e){}
+  if(lec&&lec.exists()){
+    // giảng viên có thêm tài liệu admins/<email> thì thấy nút "Nhập điểm"
+    try{const ad=await getRetry(FS.doc(fs,"admins",email));canGrade=!!(ad&&ad.exists());}catch(e){}
+    isOwner=true;mode="owner";showGate(null);render();watchClass();return;
+  }
   if(email.endsWith(DOMAIN)&&u.emailVerified){
     myRef=FS.doc(fs,COL,u.uid);
     loadGrades(email.slice(0,-DOMAIN.length));
@@ -1619,14 +1627,6 @@ async function onUser(u){
       mode="ready";sync={state:"saved",at:d.capNhat?new Date(d.capNhat):null};render();autoTick();
     }else{mode="profile";showGate("profile");render();}
     return;
-  }
-  // không phải email sinh viên: kiểm tra danh sách giảng viên
-  let lec=null;
-  try{lec=await getRetry(FS.doc(fs,"lecturers",email));}catch(e){}
-  if(lec&&lec.exists()){
-    // giảng viên có thêm tài liệu admins/<email> thì thấy nút "Nhập điểm"
-    try{const ad=await getRetry(FS.doc(fs,"admins",email));canGrade=!!(ad&&ad.exists());}catch(e){}
-    isOwner=true;mode="owner";showGate(null);render();watchClass();return;
   }
   mode="domain";showGate("domain");render();
 }
